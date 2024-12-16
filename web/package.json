@@ -28,7 +28,9 @@
     "react-dom": "18.3.1",
     "react-perfect-scrollbar": "1.5.8",
     "react-use": "17.5.1",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "@bitgo/utxo-lib": "https://github.com/VerusCoin/BitGoJS.git#7c754d4a5920198d9fe6827d3e23bd5cf431f264",
+    "verusid-ts-client": "https://github.com/VerusCoin/verusid-ts-client.git"
   },
   "devDependencies": {
     "@iconify/json": "2.2.230",
