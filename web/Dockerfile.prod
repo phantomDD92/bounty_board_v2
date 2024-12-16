@@ -1,0 +1,28 @@
+# Build stage
+FROM node:18 AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json yarn.lock, and install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Copy the entire application code
+COPY . .
+RUN yarn build
+
+# Production stage
+FROM node:18
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only the build app and dependencies
+COPY --from=builder /app ./
+
+# Expose the port for Next.js
+EXPOSE 3000
+
+# Run the application in development mode
+CMD ["yarn", "start"]
