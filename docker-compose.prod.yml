@@ -3,24 +3,25 @@ services:
     container_name: web
     build: 
       context: ./web
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     stdin_open: true
     tty: true
     ports:
       - "3000:3000"
     volumes:
       - ./web:/app
-    depends_on:
-      - mongodb
     env_file:
-      - .env.prod
-    command: yarn start
+      - .env.dev
+    command: >
+      sh -c "yarn install && yarn build && yarn start"
+    depends_on: 
+      - mongodb
 
   mongodb:
     container_name: mongodb
     image: mongo:5.0
     ports:
-      - "27017:27017"
+      - "57017:27017"
     volumes:
       - ./data:/data/db
 
