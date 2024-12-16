@@ -1,7 +1,9 @@
 services:
   web:
     container_name: web
-    build: ./web
+    build: 
+      context: ./web
+      dockerfile: Dockerfile.dev
     stdin_open: true
     tty: true
     ports:
