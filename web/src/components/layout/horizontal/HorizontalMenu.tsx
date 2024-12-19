@@ -82,11 +82,17 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <MenuItem href='/' icon={<i className='ri-home-smile-line' />}>
-          Home
+        <MenuItem href='/bounty' icon={<i className='ri-blogger-line' />}>
+          Bounty
         </MenuItem>
-        <MenuItem href='/about' icon={<i className='ri-information-line' />}>
-          About
+        <MenuItem href='/infra' icon={<i className='ri-steering-line' />}>
+          Infra
+        </MenuItem>
+        <MenuItem href='/video' icon={<i className='ri-video-line' />}>
+          Video
+        </MenuItem>
+        <MenuItem href='/code' icon={<i className='ri-codepen-line' />}>
+          Code
         </MenuItem>
       </Menu>
 

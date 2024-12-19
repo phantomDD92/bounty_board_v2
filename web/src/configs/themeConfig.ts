@@ -35,7 +35,7 @@ type Footer = {
 
 export type Config = {
   templateName: string
-  homePageUrl: string
+  homePageUrl: string,
   settingsCookieName: string
   mode: Mode
   skin: Skin
@@ -50,13 +50,13 @@ export type Config = {
 }
 
 const themeConfig: Config = {
-  templateName: 'Materio',
-  homePageUrl: '/home',
+  templateName: 'BountyBoard',
+  homePageUrl: '/bounty',
   settingsCookieName: 'materio-mui-next-demo',
-  mode: 'system', // 'system', 'light', 'dark'
+  mode: 'dark', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
-  layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
+  layout: 'horizontal', // 'vertical', 'collapsed', 'horizontal'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
   compactContentWidth: 1440, // in px
   navbar: {

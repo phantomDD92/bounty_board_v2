@@ -20,9 +20,9 @@ export const getApiDocs = async () => {
       },
       security: [],
       tags: [
-        {
-          name: 'Hello',
-        },
+        { name: 'Users', },
+        { name: "Tags" },
+        { name: "Infra" }
       ],
     },
   });

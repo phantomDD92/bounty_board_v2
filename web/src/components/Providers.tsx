@@ -1,3 +1,4 @@
+
 // Type Imports
 import type { ChildrenType, Direction } from '@core/types'
 
@@ -8,6 +9,7 @@ import ThemeProvider from '@components/theme'
 
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
+import { AuthProvider } from '@/context/AuthContext'
 
 type Props = ChildrenType & {
   direction: Direction
@@ -26,7 +28,12 @@ const Providers = (props: Props) => {
     <VerticalNavProvider>
       <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
         <ThemeProvider direction={direction} systemMode={systemMode}>
-          {children}
+          {/* <Provider store={store}> */}
+            {/* <PersistGate loading={null} persistor={persistor}> */}
+              <AuthProvider>{children}</AuthProvider>
+              {/* {children} */}
+            {/* </PersistGate> */}
+          {/* </Provider> */}
         </ThemeProvider>
       </SettingsProvider>
     </VerticalNavProvider>

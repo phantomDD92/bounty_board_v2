@@ -7,9 +7,14 @@ import classnames from 'classnames'
 import NavToggle from './NavToggle'
 import ModeDropdown from '@components/layout/shared/ModeDropdown'
 import UserDropdown from '@components/layout/shared/UserDropdown'
-
+import { Button } from '@mui/material'
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
+import { loginUser } from '@/lib/api'
+
+const handleLogin = async () => {
+  await loginUser("", "");
+}
 
 const NavbarContent = () => {
   return (
@@ -19,7 +24,8 @@ const NavbarContent = () => {
         <ModeDropdown />
       </div>
       <div className='flex items-center'>
-        <UserDropdown />
+        {/* <UserDropdown /> */}
+        <Button onClick={handleLogin}>Login</Button>
       </div>
     </div>
   )

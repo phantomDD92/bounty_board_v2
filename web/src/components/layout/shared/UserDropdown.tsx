@@ -23,6 +23,7 @@ import Button from '@mui/material/Button'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+import { useAuth } from '@/context/AuthContext'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -33,11 +34,15 @@ const BadgeContentSpan = styled('span')({
   backgroundColor: 'var(--mui-palette-success-main)',
   boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
 })
+type Props = {
+  name?: string
+  iaddress?: string
+}
 
-const UserDropdown = () => {
+const UserDropdown = ({ name, iaddress }: Props) => {
   // States
   const [open, setOpen] = useState(false)
-
+  const {logout} = useAuth();
   // Refs
   const anchorRef = useRef<HTMLDivElement>(null)
 
@@ -63,8 +68,9 @@ const UserDropdown = () => {
   }
 
   const handleUserLogout = async () => {
+    logout();
     // Redirect to login page
-    router.push('/login')
+    // router.push('/login')
   }
 
   return (
@@ -106,13 +112,13 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        John Doe
+                        {name}
                       </Typography>
-                      <Typography variant='caption'>admin@materio.com</Typography>
+                      <Typography variant='caption'>{iaddress}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
+                  {/* <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-user-3-line' />
                     <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
@@ -127,7 +133,7 @@ const UserDropdown = () => {
                   <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-question-line' />
                     <Typography color='text.primary'>FAQ</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
                   <div className='flex items-center plb-2 pli-4'>
                     <Button
                       fullWidth
