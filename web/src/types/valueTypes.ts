@@ -53,7 +53,8 @@ export type InfraType = {
 };
 
 export type VideoType = {
-  id: number,
+  _id: string,
+  title: string,
   url: string,
 };
 

@@ -24,7 +24,8 @@ import TagsList from '@/components/TagsList'
 import Link from 'next/link'
 import { TimelineOppositeContent } from '@mui/lab'
 import { dateToString } from '@/utils/string'
-import { useAuth } from '@/context/AuthContext'
+// import { useAuth } from '@/context/AuthContext'
+import { useSession } from '@/context/SessionContext'
 
 type CommentItemProps = {
   key: string
@@ -93,7 +94,8 @@ type Props = {
 const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
   const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
-  const { session, token } = useAuth()
+  // const { session, token } = useAuth()
+  const {session} = useSession();
   const handleClose = () => {
     setOpen(false)
     // setBountyData(data)
@@ -149,7 +151,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
           I'm interested
         </Button>
-        {session?.isLogged && <CommentEditor onSend={handleCommentSend} />}
+        {session?.isAuth && <CommentEditor onSend={handleCommentSend} />}
         <Timeline className='p-4'>
           {(bountyData?.comments || []).map((comment, index) => (
             <CommentItem key={`${index}`} comment={comment} />

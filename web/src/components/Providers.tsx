@@ -9,8 +9,7 @@ import ThemeProvider from '@components/theme'
 
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
-import { AuthProvider } from '@/context/AuthContext'
-
+import { SessionProvider } from '@/context/SessionContext'
 type Props = ChildrenType & {
   direction: Direction
 }
@@ -30,7 +29,7 @@ const Providers = (props: Props) => {
         <ThemeProvider direction={direction} systemMode={systemMode}>
           {/* <Provider store={store}> */}
             {/* <PersistGate loading={null} persistor={persistor}> */}
-              <AuthProvider>{children}</AuthProvider>
+              <SessionProvider>{children}</SessionProvider>
               {/* {children} */}
             {/* </PersistGate> */}
           {/* </Provider> */}

@@ -18,12 +18,11 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import MenuList from '@mui/material/MenuList'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
-import { useAuth } from '@/context/AuthContext'
+import { MenuItem } from '@mui/material'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -34,15 +33,16 @@ const BadgeContentSpan = styled('span')({
   backgroundColor: 'var(--mui-palette-success-main)',
   boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
 })
+
 type Props = {
   name?: string
-  iaddress?: string
+  admin?: boolean
+  onLogout?: () => void
 }
 
-const UserDropdown = ({ name, iaddress }: Props) => {
+const UserDropdown = ({ name, onLogout, admin }: Props) => {
   // States
   const [open, setOpen] = useState(false)
-  const {logout} = useAuth();
   // Refs
   const anchorRef = useRef<HTMLDivElement>(null)
 
@@ -68,33 +68,47 @@ const UserDropdown = ({ name, iaddress }: Props) => {
   }
 
   const handleUserLogout = async () => {
-    logout();
-    // Redirect to login page
-    // router.push('/login')
+    setOpen(false)
+    onLogout && onLogout()
   }
 
+  const handleHomeClicked = (e: any) => {
+    handleDropdownClose(e)
+    if (admin)
+      router.replace('/');
+    else
+      router.replace('/admin');
+  }
   return (
     <>
-      <Badge
-        ref={anchorRef}
-        overlap='circular'
-        badgeContent={<BadgeContentSpan onClick={handleDropdownOpen} />}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        className='mis-2'
-      >
-        <Avatar
+      <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
+        <Badge
           ref={anchorRef}
-          alt='John Doe'
-          src='/images/avatars/1.png'
+          overlap='circular'
+          badgeContent={<BadgeContentSpan onClick={handleDropdownOpen} />}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           onClick={handleDropdownOpen}
-          className='cursor-pointer bs-[38px] is-[38px]'
-        />
-      </Badge>
+          className='mis-2'
+        >
+          <Avatar
+            ref={anchorRef}
+            alt='John Doe'
+            src='/images/avatars/1.png'
+            className='cursor-pointer bs-[38px] is-[38px]'
+          />
+        </Badge>
+        <div className='flex items-start flex-col'>
+          <Typography className='font-medium' color='text.primary'>
+            {name}
+          </Typography>
+          {/* <Typography variant='caption'>{iaddress}</Typography> */}
+        </div>
+      </div>
       <Popper
         open={open}
         transition
         disablePortal
-        placement='bottom-end'
+        placement='auto'
         anchorEl={anchorRef.current}
         className='min-is-[240px] !mbs-4 z-[1]'
       >
@@ -108,21 +122,20 @@ const UserDropdown = ({ name, iaddress }: Props) => {
             <Paper className={settings.skin === 'bordered' ? 'border shadow-none' : 'shadow-lg'}>
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
-                  <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt='John Doe' src='/images/avatars/1.png' />
-                    <div className='flex items-start flex-col'>
-                      <Typography className='font-medium' color='text.primary'>
-                        {name}
-                      </Typography>
-                      <Typography variant='caption'>{iaddress}</Typography>
-                    </div>
-                  </div>
-                  <Divider className='mlb-1' />
-                  {/* <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
-                    <i className='ri-user-3-line' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                  <MenuItem className='gap-3' onClick={handleHomeClicked}>
+                    {admin ? (
+                      <>
+                        <i className='ri-home-line' />
+                        <Typography color='text.primary'>Home</Typography>
+                      </>
+                    ) : (
+                      <>
+                        <i className='ri-dashboard-line' />
+                        <Typography color='text.primary'>Dashboard</Typography>
+                      </>
+                    )}
                   </MenuItem>
-                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
+                  {/* <MenuItem className='gap-3' onClick={e => handleDropdownClose(e)}>
                     <i className='ri-settings-4-line' />
                     <Typography color='text.primary'>Settings</Typography>
                   </MenuItem>
@@ -134,6 +147,7 @@ const UserDropdown = ({ name, iaddress }: Props) => {
                     <i className='ri-question-line' />
                     <Typography color='text.primary'>FAQ</Typography>
                   </MenuItem> */}
+                  <Divider className='mlb-1' />
                   <div className='flex items-center plb-2 pli-4'>
                     <Button
                       fullWidth

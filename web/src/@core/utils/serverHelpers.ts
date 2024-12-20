@@ -49,3 +49,4 @@ export const getSkin = () => {
 
   return settingsCookie.skin || 'default'
 }
+

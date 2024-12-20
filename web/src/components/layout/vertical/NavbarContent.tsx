@@ -5,27 +5,21 @@ import classnames from 'classnames'
 
 // Component Imports
 import NavToggle from './NavToggle'
-import ModeDropdown from '@components/layout/shared/ModeDropdown'
 import UserDropdown from '@components/layout/shared/UserDropdown'
-import { Button } from '@mui/material'
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
-import { loginUser } from '@/lib/api'
-
-const handleLogin = async () => {
-  await loginUser("", "");
-}
+import { useSession } from '@/context/SessionContext'
 
 const NavbarContent = () => {
+  const { session } = useSession()
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
       <div className='flex items-center gap-4'>
         <NavToggle />
-        <ModeDropdown />
+        {/* <ModeDropdown /> */}
       </div>
       <div className='flex items-center'>
-        {/* <UserDropdown /> */}
-        <Button onClick={handleLogin}>Login</Button>
+        <UserDropdown name={session?.name} admin/>
       </div>
     </div>
   )

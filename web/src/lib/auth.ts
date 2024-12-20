@@ -19,7 +19,7 @@ export async function verifyToken(token: string):Promise<JWTPayload | undefined>
     })
     return payload.payload
   } catch (error) {
-    console.log('Failed to verify session')
+
     return undefined
   }
 };

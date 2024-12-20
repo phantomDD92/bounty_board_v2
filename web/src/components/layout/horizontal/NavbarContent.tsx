@@ -10,17 +10,22 @@ import useHorizontalNav from '@menu/hooks/useHorizontalNav'
 // Util Imports
 import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
 import Button from '@mui/material/Button'
-import { useAuth } from '@/context/AuthContext'
+// import { useAuth } from '@/context/AuthContext'
 import UserDropdown from '@components/layout/shared/UserDropdown'
+import { useSession } from '@/context/SessionContext'
 
 const NavbarContent = () => {
   // Hooks
   const { isBreakpointReached } = useHorizontalNav()
-  const { testLogin, login, session } = useAuth()
+  const { testLogin, logout, session } = useSession()
 
   const handleLoginClick = async (e: any) => {
-    if (testLogin) await testLogin();
+    if (testLogin) await testLogin()
     // if (login) await login();
+  }
+
+  const handleLogout = async () => {
+    if (logout) await logout()
   }
 
   return (
@@ -33,8 +38,8 @@ const NavbarContent = () => {
         {!isBreakpointReached && <Logo />}
       </div>
       <div className='flex items-center'>
-        {session?.isLogged ? (
-          <UserDropdown iaddress={session?.iaddress} name={session?.name} />
+        {session && session.isAuth ? (
+          <UserDropdown name={session?.name} onLogout={handleLogout} />
         ) : (
           <Button onClick={handleLoginClick} variant='contained'>
             Login

@@ -22,6 +22,7 @@ import menuItemStyles from '@core/styles/horizontal/menuItemStyles'
 import verticalNavigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
 import verticalMenuItemStyles from '@core/styles/vertical/menuItemStyles'
 import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import horizontalMenuData from '@/data/navigation/horizontalMenuData'
 
 type RenderExpandIconProps = {
   level?: number
@@ -82,18 +83,9 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <MenuItem href='/bounty' icon={<i className='ri-blogger-line' />}>
-          Bounty
-        </MenuItem>
-        <MenuItem href='/infra' icon={<i className='ri-steering-line' />}>
-          Infra
-        </MenuItem>
-        <MenuItem href='/video' icon={<i className='ri-video-line' />}>
-          Video
-        </MenuItem>
-        <MenuItem href='/code' icon={<i className='ri-codepen-line' />}>
-          Code
-        </MenuItem>
+        { horizontalMenuData().map((menu, index) =>  <MenuItem key={index} href={menu.href} icon={<i className={menu.icon} />}>
+          {menu.label}
+        </MenuItem>)}
       </Menu>
 
       {/* <Menu

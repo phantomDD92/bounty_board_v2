@@ -5,7 +5,13 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/home',
+        destination: '/bounty',
+        permanent: true,
+        locale: false
+      },
+      {
+        source: '/admin',
+        destination: '/admin/bounty',
         permanent: true,
         locale: false
       }

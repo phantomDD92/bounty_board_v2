@@ -11,16 +11,18 @@ export const getApiDocs = async () => {
       },
       components: {
         securitySchemes: {
-          BearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
+          cookieAuth: {
+            type: 'apiKey',
+            in: 'cookie',
+            name: 'session',
           },
         },
       },
-      security: [],
+      security: [
+        { sessionCookie: [] },
+      ],
       tags: [
-        { name: 'Users', },
+        { name: 'Auth', },
         { name: "Tags" },
         { name: "Infra" }
       ],

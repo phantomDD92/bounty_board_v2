@@ -14,20 +14,20 @@ import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
 import { InfraType } from '@/types/valueTypes'
-import { getInfraList } from '@/libs/api'
+// import { getInfraList } from '@/libs/api'
 
 const InfraList = () => {
   // States
   const [data, setData] = useState<InfraType[]>([])
   const [page, setPage] = useState(0)
 
-  useEffect(() => {
-    getInfraList()
-      .then(items => {
-        setData(items)
-      })
-      .catch(() => {})
-  }, [getInfraList])
+  // useEffect(() => {
+    // getInfraList()
+    //   .then(items => {
+    //     setData(items)
+    //   })
+    //   .catch(() => {})
+  // }, [getInfraList])
 
   useEffect(() => {
     let newData = data || []

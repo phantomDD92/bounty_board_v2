@@ -1,16 +1,26 @@
 // Type Imports
-import type { VerticalMenuDataType } from '@/types/menuTypes'
+import type { HorizontalMenuDataType, VerticalMenuDataType } from '@/types/menuTypes'
 
-const verticalMenuData = (): VerticalMenuDataType[] => [
+const verticalMenuData = (): HorizontalMenuDataType[] => [
   {
-    label: 'Home',
-    href: '/home',
-    icon: 'ri-home-smile-line'
+    label: 'Bounties',
+    href: '/admin/bounty',
+    icon: 'ri-blogger-line'
   },
   {
-    label: 'About',
-    href: '/about',
-    icon: 'ri-information-line'
+    label: 'Infra',
+    href: '/admin/infra',
+    icon: 'ri-steering-line'
+  },
+  {
+    label: 'Videos',
+    href: '/admin/video',
+    icon: 'ri-video-line'
+  },
+  {
+    label: 'Codes',
+    href: '/admin/code',
+    icon: 'ri-codepen-line'
   }
 ]
 

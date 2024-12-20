@@ -23,13 +23,12 @@ import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 
 const Layout = async ({ children }: ChildrenType) => {
   // Vars
-  const direction = 'ltr'
   const mode = getMode()
   const systemMode = getSystemMode()
 
   return (
-    <Providers direction={direction}>
-      <LayoutWrapper
+    <>
+      {/* <LayoutWrapper
         systemMode={systemMode}
         verticalLayout={
           <VerticalLayout
@@ -45,13 +44,16 @@ const Layout = async ({ children }: ChildrenType) => {
             {children}
           </HorizontalLayout>
         }
-      />
+      /> */}
+      <HorizontalLayout header={<Header />} footer={<HorizontalFooter />}>
+        {children}
+      </HorizontalLayout>
       <ScrollToTop className='mui-fixed'>
         <Button variant='contained' className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'>
           <i className='ri-arrow-up-line' />
         </Button>
       </ScrollToTop>
-    </Providers>
+    </>
   )
 }
 
