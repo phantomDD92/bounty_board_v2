@@ -7,49 +7,53 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addInfra } from '@/lib/api'
+import { addCode, addCodeSnippet } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { InfraParamType } from '@/types/valueTypes'
+import { CodeParamType, CodeSnippetType, CodeType } from '@/types/valueTypes'
 import TiptapEditor from '@/components/TiptapEditor'
+import CodeEditor from '@/components/CodeEditor'
+import { MenuItem, Select } from '@mui/material'
+import { Language } from '@/lib/models/Code'
+import languageData from '@/data/LanguageData'
 // Type Imports
 
 type Props = {
+  data: CodeType
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
   // setData: (data: VideoType[]) => void
 }
 
-const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
+const AddCodeSnippetDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   // Hooks
   const {
     control,
     reset: resetForm,
     handleSubmit,
     formState: { errors }
-  } = useForm<InfraParamType>({
+  } = useForm<CodeSnippetType>({
     defaultValues: {
-      description: '',
-      title: '',
-      url: ''
+      language: '',
+      code: ''
     }
   })
 
   // Handle Form Submit
-  const handleFormSubmit = async (data: InfraParamType) => {
+  const handleFormSubmit = async (params: CodeSnippetType) => {
     try {
-      await addInfra(data);
-      resetForm({ title: '', url: '', description: '' });
-      onUpdate && onUpdate();
-      toast.success("Add Infra Success");
+      await addCodeSnippet(data, params)
+      resetForm({ language: '', code: '' })
+      onUpdate && onUpdate()
+      toast.success('Add Code Snippet Success')
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
   }
 
   // Handle Form Reset
   const handleReset = () => {
-    resetForm({ title: '', url: '' })
+    resetForm({ language: '', code: '' })
     onClose && onClose()
   }
 
@@ -63,7 +67,7 @@ const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>Add Infra</Typography>
+        <Typography variant='h5'>Add Code Snippet</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>
@@ -72,41 +76,33 @@ const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
       <div className='p-5'>
         <form onSubmit={handleSubmit(data => handleFormSubmit(data))} className='flex flex-col gap-5'>
           <Controller
-            name='url'
+            name='language'
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Select label='Language' {...field} error={Boolean(errors.language)} defaultValue={Language.JAVASCRIPT}>
+                {languageData().map((item, index) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.text}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+
+          <Controller
+            name='code'
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
-                label='URL'
-                placeholder='Enter a video url...'
-                {...(errors.url && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='title'
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label='Title'
-                placeholder='Title'
-                {...(errors.title && { error: true, helperText: 'This field is required.' })}
-              />
-            )}
-          />
-          <Controller
-            name='description'
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TiptapEditor
-                {...field}
-                label='Description'
+                multiline
+                label='Code'
+                rows={10}
+                placeholder='Enter a code snippet...'
+                {...(errors.code && { error: true, helperText: 'This field is required.' })}
               />
             )}
           />
@@ -124,4 +120,4 @@ const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
   )
 }
 
-export default AddInfraDrawer
+export default AddCodeSnippetDrawer

@@ -69,14 +69,18 @@ export type InfraType = InfraParamType & {
 };
 
 export type CodeSnippetType = {
-  id: number,
   language: string,
-  snippet: string,
+  code: string,
 };
 
-export type CodeType = {
-  id: number,
+export type CodeParamType = {
   title: string,
   description: string,
-  snippets: CodeSnippetType[],
+  snippets?: CodeSnippetType[],
 }
+
+export type CodeType = CodeParamType & {
+  _id: string,
+  createdAt: Date,
+  updatedAt: Date,
+};

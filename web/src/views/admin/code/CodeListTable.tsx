@@ -12,7 +12,6 @@ import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { htmlToText } from 'html-to-text'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -33,15 +32,17 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Component Imports
-import AddVideoDrawer from './AddInfraDrawer'
+import AddCodeDrawer from './AddCodeDrawer'
 import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { InfraType } from '@/types/valueTypes'
-import { deleteInfra, getInfraList } from '@/lib/api'
+import { CodeType } from '@/types/valueTypes'
+import { deleteCode, getCodeList } from '@/lib/api'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader } from '@mui/material'
+import { CardHeader, Tooltip } from '@mui/material'
+import { htmlToText } from 'html-to-text'
+import AddCodeSnippetDrawer from './AddCodeSnippetDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -52,7 +53,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type InfraWithActionsType = InfraType & {
+type CodeWithActionsType = CodeType & {
   actions?: string
 }
 
@@ -99,47 +100,49 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<InfraWithActionsType>()
+const columnHelper = createColumnHelper<CodeWithActionsType>()
 
-const InfraListTable = () => {
+const CodeListTable = () => {
   // States
   const [open, setOpen] = useState(false)
-  const [confirmShow, setConfirmShow] = useState(false)
   const [selected, setSelected] = useState<any>(undefined)
+  const [confirmShow, setConfirmShow] = useState(false)
+  const [snippetShow, setSnippetShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
-    getInfraList()
+    getCodeList()
       .then(newData => {
         setData(newData)
       })
       .catch(() => {})
-  }, [getInfraList])
+  }, [getCodeList])
 
   const handleUpdateData = async () => {
     try {
+      setSnippetShow(false);
       setOpen(false)
-      const newData = await getInfraList()
+      const newData = await getCodeList()
       setData(newData)
     } catch (error: any) {}
   }
 
   const handleDeleteData = async (data: any) => {
     try {
-      setSelected(undefined);
-      setConfirmShow(false);
-      await deleteInfra(data._id)
-      toast.success('Delete Infra Success')
-      const newData = await getInfraList()
+      setSelected(undefined)
+      setConfirmShow(false)
+      await deleteCode(data._id)
+      toast.success('Delete Code Success')
+      const newData = await getCodeList()
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)
     }
   }
 
-  const columns = useMemo<ColumnDef<InfraWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<CodeWithActionsType, any>[]>(
     () => [
       {
         id: 'select',
@@ -171,10 +174,6 @@ const InfraListTable = () => {
           </Typography>
         )
       }),
-      columnHelper.accessor('url', {
-        header: 'URL',
-        cell: ({ row }) => <Typography>{row.original.url}</Typography>
-      }),
       columnHelper.accessor('description', {
         header: 'Description',
         cell: ({ row }) => (
@@ -191,13 +190,48 @@ const InfraListTable = () => {
           </Typography>
         )
       }),
+      columnHelper.accessor('snippets', {
+        header: 'Code Snippets',
+        cell: ({ row }) => (
+          <Typography
+            variant='body1'
+            sx={{
+              width: 250, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {(row.original.snippets || []).map(item => item.language).join(', ')}
+          </Typography>
+        )
+      }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small' onClick={() => setSelected(row.original)}>
-              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
-            </IconButton>
+            <Tooltip title='Add Snippet'>
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setSnippetShow(true)
+                }}
+              >
+                <i className='ri-file-add-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete'>
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setConfirmShow(true)
+                }}
+              >
+                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -208,7 +242,7 @@ const InfraListTable = () => {
   )
 
   const table = useReactTable({
-    data: data as InfraType[],
+    data: data as CodeType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -239,7 +273,7 @@ const InfraListTable = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Infra List' className='pbe-4' />
+        <CardHeader title='Code List' className='pbe-4' />
         <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -254,7 +288,7 @@ const InfraListTable = () => {
               onClick={() => setOpen(!open)}
               startIcon={<i className='ri-add-line' />}
             >
-              Add Infra
+              Add Code
             </Button>
           </div>
         </div>
@@ -326,14 +360,20 @@ const InfraListTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
-      <ConfirmDialog
-        open={confirmShow}
+      <AddCodeDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <AddCodeSnippetDrawer
+        open={snippetShow}
         data={selected}
+        onClose={() => setSnippetShow(false)}
+        onUpdate={handleUpdateData}
+      />
+      <ConfirmDialog
+        data={selected}
+        open={confirmShow}
         question='Are you sure to delete?'
         onCancel={() => {
-          setSelected(undefined);
-          setConfirmShow(false);
+          setSelected(undefined)
+          setConfirmShow(false)
         }}
         onConfirm={handleDeleteData}
       />
@@ -341,4 +381,4 @@ const InfraListTable = () => {
   )
 }
 
-export default InfraListTable
+export default CodeListTable

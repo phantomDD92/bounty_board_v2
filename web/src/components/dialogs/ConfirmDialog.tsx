@@ -7,16 +7,17 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
 type ConfirmationDialogProps = {
-  data: any
+  data: any,
+  open: boolean,
   question: string
   onCancel: () => void
   onConfirm: (data:any) => void
 }
 
-const ConfirmDialog = ({ data, question, onCancel, onConfirm }: ConfirmationDialogProps) => {
+const ConfirmDialog = ({ data, open, question, onCancel, onConfirm }: ConfirmationDialogProps) => {
   // States
   return (
-    <Dialog fullWidth maxWidth='xs' open={data} onClose={() => onCancel && onCancel()}>
+    <Dialog fullWidth maxWidth='xs' open={open} onClose={() => onCancel && onCancel()}>
       <DialogContent className='flex items-center flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16'>
         <i className='ri-error-warning-line text-[88px] mbe-6 text-warning' />
         <Typography variant='h4'>{question}</Typography>
