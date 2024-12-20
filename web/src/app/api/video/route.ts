@@ -3,7 +3,7 @@ import dbConnect from '@/lib/mongoose';
 import Video from '@/lib/models/Video';
 import { getSession } from "@/lib/session";
 import { Role } from "@/lib/models/User";
-import VideoService from "@/lib/service.ts/VideoService";
+import VideoService from "@/lib/service/VideoService";
 
 /**
  * @swagger

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import Infra from '@/lib/models/Infra';
+import { getSession } from '@/lib/session';
+import { Role } from '@/lib/models/User';
 
 /**
  * @swagger
@@ -48,10 +50,10 @@ export async function GET() {
   await dbConnect();
   try {
     const infraList = await Infra.find({});
-    return NextResponse.json(infraList);
+    return NextResponse.json({ success: true, infra: infraList });
   } catch (error) {
     console.error('Error fetching infra list:', error);
-    return NextResponse.json({ message: 'Server error occurred' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -121,20 +123,24 @@ export async function GET() {
  *                   example: "Server error occurred"
  */
 export async function POST(req: NextRequest) {
-  await dbConnect();
   try {
-    const { title, description, url } = await req.json();
-
-    if (!title || !description || !url) {
-      return NextResponse.json({ message: "Title, Description, and URL are required." }, { status: 400 });
+    await dbConnect();
+    const session = await getSession();
+    if (!session || !session.isAuth) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
-
+    if (session.role != Role.ADMIN) {
+      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+    }
+    const { title, description, url } = await req.json();
+    if (!title || !description || !url) {
+      return NextResponse.json({ success: false, message: "Title, Description, and URL are required." }, { status: 400 });
+    }
     const newInfra = new Infra({ title, description, url });
     await newInfra.save();
-
-    return NextResponse.json({ message: 'Infra created successfully', infra: newInfra });
+    return NextResponse.json({ success: true, }, { status: 201 });
   } catch (error) {
     console.error('Error creating infra:', error);
-    return NextResponse.json({ message: 'Server error occurred' }, { status: 500 });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

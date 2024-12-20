@@ -1,3 +1,4 @@
+import { InfraParamType, VideoParamType } from '@/types/valueTypes';
 import axios from 'axios'
 
 export async function getSession() {
@@ -7,7 +8,7 @@ export async function getSession() {
 
 export async function loginSimulate() {
   try {
-    const res = await axios.post('/api/auth',
+    await axios.post('/api/auth',
       { iaddress: 'iKX5wGESZQFRQzhTV7dYGdsXq2o3uwyTd1', name: 'CCC.bitcoins@' }
     );
   } catch (error: any) {
@@ -20,9 +21,9 @@ export async function logoutUser() {
 }
 
 // Video related api calls
-export async function addVideo({title, url}: {title: string, url: string}) {
+export async function addVideo(params: VideoParamType) {
   try {
-    await axios.post('/api/video', {title, url});
+    await axios.post('/api/video', params);
   } catch (error: any) {
     if (error?.response?.data?.message)
       throw new Error(error?.response?.data?.message)
@@ -35,6 +36,26 @@ export async function getVideoList() {
   return resp.data?.videos;
 }
 
-export async function deleteVideo(id:string) {
+export async function deleteVideo(id: string) {
   await axios.delete(`/api/video/${id}`);
+}
+
+// Infra related api calls
+export async function addInfra(params: InfraParamType) {
+  try {
+    await axios.post('/api/infra', params);
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getInfraList() {
+  const resp = await axios.get('/api/infra');
+  return resp.data?.infra;
+}
+
+export async function deleteInfra(id: string) {
+  await axios.delete(`/api/infra/${id}`);
 }

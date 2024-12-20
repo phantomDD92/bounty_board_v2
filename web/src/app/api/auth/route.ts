@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import { Role } from '@/lib/models/User';
 import { createSession } from '@/lib/session';
-import UserService from '@/lib/service.ts/UserService';
+import UserService from '@/lib/service/UserService';
 
 export async function POST(req: NextRequest) {
   await dbConnect();

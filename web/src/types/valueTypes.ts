@@ -23,8 +23,8 @@ export type CommentType = {
 
 export type TagType = {
   id: number,
-  name:string,
-  text:string,
+  name: string,
+  text: string,
 }
 
 export type BountyType = {
@@ -44,14 +44,6 @@ export type BountyType = {
   creator: UserType,
 };
 
-export type InfraType = {
-  id: number,
-  date_created: Date,
-  title: string,
-  description: string,
-  url: string,
-};
-
 // video related
 export type VideoParamType = {
   title: string,
@@ -60,6 +52,20 @@ export type VideoParamType = {
 
 export type VideoType = VideoParamType & {
   _id: string,
+  createdAt: Date,
+  updatedAt: Date,
+};
+
+export type InfraParamType = {
+  title: string,
+  description: string,
+  url: string,
+}
+
+export type InfraType = InfraParamType & {
+  _id: string,
+  createdAt: Date,
+  updatedAt: Date,
 };
 
 export type CodeSnippetType = {

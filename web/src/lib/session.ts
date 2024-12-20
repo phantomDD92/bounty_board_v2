@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import User, { IUser } from './models/User'
 import { NextResponse } from 'next/server'
-import UserService from './service.ts/UserService'
+import UserService from './service/UserService'
 
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
