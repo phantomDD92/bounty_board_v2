@@ -100,10 +100,11 @@ const DebouncedInput = ({
 // Column Definitions
 const columnHelper = createColumnHelper<VideoWithActionsType>()
 
-const VideoTable = () => {
+const VideoListTable = () => {
   // States
   const [open, setOpen] = useState(false)
-  const [confirmData, setConfirmData] = useState<any>(undefined)
+  const [confirmShow, setConfirmShow] = useState(false)
+  const [selected, setSelected] = useState<any>(undefined)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
@@ -130,7 +131,8 @@ const VideoTable = () => {
 
   const handleDeleteData = async (data: any) => {
     try {
-      setConfirmData(undefined)
+      setSelected(undefined)
+      setConfirmShow(false)
       await deleteVideo(data._id)
       toast.success('Delete Video Success')
       const newData = await getVideoList()
@@ -180,7 +182,13 @@ const VideoTable = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small' onClick={() => setConfirmData(row.original)}>
+            <IconButton
+              size='small'
+              onClick={() => {
+                setSelected(row.original)
+                setConfirmShow(true)
+              }}
+            >
               <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
             </IconButton>
           </div>
@@ -313,13 +321,17 @@ const VideoTable = () => {
       </Card>
       <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
       <ConfirmDialog
-        data={confirmData}
+        open={confirmShow}
+        data={selected}
         question='Are you sure to delete?'
-        onCancel={() => setConfirmData(undefined)}
+        onCancel={() => {
+          setSelected(undefined)
+          setConfirmShow(false)
+        }}
         onConfirm={handleDeleteData}
       />
     </>
   )
 }
 
-export default VideoTable
+export default VideoListTable

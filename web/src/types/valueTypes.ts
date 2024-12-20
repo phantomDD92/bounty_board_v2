@@ -21,10 +21,14 @@ export type CommentType = {
   text: string,
 };
 
-export type TagType = {
-  id: number,
+export type TagParamType = {
+  _id: string,
   name: string,
-  text: string,
+}
+
+export type TagType = TagParamType & {
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export type BountyType = {

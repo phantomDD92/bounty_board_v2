@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import Tag from '@/lib/models/Tag';
+import { getSession } from '@/lib/session';
+import { Role } from '@/lib/models/User';
 
 /**
  * @swagger
@@ -107,7 +109,7 @@ export async function GET() {
   await dbConnect(); // Connect to MongoDB
   try {
     const tags = await Tag.find({});
-    return NextResponse.json(tags);
+    return NextResponse.json({ success: true, tags});
   } catch (error) {
     console.error('Error fetching tags:', error);
     return NextResponse.json(
@@ -118,22 +120,26 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  await dbConnect();
   try {
-    const { _id, name } = await req.json();
-
-    if (!_id) {
-      return NextResponse.json({ message: "ID (_id) is required" }, { status: 400 });
+    await dbConnect();
+    const session = await getSession();
+    if (!session || !session.isAuth) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
-
+    if (session.role != Role.ADMIN) {
+      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+    }
+    const { _id, name } = await req.json();
+    if (!_id || !name) {
+      return NextResponse.json({ message: "ID, Name is required" }, { status: 400 });
+    }
     const newTag = new Tag({ _id, name });
     await newTag.save();
-
-    return NextResponse.json({ message: "Tag created successfully", tag: newTag });
+    return NextResponse.json({ success: true, }, { status: 201 });
   } catch (error) {
     console.error('Error creating tag:', error);
     return NextResponse.json(
-      { message: 'Server error occurred' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }

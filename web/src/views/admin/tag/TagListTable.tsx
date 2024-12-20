@@ -32,13 +32,13 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Component Imports
-import AddVideoDrawer from './AddVideoDrawer'
+import AddTagDrawer from './AddTagDrawer'
 import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { VideoType } from '@/types/valueTypes'
-import { deleteVideo, getVideoList } from '@/lib/api'
+import { TagType } from '@/types/valueTypes'
+import { deleteTag, getTagList } from '@/lib/api'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import { CardHeader } from '@mui/material'
 
@@ -51,7 +51,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type VideoWithActionsType = VideoType & {
+type TagWithActionsType = TagType & {
   actions?: string
 }
 
@@ -98,18 +98,19 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<VideoWithActionsType>()
+const columnHelper = createColumnHelper<TagWithActionsType>()
 
-const VideoTable = () => {
+const TagListTable = () => {
   // States
   const [open, setOpen] = useState(false)
-  const [confirmData, setConfirmData] = useState<any>(undefined)
+  const [selected, setSelected] = useState<any>(undefined)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
-    getVideoList()
+    getTagList()
       .then(newData => {
         setData(newData)
       })
@@ -118,7 +119,7 @@ const VideoTable = () => {
 
   const handleUpdateData = async () => {
     setOpen(false)
-    getVideoList()
+    getTagList()
       .then(newData => {
         setData(newData)
       })
@@ -130,17 +131,18 @@ const VideoTable = () => {
 
   const handleDeleteData = async (data: any) => {
     try {
-      setConfirmData(undefined)
-      await deleteVideo(data._id)
-      toast.success('Delete Video Success')
-      const newData = await getVideoList()
+      setConfirmShow(false)
+      setSelected(undefined)
+      await deleteTag(data._id)
+      toast.success('Delete Tag Success')
+      const newData = await getTagList()
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)
     }
   }
 
-  const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<TagWithActionsType, any>[]>(
     () => [
       {
         id: 'select',
@@ -164,23 +166,25 @@ const VideoTable = () => {
           />
         )
       },
-      columnHelper.accessor('title', {
-        header: 'Title',
+      columnHelper.accessor('name', {
+        header: 'Name',
         cell: ({ row }) => (
           <Typography className='font-medium' color='text.primary'>
-            {row.original.title}
+            {row.original.name}
           </Typography>
         )
-      }),
-      columnHelper.accessor('url', {
-        header: 'Video URL',
-        cell: ({ row }) => <Typography>{row.original.url}</Typography>
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small' onClick={() => setConfirmData(row.original)}>
+            <IconButton
+              size='small'
+              onClick={() => {
+                setSelected(row.original)
+                setConfirmShow(true)
+              }}
+            >
               <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
             </IconButton>
           </div>
@@ -193,7 +197,7 @@ const VideoTable = () => {
   )
 
   const table = useReactTable({
-    data: data as VideoType[],
+    data: data as TagType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -224,7 +228,7 @@ const VideoTable = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Video List' className='pbe-4' />
+        <CardHeader title='Tag List' className='pbe-4' />
         <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -239,7 +243,7 @@ const VideoTable = () => {
               onClick={() => setOpen(!open)}
               startIcon={<i className='ri-add-line' />}
             >
-              Add Video
+              Add Tag
             </Button>
           </div>
         </div>
@@ -311,15 +315,19 @@ const VideoTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <AddTagDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
       <ConfirmDialog
-        data={confirmData}
+        data={selected}
+        open={confirmShow}
         question='Are you sure to delete?'
-        onCancel={() => setConfirmData(undefined)}
+        onCancel={() => {
+          setSelected(undefined)
+          setConfirmShow(false)
+        }}
         onConfirm={handleDeleteData}
       />
     </>
   )
 }
 
-export default VideoTable
+export default TagListTable

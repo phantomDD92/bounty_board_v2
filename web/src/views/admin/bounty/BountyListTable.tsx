@@ -3,19 +3,11 @@
 // React Imports
 import { useEffect, useMemo, useState } from 'react'
 
-// Next Imports
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
-
 // MUI Imports
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
-import Switch from '@mui/material/Switch'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -39,19 +31,15 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Type Imports
-import type { ThemeColor } from '@core/types'
-import type { ProductType } from '@/types/apps/ecommerceTypes'
-
 // Component Imports
-import TableFilters from './BountyFilters'
-import CustomAvatar from '@core/components/mui/Avatar'
-import OptionMenu from '@core/components/option-menu'
-
-// Util Imports
+import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { TagType } from '@/types/valueTypes'
+import { deleteTag, getTagList } from '@/lib/api'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import { CardHeader } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -62,22 +50,8 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type ProductWithActionsType = ProductType & {
+type TagWithActionsType = TagType & {
   actions?: string
-}
-
-type ProductCategoryType = {
-  [key: string]: {
-    icon: string
-    color: ThemeColor
-  }
-}
-
-type productStatusType = {
-  [key: string]: {
-    title: string
-    color: ThemeColor
-  }
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -122,36 +96,52 @@ const DebouncedInput = ({
   return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
 }
 
-// Vars
-const productCategoryObj: ProductCategoryType = {
-  Accessories: { icon: 'ri-headphone-line', color: 'error' },
-  'Home Decor': { icon: 'ri-home-6-line', color: 'info' },
-  Electronics: { icon: 'ri-computer-line', color: 'primary' },
-  Shoes: { icon: 'ri-footprint-line', color: 'success' },
-  Office: { icon: 'ri-briefcase-line', color: 'warning' },
-  Games: { icon: 'ri-gamepad-line', color: 'secondary' }
-}
-
-const productStatusObj: productStatusType = {
-  Scheduled: { title: 'Scheduled', color: 'warning' },
-  Published: { title: 'Publish', color: 'success' },
-  Inactive: { title: 'Inactive', color: 'error' }
-}
-
 // Column Definitions
-const columnHelper = createColumnHelper<ProductWithActionsType>()
+const columnHelper = createColumnHelper<TagWithActionsType>()
 
-const ProductListTable = ({ productData }: { productData?: ProductType[] }) => {
+const TagListTable = () => {
   // States
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<any>(undefined)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState(...[productData])
-  const [filteredData, setFilteredData] = useState(data)
+  const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  // Hooks
-  const { lang: locale } = useParams()
+  useEffect(() => {
+    getTagList()
+      .then(newData => {
+        setData(newData)
+      })
+      .catch(() => {})
+  }, [])
 
-  const columns = useMemo<ColumnDef<ProductWithActionsType, any>[]>(
+  const handleUpdateData = async () => {
+    setOpen(false)
+    getTagList()
+      .then(newData => {
+        setData(newData)
+      })
+      .catch(error => {
+        toast.error(error.message)
+        // setOpen(false);
+      })
+  }
+
+  const handleDeleteData = async (data: any) => {
+    try {
+      setConfirmShow(false)
+      setSelected(undefined)
+      await deleteTag(data._id)
+      toast.success('Delete Tag Success')
+      const newData = await getTagList()
+      setData(newData)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
+
+  const columns = useMemo<ColumnDef<TagWithActionsType, any>[]>(
     () => [
       {
         id: 'select',
@@ -175,93 +165,38 @@ const ProductListTable = ({ productData }: { productData?: ProductType[] }) => {
           />
         )
       },
-      columnHelper.accessor('productName', {
-        header: 'Product',
+      columnHelper.accessor('name', {
+        header: 'Name',
         cell: ({ row }) => (
-          <div className='flex items-center gap-4'>
-            <img src={row.original.image} width={38} height={38} className='rounded bg-actionHover' />
-            <div className='flex flex-col'>
-              <Typography className='font-medium' color='text.primary'>
-                {row.original.productName}
-              </Typography>
-              <Typography variant='body2'>{row.original.productBrand}</Typography>
-            </div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('category', {
-        header: 'Category',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-4'>
-            <CustomAvatar skin='light' color={productCategoryObj[row.original.category].color} size={30}>
-              <i className={classnames(productCategoryObj[row.original.category].icon, 'text-lg')} />
-            </CustomAvatar>
-            <Typography color='text.primary'>{row.original.category}</Typography>
-          </div>
-        )
-      }),
-      columnHelper.accessor('stock', {
-        header: 'Stock',
-        cell: ({ row }) => <Switch defaultChecked={row.original.stock} />,
-        enableSorting: false
-      }),
-      columnHelper.accessor('sku', {
-        header: 'SKU',
-        cell: ({ row }) => <Typography>{row.original.sku}</Typography>
-      }),
-      columnHelper.accessor('price', {
-        header: 'Price',
-        cell: ({ row }) => <Typography>{row.original.price}</Typography>
-      }),
-      columnHelper.accessor('qty', {
-        header: 'QTY',
-        cell: ({ row }) => <Typography>{row.original.qty}</Typography>
-      }),
-      columnHelper.accessor('status', {
-        header: 'Status',
-        cell: ({ row }) => (
-          <Chip
-            label={productStatusObj[row.original.status].title}
-            variant='tonal'
-            color={productStatusObj[row.original.status].color}
-            size='small'
-          />
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.name}
+          </Typography>
         )
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small'>
-              <i className='ri-edit-box-line text-[22px] text-textSecondary' />
+            <IconButton
+              size='small'
+              onClick={() => {
+                setSelected(row.original)
+                setConfirmShow(true)
+              }}
+            >
+              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
             </IconButton>
-            <OptionMenu
-              iconButtonProps={{ size: 'medium' }}
-              iconClassName='text-textSecondary text-[22px]'
-              options={[
-                { text: 'Download', icon: 'ri-download-line', menuItemProps: { className: 'gap-2' } },
-                {
-                  text: 'Delete',
-                  icon: 'ri-delete-bin-7-line',
-                  menuItemProps: {
-                    className: 'gap-2',
-                    onClick: () => setData(data?.filter(product => product.id !== row.original.id))
-                  }
-                },
-                { text: 'Duplicate', icon: 'ri-stack-line', menuItemProps: { className: 'gap-2' } }
-              ]}
-            />
           </div>
         ),
         enableSorting: false
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data, filteredData]
+    [data]
   )
 
   const table = useReactTable({
-    data: filteredData as ProductType[],
+    data: data as TagType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -292,33 +227,22 @@ const ProductListTable = ({ productData }: { productData?: ProductType[] }) => {
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
-        <TableFilters setData={setFilteredData} productData={data} />
-        <Divider />
-        <div className='flex justify-between flex-col items-start sm:flex-row sm:items-center gap-y-4 p-5'>
+        <CardHeader title='Tag List' className='pbe-4' />
+        <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={value => setGlobalFilter(String(value))}
-            placeholder='Search Product'
+            placeholder='Search'
             className='max-sm:is-full'
           />
           <div className='flex items-center max-sm:flex-col gap-4 max-sm:is-full is-auto'>
             <Button
-              color='secondary'
-              variant='outlined'
-              className='max-sm:is-full is-auto'
-              startIcon={<i className='ri-upload-2-line' />}
-            >
-              Export
-            </Button>
-            <Button
               variant='contained'
-              component={Link}
-              href={'/apps/ecommerce/products/add'}
-              startIcon={<i className='ri-add-line' />}
               className='max-sm:is-full is-auto'
+              onClick={() => setOpen(!open)}
+              startIcon={<i className='ri-add-line' />}
             >
-              Add Product
+              Add Tag
             </Button>
           </div>
         </div>
@@ -378,7 +302,7 @@ const ProductListTable = ({ productData }: { productData?: ProductType[] }) => {
           </table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[10, 15, 25]}
           component='div'
           className='border-bs'
           count={table.getFilteredRowModel().rows.length}
@@ -390,8 +314,18 @@ const ProductListTable = ({ productData }: { productData?: ProductType[] }) => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
+      <ConfirmDialog
+        data={selected}
+        open={confirmShow}
+        question='Are you sure to delete?'
+        onCancel={() => {
+          setSelected(undefined)
+          setConfirmShow(false)
+        }}
+        onConfirm={handleDeleteData}
+      />
     </>
   )
 }
 
-export default ProductListTable
+export default TagListTable

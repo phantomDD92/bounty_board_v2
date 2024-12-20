@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addVideo } from '@/lib/api'
+import { addTag } from '@/lib/api'
 import { toast } from 'react-toastify'
+import { TagParamType } from '@/types/valueTypes'
 // Type Imports
 
 type Props = {
@@ -18,30 +19,26 @@ type Props = {
   // setData: (data: VideoType[]) => void
 }
 
-type FormValues = {
-  title: string
-  url: string
-}
 
-const AddVideoDrawer = ({ open, onClose, onUpdate }: Props) => {
+const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
   // Hooks
   const {
     control,
     reset: resetForm,
     handleSubmit,
     formState: { errors }
-  } = useForm<FormValues>({
+  } = useForm<TagParamType>({
     defaultValues: {
-      title: '',
-      url: ''
+      _id: '',
+      name: ''
     }
   })
 
   // Handle Form Submit
-  const handleFormSubmit = async (data: FormValues) => {
-    addVideo(data)
+  const handleFormSubmit = async (data: TagParamType) => {
+    addTag(data)
       .then(() => {
-        resetForm({ title: '', url: '' })
+        resetForm({ _id: '', name: '' })
         onUpdate && onUpdate()
       })
       .catch(error => {
@@ -51,7 +48,7 @@ const AddVideoDrawer = ({ open, onClose, onUpdate }: Props) => {
 
   // Handle Form Reset
   const handleReset = () => {
-    resetForm({ title: '', url: '' })
+    resetForm({ _id: '', name: '' })
     onClose && onClose()
   }
 
@@ -65,7 +62,7 @@ const AddVideoDrawer = ({ open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>Add Video</Typography>
+        <Typography variant='h5'>Add Tag</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>
@@ -74,30 +71,30 @@ const AddVideoDrawer = ({ open, onClose, onUpdate }: Props) => {
       <div className='p-5'>
         <form onSubmit={handleSubmit(data => handleFormSubmit(data))} className='flex flex-col gap-5'>
           <Controller
-            name='title'
+            name='_id'
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
-                label='Title'
-                placeholder='Title'
-                {...(errors.title && { error: true, helperText: 'This field is required.' })}
+                label='ID'
+                placeholder='Enter a tag ID...'
+                {...(errors._id && { error: true, helperText: 'This field is required.' })}
               />
             )}
           />
           <Controller
-            name='url'
+            name='name'
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
-                label='URL'
-                placeholder='Enter a video url...'
-                {...(errors.url && { error: true, helperText: 'This field is required.' })}
+                label='Name'
+                placeholder='Enter a tag name...'
+                {...(errors.name && { error: true, helperText: 'This field is required.' })}
               />
             )}
           />
@@ -115,4 +112,4 @@ const AddVideoDrawer = ({ open, onClose, onUpdate }: Props) => {
   )
 }
 
-export default AddVideoDrawer
+export default AddTagDrawer

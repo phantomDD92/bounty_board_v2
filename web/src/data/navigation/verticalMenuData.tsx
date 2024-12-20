@@ -3,6 +3,11 @@ import type { HorizontalMenuDataType, VerticalMenuDataType } from '@/types/menuT
 
 const verticalMenuData = (): HorizontalMenuDataType[] => [
   {
+    label: 'Tags',
+    href: '/admin/tag',
+    icon: 'ri-blogger-line'
+  },
+  {
     label: 'Bounties',
     href: '/admin/bounty',
     icon: 'ri-blogger-line'

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongoose";
 import Tag from "@/lib/models/Tag";
+import { getSession } from "@/lib/session";
+import { Role } from "@/lib/models/User";
 
 /**
  * @swagger
@@ -86,6 +88,13 @@ import Tag from "@/lib/models/Tag";
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     await dbConnect();
+    const session = await getSession();
+    if (!session || !session.isAuth) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+    }
+    if (session.role != Role.ADMIN) {
+      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+    }
     const tagId = params.id;
     const updatedData = await request.json();
     const updatedTag = await Tag.findByIdAndUpdate(tagId, updatedData, {
@@ -138,15 +147,21 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     await dbConnect();
+    const session = await getSession();
+    if (!session || !session.isAuth) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+    }
+    if (session.role != Role.ADMIN) {
+      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+    }
     const tagId = params.id;
-
     const deletedTag = await Tag.findByIdAndDelete(tagId);
 
     if (!deletedTag) {
       return NextResponse.json({ success: false, message: "Tag not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, message: "Tag deleted successfully" });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

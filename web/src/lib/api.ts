@@ -1,4 +1,4 @@
-import { CodeParamType, CodeSnippetType, CodeType, InfraParamType, VideoParamType } from '@/types/valueTypes';
+import { CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
 import axios from 'axios'
 
 export async function getSession() {
@@ -89,4 +89,24 @@ export async function getCodeList() {
 
 export async function deleteCode(id: string) {
   await axios.delete(`/api/code/${id}`);
+}
+
+// Tag related api calls
+export async function addTag(params: TagParamType) {
+  try {
+    await axios.post('/api/tags', params);
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getTagList() {
+  const resp = await axios.get('/api/tags');
+  return resp.data?.tags;
+}
+
+export async function deleteTag(id: string) {
+  await axios.delete(`/api/tags/${id}`);
 }
