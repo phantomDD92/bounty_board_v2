@@ -18,3 +18,23 @@ export async function loginSimulate() {
 export async function logoutUser() {
   await axios.delete('/api/auth/session');
 }
+
+// Video related api calls
+export async function addVideo({title, url}: {title: string, url: string}) {
+  try {
+    await axios.post('/api/video', {title, url});
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getVideoList() {
+  const resp = await axios.get('/api/video');
+  return resp.data?.videos;
+}
+
+export async function deleteVideo(id:string) {
+  await axios.delete(`/api/video/${id}`);
+}

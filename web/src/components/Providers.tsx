@@ -10,6 +10,7 @@ import ThemeProvider from '@components/theme'
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
 import { SessionProvider } from '@/context/SessionContext'
+import AppReactToastify from '@/lib/styles/AppReactToastify'
 type Props = ChildrenType & {
   direction: Direction
 }
@@ -33,6 +34,7 @@ const Providers = (props: Props) => {
               {/* {children} */}
             {/* </PersistGate> */}
           {/* </Provider> */}
+          <AppReactToastify direction={direction} hideProgressBar />
         </ThemeProvider>
       </SettingsProvider>
     </VerticalNavProvider>

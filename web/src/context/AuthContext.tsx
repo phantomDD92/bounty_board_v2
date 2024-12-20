@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import Router from 'next/router'
 // import { jwtDecode, JwtPayload } from 'jwt-decode'
-import LoginDialog from '@/components/dialogs/login-dialog'
+import LoginDialog from '@/components/dialogs/LoginDialog'
 import { SessionType } from '@/types/valueTypes'
 import axios from 'axios'
 // import { getUser } from '@/lib/api'

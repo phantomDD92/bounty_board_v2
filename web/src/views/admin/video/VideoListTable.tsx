@@ -32,12 +32,15 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Component Imports
-import AddCategoryDrawer from './AddVideoDrawer'
-import OptionMenu from '@core/components/option-menu'
+import AddVideoDrawer from './AddVideoDrawer'
+import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 import { VideoType } from '@/types/valueTypes'
+import { deleteVideo, getVideoList } from '@/lib/api'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import { CardHeader } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -47,7 +50,6 @@ declare module '@tanstack/table-core' {
     itemRank: RankingInfo
   }
 }
-
 
 type VideoWithActionsType = VideoType & {
   actions?: string
@@ -95,79 +97,48 @@ const DebouncedInput = ({
   return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
 }
 
-// Vars
-const categoryData: VideoType[] = [
-  {
-    _id: "1",
-    title: 'Smart Phone',
-    url: 'http://images/apps/ecommerce/product-1.png'
-  },
-  {
-    _id: "2",
-    title: 'Clothing, Shoes, and jewellery',
-    url: 'http://images/apps/ecommerce/product-9.png'
-  },
-  {
-    _id: "3",
-    title: 'Home and Kitchen',
-    url: 'http://images/apps/ecommerce/product-10.png'
-  },
-  {
-    _id: "4",
-    title: 'Beauty and Personal Care',
-    url: 'http://images/apps/ecommerce/product-19.png'
-  },
-  {
-    _id: "5",
-    title: 'Books',
-    url: 'http://images/apps/ecommerce/product-25.png'
-  },
-  {
-    _id: "6",
-    title: 'Games',
-    url: 'http://images/apps/ecommerce/product-12.png'
-  },
-  {
-    _id: "7",
-    title: 'Baby Products',
-    url: 'http://images/apps/ecommerce/product-14.png'
-  },
-  {
-    _id: "8",
-    title: 'Growsari',
-    url: 'http://images/apps/ecommerce/product-26.png'
-  },
-  {
-    _id: "9",
-    title: 'Computer Accessories',
-    url: 'http://images/apps/ecommerce/product-17.png'
-  },
-  {
-    _id: "10",
-    title: 'Fitness Tracker',
-    url: 'http://images/apps/ecommerce/product-10.png'
-  },
-  {
-    _id: "11",
-    title: 'Smart Home Devices',
-    url: 'http://images/apps/ecommerce/product-11.png'
-  },
-  {
-    _id: "12",
-    title: 'Audio Speakers',
-    url: 'http://images/apps/ecommerce/product-2.png'
-  }
-]
-
 // Column Definitions
 const columnHelper = createColumnHelper<VideoWithActionsType>()
 
 const VideoTable = () => {
   // States
   const [open, setOpen] = useState(false)
+  const [confirmData, setConfirmData] = useState<any>(undefined)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState(...[categoryData])
+  const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
+
+  useEffect(() => {
+    getVideoList()
+      .then(newData => {
+        setData(newData)
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleUpdateData = async () => {
+    setOpen(false)
+    getVideoList()
+      .then(newData => {
+        setData(newData)
+      })
+      .catch(error => {
+        toast.error(error.message)
+        // setOpen(false);
+      })
+  }
+
+  const handleDeleteData = async (data: any) => {
+    try {
+      setConfirmData(undefined)
+      await deleteVideo(data._id)
+      toast.success('Delete Video Success')
+      const newData = await getVideoList()
+      setData(newData)
+    } catch (error: any) {
+      toast.error(error.message)
+    }
+  }
 
   const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
     () => [
@@ -196,9 +167,9 @@ const VideoTable = () => {
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-              <Typography className='font-medium' color='text.primary'>
-                {row.original.title}
-              </Typography>
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.title}
+          </Typography>
         )
       }),
       columnHelper.accessor('url', {
@@ -209,8 +180,8 @@ const VideoTable = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small'>
-              <i className='ri-edit-box-line text-[22px] text-textSecondary' />
+            <IconButton size='small' onClick={() => setConfirmData(row.original)}>
+              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
             </IconButton>
           </div>
         ),
@@ -253,6 +224,7 @@ const VideoTable = () => {
   return (
     <>
       <Card>
+        <CardHeader title='Video List' className='pbe-4' />
         <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -262,21 +234,12 @@ const VideoTable = () => {
           />
           <div className='flex items-center max-sm:flex-col gap-4 max-sm:is-full is-auto'>
             <Button
-              color='secondary'
-              fullWidth
-              variant='outlined'
-              className='max-sm:is-full is-auto'
-              startIcon={<i className='ri-upload-2-line' />}
-            >
-              Export
-            </Button>
-            <Button
               variant='contained'
               className='max-sm:is-full is-auto'
               onClick={() => setOpen(!open)}
               startIcon={<i className='ri-add-line' />}
             >
-              Add Category
+              Add Video
             </Button>
           </div>
         </div>
@@ -348,11 +311,12 @@ const VideoTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <AddCategoryDrawer
-        open={open}
-        dataSource={data}
-        setData={setData}
-        handleClose={() => setOpen(!open)}
+      <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <ConfirmDialog
+        data={confirmData}
+        question='Are you sure to delete?'
+        onCancel={() => setConfirmData(undefined)}
+        onConfirm={handleDeleteData}
       />
     </>
   )

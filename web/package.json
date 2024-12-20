@@ -39,6 +39,7 @@
     "react-hook-form": "^7.54.1",
     "react-perfect-scrollbar": "1.5.8",
     "react-qr-code": "^2.0.15",
+    "react-toastify": "^11.0.2",
     "react-use": "17.5.1",
     "server-only": "0.0.1",
     "swagger-ui-react": "^5.18.2",

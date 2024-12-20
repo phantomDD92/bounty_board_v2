@@ -52,10 +52,14 @@ export type InfraType = {
   url: string,
 };
 
-export type VideoType = {
-  _id: string,
+// video related
+export type VideoParamType = {
   title: string,
   url: string,
+}
+
+export type VideoType = VideoParamType & {
+  _id: string,
 };
 
 export type CodeSnippetType = {
