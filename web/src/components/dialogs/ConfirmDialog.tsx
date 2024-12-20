@@ -21,7 +21,7 @@ const ConfirmDialog = ({ data, question, onCancel, onConfirm }: ConfirmationDial
         <i className='ri-error-warning-line text-[88px] mbe-6 text-warning' />
         <Typography variant='h4'>{question}</Typography>
       </DialogContent>
-      <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
+      <DialogActions className='justify-around pbs-0 sm:pbe-16 sm:pli-16'>
         <Button variant='contained' onClick={() => onConfirm && onConfirm(data)}>
           Yes
         </Button>
