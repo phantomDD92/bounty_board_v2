@@ -6,6 +6,7 @@ export type SkillType = {
 
 export type UserType = {
   name: string,
+  iaddress: string,
 };
 
 export type SessionType = {
@@ -15,10 +16,15 @@ export type SessionType = {
   isLogged: boolean,
 };
 
-export type CommentType = {
-  date_created: string,
-  creator: UserType,
+export type CommentParamsType = {
   text: string,
+};
+
+export type CommentType = CommentParamsType & {
+  _id: string,
+  createdAt: Date,
+  updatedAt: Date,
+  creator: UserType,
 };
 
 export type TagParamType = {
@@ -31,21 +37,23 @@ export type TagType = TagParamType & {
   updatedAt: Date,
 }
 
-export type BountyType = {
-  id: number,
-  url: string,
+export type BountyParamType = {
   title: string,
   description: string,
-  date_created: string,
-  tags: TagType[],
-  comments?: CommentType[],
-  status?: string,
-  is_auction?: boolean,
-  discord?: string,
-  reward_amount: number,
-  reward_type: string,
-  reward_token: string,
+  skills: TagParamType[],
+  reward: string,
+  deadline: Date,
+  contact: string,
+}
+
+export type BountyType = BountyParamType & {
+  _id: string,
+  status: string,
+  feedback: string,
   creator: UserType,
+  comments?: CommentType[],
+  createdAt: Date,
+  updatedAt: Date,
 };
 
 // video related
@@ -64,6 +72,15 @@ export type InfraParamType = {
   title: string,
   description: string,
   url: string,
+}
+
+export type FeedbackParamType = {
+  feedback: string,
+}
+
+export type FeedbackType = {
+  feedback: string,
+  approve: boolean,
 }
 
 export type InfraType = InfraParamType & {
@@ -88,3 +105,11 @@ export type CodeType = CodeParamType & {
   createdAt: Date,
   updatedAt: Date,
 };
+
+export type BountySearchType = {
+  search: string,
+  tags: string[],
+  sort: string,
+  page: number,
+  size: number,
+}

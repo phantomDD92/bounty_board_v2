@@ -11,30 +11,36 @@ import CardContent from '@mui/material/CardContent'
 import Pagination from '@mui/material/Pagination'
 
 // Type Imports
-import { BountyType } from '@/types/valueTypes'
+import { BountyType, TagType } from '@/types/valueTypes'
 import BountyCard from '@/components/BountyCard'
-import { ButtonBase } from '@mui/material'
-import BountyDetail from './BountyDetail'
+import { Button, ButtonBase } from '@mui/material'
+import BountyDetail from './BountyDetailDialog'
+import { getApprovedBountyList } from '@/lib/api'
+import { useSession } from '@/context/SessionContext'
+import BountyCreateDialog from './BountyCreateDialog'
 // import { getBountyList } from '@/libs/api'
 
 type Props = {
-  search: string,
+  search: string
   sort: string,
-  selectedTags: number[]
+  tags: TagType[],
+  selectedTags: string[]
 }
 
-const BountyList = ({search, sort, selectedTags}: Props) => {
+const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
   const [selected, setSelected] = useState<BountyType | undefined>()
   const [data, setData] = useState<BountyType[]>([])
   const [page, setPage] = useState(0)
+  const [createShow, setCreateShow] = useState(false)
+  const { session } = useSession()
 
-  // useEffect(() => {
-  //   getBountyList({search, sort, selectedTags})
-  //     .then(items => {
-  //       setData(items)
-  //     })
-  //     .catch(() => {})
-  // }, [getBountyList, search, sort, selectedTags])
+  useEffect(() => {
+    getApprovedBountyList({ search, sort, tags: selectedTags, page, size: 10 })
+      .then(items => {
+        setData(items)
+      })
+      .catch(() => {})
+  }, [getApprovedBountyList, search, sort, selectedTags, page])
 
   useEffect(() => {
     let newData = data || []
@@ -48,7 +54,19 @@ const BountyList = ({search, sort, selectedTags}: Props) => {
 
   return (
     <Card>
-      <CardHeader title='Open Bounties' subheader={`Total ${data ? data.length : 0} bounties founded`} />
+      <div className='flex justify-between items-center mr-4'>
+        <CardHeader title='Open Bounties' subheader={`Total ${data ? data.length : 0} bounties founded`} />
+        {session?.isAuth && (
+          <Button
+            variant='contained'
+            className='max-sm:is-full is-auto'
+            onClick={() => setCreateShow(true)}
+            startIcon={<i className='ri-add-line' />}
+          >
+            Create
+          </Button>
+        )}
+      </div>
       <CardContent className='flex flex-col gap-6'>
         <Grid item xs={12} md={12} className='flex flex-col gap-6'>
           {data &&
@@ -75,6 +93,7 @@ const BountyList = ({search, sort, selectedTags}: Props) => {
         )}
 
         <BountyDetail open={selected != null} setOpen={() => setSelected(undefined)} data={selected} />
+        <BountyCreateDialog open={createShow} tags={tags} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)}/>
       </CardContent>
     </Card>
   )

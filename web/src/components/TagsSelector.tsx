@@ -16,9 +16,9 @@ export type Props = {
 
 const TagsSelector = ({title, description, tags, onChange}: Props) => {
   // Props
-  const [value, setValue] = useState<number[]>([])
+  const [value, setValue] = useState<string[]>([])
 
-  const handleTagClick = (tag: number) => {
+  const handleTagClick = (tag: string) => {
     if (value.includes(tag)) {
       var index = value.indexOf(tag)
       if (index !== -1) {
@@ -44,11 +44,11 @@ const TagsSelector = ({title, description, tags, onChange}: Props) => {
       <div className='flex gap-3 flex-wrap'>
         {tags && tags.map(tag => (
           <Chip
-            key={tag.id}
-            label={tag.text}
-            onClick={() => handleTagClick(tag.id)}
+            key={tag._id}
+            label={tag.name}
+            onClick={() => handleTagClick(tag._id)}
             size='small'
-            color={value.includes(tag.id) ? 'primary' : 'default'}
+            color={value.includes(tag._id) ? 'primary' : 'default'}
           />
         ))}
       </div>

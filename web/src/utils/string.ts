@@ -28,7 +28,7 @@ export const dateUserToString = (date:string, username:string) => {
     return `${moment().diff(moment(date), 'second', false)} seconds ago by ${username}`
   }
 }
-export const dateToString = (date:string) => {
+export const dateToString = (date:Date) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago`
   } else if (moment().diff(moment(date), 'year', false) == 1) {

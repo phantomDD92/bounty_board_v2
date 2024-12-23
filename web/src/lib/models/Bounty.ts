@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { IComment } from "./Comment";
 
 // Interfaces for referenced fields
 interface IUser {
@@ -14,35 +15,24 @@ interface ITag {
 
 // Enum-like options for status, reward type, and token
 export const BountyStatus = {
-  TO_DO: "TO_DO",
-  IN_PROGRESS: "IN_PROGRESS",
-  COMPLETED: "COMPLETED",
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
 };
 
-export const RewardType = {
-  FIXED: "FIXED",
-  VARIABLE: "VARIABLE",
-};
-
-export const Token = {
-  USDC: "USDC",
-  ETH: "ETH",
-  BTC: "BTC",
-};
 
 // Bounty Interface for TypeScript
 export interface IBounty extends Document {
   title: string;
   description: string;
+  skills: ITag["_id"][]; // Array of tag IDs
   creator: IUser["_id"];
-  discord: string;
-  point: number;
+  reward: string;
+  deadline: Date;
+  contact: string,
+  feedback: string,
   status: string;
-  isAuction: boolean;
-  rewardAmount: number;
-  rewardType: string;
-  rewardToken: string;
-  tags: ITag["_id"][]; // Array of tag IDs
+  comments: IComment["_id"][]
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,11 +40,6 @@ export interface IBounty extends Document {
 // Mongoose Schema for Bounty
 const BountySchema: Schema<IBounty> = new Schema(
   {
-    discord: {
-      type: String,
-      required: true,
-      default: "",
-    },
     title: {
       type: String,
       required: true,
@@ -70,38 +55,39 @@ const BountySchema: Schema<IBounty> = new Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    point: {
-      type: Number,
-      required: false,
+    feedback: {
+      type: String,
+      default: "",
     },
     status: {
       type: String,
       enum: Object.values(BountyStatus),
-      default: BountyStatus.TO_DO,
+      default: BountyStatus.PENDING,
     },
-    isAuction: {
-      type: Boolean,
-      default: false,
-    },
-    rewardAmount: {
-      type: Number,
+    reward: {
+      type: String,
       required: true,
-      default: 0,
+      default: "",
     },
-    rewardType: {
+    deadline: {
+      type: Date,
+      required: true
+    },
+    contact: {
       type: String,
-      enum: Object.values(RewardType),
-      default: RewardType.FIXED,
+      required: true,
+      default: "",
     },
-    rewardToken: {
-      type: String,
-      enum: Object.values(Token),
-      default: Token.USDC,
-    },
-    tags: [
+    skills: [
+      {
+        type: String,
+        ref: "Tag", // Reference to the Tag model
+      },
+    ],
+    comments: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Tag", // Reference to the Tag model
+        ref: "Comment", // Reference to the Tag model
       },
     ],
   },
@@ -111,6 +97,6 @@ const BountySchema: Schema<IBounty> = new Schema(
 );
 
 // Export the model
-const Bounty: Model<IBounty> = mongoose.models.Bounty || mongoose.model<IBounty>("Bounty", BountySchema);
+const Bounty: Model<IBounty> = mongoose.models?.Bounty || mongoose.model<IBounty>("Bounty", BountySchema);
 
 export default Bounty;

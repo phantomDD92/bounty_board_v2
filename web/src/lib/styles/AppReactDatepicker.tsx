@@ -13,9 +13,11 @@ import ReactDatePickerComponent from 'react-datepicker'
 
 // Styles
 import 'react-datepicker/dist/react-datepicker.css'
+import { Typography } from '@mui/material'
 
 type Props = ComponentProps<typeof ReactDatePickerComponent> & {
-  boxProps?: BoxProps
+  boxProps?: BoxProps,
+  label?: string,
 }
 
 // Styled Components
@@ -491,10 +493,10 @@ const StyledReactDatePicker = styled(Box)<BoxProps>(({ theme }) => {
 
 const AppReactDatepicker = (props: Props) => {
   // Props
-  const { boxProps, ...rest } = props
-
+  const { boxProps, label, ...rest } = props
   return (
     <StyledReactDatePicker {...boxProps}>
+      {label && <Typography>{label}</Typography>}
       <ReactDatePickerComponent popperPlacement='bottom-start' {...rest} />
     </StyledReactDatePicker>
   )

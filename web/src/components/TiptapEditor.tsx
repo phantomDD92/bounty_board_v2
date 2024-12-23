@@ -19,6 +19,7 @@ import { useEffect } from 'react'
 
 interface TiptapEditorProps {
   value: string
+  minHeight?: number
   onChange: (value: string) => void
   label?: string
 }
@@ -110,7 +111,7 @@ const EditorToolbar = ({ editor }: { editor: Editor | null }) => {
   )
 }
 
-export default function TiptapEditor({ value, onChange, label }: TiptapEditorProps) {
+export default function TiptapEditor({ value, minHeight, onChange, label }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: value,
@@ -121,21 +122,20 @@ export default function TiptapEditor({ value, onChange, label }: TiptapEditorPro
 
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value); // Update editor content when `value` changes
+      editor.commands.setContent(value) // Update editor content when `value` changes
     }
-  }, [value, editor]);
+  }, [value, editor])
 
   return (
     <>
-    <Typography >{label}</Typography>
-    <Card className='p-0 border shadow-none'>
-      <CardContent className='p-0'>
-        <EditorToolbar editor={editor} />
-        <Divider className='mli-5' />
-        <EditorContent editor={editor} className='bs-[150px] overflow-y-auto flex ' />
-      </CardContent>
-    </Card>
+      <Typography>{label}</Typography>
+      <Card className='p-0 border mt-2 shadow-none'>
+        <CardContent className='p-0'>
+          <EditorToolbar editor={editor} />
+          <Divider className='mli-5' />
+          <EditorContent editor={editor} className={`bs-[150px] min-h-[${minHeight || 150}px] overflow-y-auto flex`} />
+        </CardContent>
+      </Card>
     </>
-
   )
 }

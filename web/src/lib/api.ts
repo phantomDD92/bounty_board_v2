@@ -1,4 +1,4 @@
-import { CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
+import { BountyParamType, BountySearchType, BountyType, CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
 import axios from 'axios'
 
 export async function getSession() {
@@ -110,3 +110,43 @@ export async function getTagList() {
 export async function deleteTag(id: string) {
   await axios.delete(`/api/tags/${id}`);
 }
+
+// Bounty related apis
+export async function getApprovedBountyList({ search, sort, tags, page, size }: BountySearchType) {
+  const resp = await axios.get('/api/bounties', { params: { search, sort, tags: tags.join(","), page, size } });
+  return resp.data?.bounties;
+}
+
+// Bounty related apis
+export async function getBountyList() {
+  const resp = await axios.get('/api/bounties/all');
+  return resp.data?.bounties;
+}
+
+// Bounty related apis
+export async function getUserBountyList() {
+  const resp = await axios.get('/api/bounties/me');
+  return resp.data?.bounties;
+}
+
+// Bounty related apis
+export async function addBounty(params: BountyParamType) {
+  await axios.post('/api/bounties', params);
+}
+
+// Bounty related apis
+export async function approveBounty(bountyId: string, feedback: string) {
+  await axios.post(`/api/bounties/${bountyId}/approve`, { feedback });
+}
+
+// Bounty related apis
+export async function rejectBounty(bountyId: string, feedback: string) {
+  await axios.post(`/api/bounties/${bountyId}/reject`, { feedback });
+}
+
+// Bounty related apis
+export async function updateBounty(bountyId: string, params: BountyParamType) {
+  await axios.put(`/api/bounties/${bountyId}`, params);
+}
+
+

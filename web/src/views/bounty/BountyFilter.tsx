@@ -13,19 +13,19 @@ import Select from '@mui/material/Select'
 import TagsSelector from '@/components/TagsSelector'
 import { TagType } from '@/types/valueTypes'
 import { useEffect, useState } from 'react'
+import { getTagList } from '@/lib/api'
 // import {  getTagList } from '@/libs/api'
 
 type Props = {
   search: string
   sort: string
+  tags: TagType[]
   onSearchChange?: Function
   onSortChange?: Function
   onTagsChange?: Function
 }
 
-const BountyFilter = ({ search, sort, onSearchChange, onSortChange, onTagsChange }: Props) => {
-  const [tags, setTags] = useState<TagType[]>([])
-
+const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTagsChange }: Props) => {
   return (
     <Card>
       <CardHeader title='Filters' />

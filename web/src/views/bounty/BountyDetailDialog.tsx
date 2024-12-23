@@ -45,7 +45,7 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
           <Typography color='text.primary' className='font-medium'>
             {comment.creator?.name}
           </Typography>
-          <Typography variant='caption'>{dateToString(comment.date_created)}</Typography>
+          <Typography variant='caption'>{dateToString(comment.createdAt)}</Typography>
         </div>
         <Typography className='mbe-2 text-wrap'>{comment.text}</Typography>
       </TimelineContent>
@@ -129,11 +129,8 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-8 mb-4'>
         <div className='flex justify-between items-center mb-4'>
           <div>{bountyData?.title}</div>
-          <Link href={data?.discord || '#'}>
-            <i className='ri-discord-line text-[24px] text-textPrimary mr-8' />
-          </Link>
         </div>
-        <TagsList tags={data?.tags || []} />
+        <TagsList tags={data?.skills || []} />
       </DialogTitle>
       <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
         <Alert severity='info' className='bg-primaryLight mb-8'>

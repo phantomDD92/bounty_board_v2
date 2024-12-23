@@ -65,7 +65,6 @@ import Bounty from '@/lib/models/Bounty';
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: bountyId } = params;
-
   try {
     const comments = await Comment.find({ bounty: bountyId }).populate('creator', 'name');
     if (!comments || comments.length === 0) {

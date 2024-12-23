@@ -36,10 +36,13 @@ import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { TagType } from '@/types/valueTypes'
-import { deleteTag, getTagList } from '@/lib/api'
+import { BountyType } from '@/types/valueTypes'
+import { deleteTag, getBountyList, getTagList } from '@/lib/api'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader } from '@mui/material'
+import { CardHeader, Chip, FormControlLabel } from '@mui/material'
+import moment from 'moment'
+import BountyApproveDrawer from './BountyApproveDrawer'
+import { BountyStatus } from '@/lib/models/Bounty'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -50,7 +53,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type TagWithActionsType = TagType & {
+type BountyWithActionsType = BountyType & {
   actions?: string
 }
 
@@ -97,51 +100,46 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<TagWithActionsType>()
+const columnHelper = createColumnHelper<BountyWithActionsType>()
 
-const TagListTable = () => {
+const BountyListTable = () => {
   // States
-  const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<any>(undefined)
-  const [confirmShow, setConfirmShow] = useState(false)
+  const [approveShow, setApproveShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState([])
+  const [data, setData] = useState<BountyType[]>([])
+  const [filteredData, setFilteredData] = useState<BountyType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [pendingOnly, setPendingOnly] = useState(false)
 
   useEffect(() => {
-    getTagList()
+    getBountyList()
       .then(newData => {
         setData(newData)
       })
       .catch(() => {})
-  }, [])
+  }, [getBountyList])
+
+  useEffect(() => {
+    const fData = data?.filter(item => {
+      if (pendingOnly) return item.status == BountyStatus.PENDING
+      else return true
+    })
+    setFilteredData(fData)
+  }, [pendingOnly, data])
 
   const handleUpdateData = async () => {
-    setOpen(false)
-    getTagList()
-      .then(newData => {
-        setData(newData)
-      })
-      .catch(error => {
-        toast.error(error.message)
-        // setOpen(false);
-      })
-  }
-
-  const handleDeleteData = async (data: any) => {
     try {
-      setConfirmShow(false)
+      setApproveShow(false)
       setSelected(undefined)
-      await deleteTag(data._id)
-      toast.success('Delete Tag Success')
-      const newData = await getTagList()
+      const newData = await getBountyList()
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)
     }
   }
 
-  const columns = useMemo<ColumnDef<TagWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<BountyWithActionsType, any>[]>(
     () => [
       {
         id: 'select',
@@ -165,13 +163,41 @@ const TagListTable = () => {
           />
         )
       },
-      columnHelper.accessor('name', {
-        header: 'Name',
+      columnHelper.accessor('title', {
+        header: 'Title',
         cell: ({ row }) => (
           <Typography className='font-medium' color='text.primary'>
-            {row.original.name}
+            {row.original.title}
           </Typography>
         )
+      }),
+      columnHelper.accessor('creator', {
+        header: 'Creator',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.creator?.name}
+          </Typography>
+        )
+      }),
+      columnHelper.accessor('reward', {
+        header: 'Reward',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.reward}
+          </Typography>
+        )
+      }),
+      columnHelper.accessor('deadline', {
+        header: 'Deadline',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {moment(row.original.deadline).format('YYYY-MM-DD')}
+          </Typography>
+        )
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) => <Chip label={row.original.status} color='primary' />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -181,10 +207,10 @@ const TagListTable = () => {
               size='small'
               onClick={() => {
                 setSelected(row.original)
-                setConfirmShow(true)
+                setApproveShow(true)
               }}
             >
-              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+              <i className='ri-send-plane-line text-[22px] text-textSecondary' />
             </IconButton>
           </div>
         ),
@@ -192,11 +218,11 @@ const TagListTable = () => {
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data]
+    [data, filteredData]
   )
 
   const table = useReactTable({
-    data: data as TagType[],
+    data: filteredData as BountyType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -227,24 +253,18 @@ const TagListTable = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Tag List' className='pbe-4' />
-        <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
+        <CardHeader title='Bounty List' className='pbe-4' />
+        <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={value => setGlobalFilter(String(value))}
             placeholder='Search'
             className='max-sm:is-full'
           />
-          <div className='flex items-center max-sm:flex-col gap-4 max-sm:is-full is-auto'>
-            <Button
-              variant='contained'
-              className='max-sm:is-full is-auto'
-              onClick={() => setOpen(!open)}
-              startIcon={<i className='ri-add-line' />}
-            >
-              Add Tag
-            </Button>
-          </div>
+          <FormControlLabel
+            label='Pending Only'
+            control={<Checkbox checked={pendingOnly} onChange={e => setPendingOnly(e.target.checked)} />}
+          />
         </div>
         <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
@@ -314,18 +334,14 @@ const TagListTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <ConfirmDialog
+      <BountyApproveDrawer
+        open={approveShow}
         data={selected}
-        open={confirmShow}
-        question='Are you sure to delete?'
-        onCancel={() => {
-          setSelected(undefined)
-          setConfirmShow(false)
-        }}
-        onConfirm={handleDeleteData}
+        onClose={() => setApproveShow(false)}
+        onUpdate={handleUpdateData}
       />
     </>
   )
 }
 
-export default TagListTable
+export default BountyListTable

@@ -1,11 +1,9 @@
 // MUI Imports
-import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
-import { useState } from 'react'
-import { TagType } from '@/types/valueTypes'
+import { TagParamType } from '@/types/valueTypes'
 
 type Props = {
-  tags: TagType[]
+  tags: TagParamType[]
 }
 
 const TagsList = ({ tags }: Props) => {
@@ -14,7 +12,7 @@ const TagsList = ({ tags }: Props) => {
     <div className='flex gap-3 flex-wrap'>
       {tags &&
         tags.map(tag => (
-          <Chip key={tag.id} label={tag.text} size='small' className='text-xs' />
+          <Chip key={tag._id} label={tag.name} size='small' className='text-xs' />
         ))}
     </div>
   )
