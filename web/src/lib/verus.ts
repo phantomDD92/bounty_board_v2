@@ -1,6 +1,6 @@
 const { randomBytes } = require('crypto');
 const { VerusIdInterface, primitives } = require('verusid-ts-client');
-const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, VERUS_URL, SERVER_URL } = process.env;
+const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, NEXT_PUBLIC_APP_URL } = process.env;
 
 const R_ADDRESS_VERSION = 60;
 const I_ADDRESS_VERSION = 102;
@@ -19,6 +19,7 @@ function generateChallengeID(len = 20) {
 
 export async function createLoginRequest() {
   try {
+    console.log(PRIVATE_KEY, SIGNING_IADDRESS);
     const challengeID = generateChallengeID();
     const retval = await VerusId.createLoginConsentRequest(
       SIGNING_IADDRESS,
@@ -29,7 +30,7 @@ export async function createLoginRequest() {
         ],
         redirect_uris: [
           new primitives.RedirectUri(
-            `${SERVER_URL}/api/verus`,
+            `${NEXT_PUBLIC_APP_URL}/api/auth/verus`,
             primitives.LOGIN_CONSENT_WEBHOOK_VDXF_KEY.vdxfid
           ),
         ],
@@ -50,10 +51,9 @@ export async function createLoginRequest() {
     registeredChallengeIDs.add(challengeID);
     console.log("Login Request Signed Correctly: ", _reso, challengeID);
     return { deepLink: retval.toWalletDeeplinkUri(), challengeID: challengeID };
-
   } catch (e) {
     console.log("Whoops something went wrong: ", e);
-    return undefined
+    throw e;
   }
 }
 
@@ -72,10 +72,21 @@ export async function verifyLoginRequest(data:any) {
   return true;
 }
 
-export async function getLoginRequest(challengeID:string) {
-  if (!verifiedChallengeIDs.has(challengeID))
+export async function getLoginRequest(challenge:string) {
+  if (!verifiedChallengeIDs.has(challenge))
     return undefined
-  const data = verifiedChallengeIDs.get(challengeID)
-  verifiedChallengeIDs.delete(challengeID)
+  const data = verifiedChallengeIDs.get(challenge)
+  verifiedChallengeIDs.delete(challenge)
   return data;
+}
+
+export async function cancelLoginRequest(challenge:string) {
+  if (verifiedChallengeIDs.has(challenge)) {
+    console.log("REMOVE challenge from verified list");
+    verifiedChallengeIDs.delete(challenge)
+  }
+  if (registeredChallengeIDs.has(challenge)) {
+    console.log("REMOVE challenge from registered list")
+    registeredChallengeIDs.delete(challenge);
+  }
 }

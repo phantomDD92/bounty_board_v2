@@ -22,12 +22,26 @@ const LoginDialog = ({ open, qrCode, onClose, loading }: LoginDialogProps) => {
   const [QRData, setQRData] = useState(
     'i5jtwbp6zymeay9llnraglgjqgdrffsau4://x-callback-url/i3dQmgjq8L8XFGQUrs9Gpo8zvPWqs1KMtV/?i3dQmgjq8L8XFGQUrs9Gpo8zvPWqs1KMtV=Aa4uvSgsLAWiinJ7Go12_G6zOcUB_SsBGvW4AVxk05q0TGDq2DF_n1qbbExRobYwnNAZkWro16MN8qBxfV00Et3vHSRMeg9ysAUJ8BfPPdpjudQGAUkCBYT7MgABQR-3-LuR769M0LAIDMxQl-cgyOYFukiG9H7ZGUGMha949ih-VOicpuSgVaOvaLOFtMqY7SbkpCzAX761Kttn_BBqGSnAPo-o1JwfjbV2JpOK-1fENZwBjhSOz1LC-qIqk63NVdk0Y3PJUaUF5T_uWGcAAAAAAAAAAbqJxOWocEcouGM6Y-K9sqH6R6uuAQAAAAAAAAH9XMC6IZhHkmyGV3ojVlgCp2DnGQEkaHR0cDovLzQ1LjguMTQ2LjM1OjgwMDAvdmVydXNpZGxvZ2luVnuah7FxMfbust0L3RkezkpdYDsBAQA'
   )
+  // const [counter, setCounter] = useState(300)
   useEffect(() => {
     if (open && qrCode) {
       setQRData(qrCode)
     }
   }, [qrCode, open])
 
+  // useEffect(() => {
+  //   const counterInterval = setInterval(() => {
+  //     console.log("$$$$ : ", counter)
+  //     setCounter(counter - 1);
+  //   }, 1000)
+  //   return () => clearInterval(counterInterval)
+  // }, [])
+  const counterToTime = (value: number) => {
+    console.log('### :', value)
+    const min = Math.floor(value / 60)
+    const sec = value % 60
+    return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+  }
   return (
     <Dialog open={open} onClose={onClose} maxWidth='md' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col items-center sm:pbs-8 sm:pbe-8 sm:pli-8'>

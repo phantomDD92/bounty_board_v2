@@ -17,11 +17,11 @@ import { useSession } from '@/context/SessionContext'
 const NavbarContent = () => {
   // Hooks
   const { isBreakpointReached } = useHorizontalNav()
-  const { testLogin, logout, session } = useSession()
+  const { testLogin, login, logout, session } = useSession()
 
   const handleLoginClick = async (e: any) => {
-    if (testLogin) await testLogin()
-    // if (login) await login();
+    // if (testLogin) await testLogin()
+    if (login) await login();
   }
 
   const handleLogout = async () => {

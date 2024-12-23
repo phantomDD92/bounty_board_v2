@@ -16,6 +16,21 @@ export async function loginSimulate() {
   }
 }
 
+export async function requestLogin() {
+  const res = await axios.post('/api/auth/login');
+  return res.data;
+}
+
+export async function cancelLogin(challenge: string) {
+  const res = await axios.delete('/api/auth/login', { data: { challenge } });
+  return res.data;
+}
+
+export async function checkLogin(challenge: string) {
+  const res = await axios.put('/api/auth/login', { challenge });
+  return res.data?.success;
+}
+
 export async function logoutUser() {
   await axios.delete('/api/auth/session');
 }

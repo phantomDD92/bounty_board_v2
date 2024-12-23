@@ -9,17 +9,24 @@ import UserDropdown from '@components/layout/shared/UserDropdown'
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
 import { useSession } from '@/context/SessionContext'
+import { useRouter } from 'next/router'
+
 
 const NavbarContent = () => {
-  const { session } = useSession()
+  const router = useRouter();
+  const { session, logout } = useSession()
+  const handleLogout = async () => {
+    if (logout) await logout();
+    router.reload()
+  }
+
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
       <div className='flex items-center gap-4'>
         <NavToggle />
-        {/* <ModeDropdown /> */}
       </div>
       <div className='flex items-center'>
-        <UserDropdown name={session?.name} admin/>
+        <UserDropdown name={session?.name} admin onLogout={handleLogout}/>
       </div>
     </div>
   )

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       await newUser.save();
       user = newUser
     }
-    const response = NextResponse.json({ message: 'Success' });
+    const response = NextResponse.json({ success: true });
     // create session
     createSession(response, user);
     return response;
