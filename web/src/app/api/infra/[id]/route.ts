@@ -113,7 +113,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     if (!title || !description || !url) {
       return NextResponse.json({ success: false, error: "Title, Description, and URL are required." }, { status: 400 });
     }
-    const updatedInfra = await Infra.findByIdAndUpdate(id, { title, description, url }, { new: true });
+    const updatedInfra = await Infra.findByIdAndUpdate(id, { $set: { title, description, url } }, { new: true });
     if (!updatedInfra) {
       return NextResponse.json({ success: false, error: "Infra not found" }, { status: 404 });
     }

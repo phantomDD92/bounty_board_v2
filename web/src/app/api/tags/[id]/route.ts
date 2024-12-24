@@ -96,11 +96,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
     const tagId = params.id;
-    const updatedData = await request.json();
-    const updatedTag = await Tag.findByIdAndUpdate(tagId, updatedData, {
-      new: true,
-      runValidators: true,
-    });
+    const { name } = await request.json();
+    const updatedTag = await Tag.findByIdAndUpdate(tagId, { $set: { name } }, { new: true, });
 
     if (!updatedTag) {
       return NextResponse.json({ success: false, message: "Tag not found" }, { status: 404 });

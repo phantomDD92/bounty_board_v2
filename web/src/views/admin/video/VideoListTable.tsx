@@ -32,7 +32,7 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Component Imports
-import AddVideoDrawer from './AddVideoDrawer'
+import VideoEditDrawer from './VideoEditDrawer'
 import { toast } from 'react-toastify'
 
 // Style Imports
@@ -40,7 +40,7 @@ import tableStyles from '@core/styles/table.module.css'
 import { VideoType } from '@/types/valueTypes'
 import { deleteVideo, getVideoList } from '@/lib/api'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader } from '@mui/material'
+import { CardHeader, Tooltip } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -114,7 +114,7 @@ const VideoListTable = () => {
       .then(newData => {
         setData(newData)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   const handleUpdateData = async () => {
@@ -182,15 +182,28 @@ const VideoListTable = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton
-              size='small'
-              onClick={() => {
-                setSelected(row.original)
-                setConfirmShow(true)
-              }}
-            >
-              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
-            </IconButton>
+            <Tooltip title="Edit">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setOpen(true)
+                }}
+              >
+                <i className='ri-edit-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setConfirmShow(true)
+                }}
+              >
+                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -319,7 +332,7 @@ const VideoListTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <VideoEditDrawer open={open} data={selected} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
       <ConfirmDialog
         open={confirmShow}
         data={selected}

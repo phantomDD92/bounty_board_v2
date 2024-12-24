@@ -65,19 +65,19 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     await dbConnect();
     const videoId = params.id;
-    const { url } = await request.json();
+    const { title, url } = await request.json();
 
-    if (!url) {
-      return NextResponse.json({ success: false, message: "URL is required" }, { status: 400 });
+    if (!title || !url) {
+      return NextResponse.json({ success: false, message: "Title, URL is required" }, { status: 400 });
     }
 
-    const updatedVideo = await Video.findByIdAndUpdate(videoId, { url }, { new: true });
+    const updatedVideo = await Video.findByIdAndUpdate(videoId, { $set: { title, url } }, { new: true });
 
     if (!updatedVideo) {
       return NextResponse.json({ success: false, message: "Video not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: updatedVideo });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
