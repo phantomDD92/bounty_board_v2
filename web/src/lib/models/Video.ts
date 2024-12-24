@@ -26,6 +26,6 @@ const VideoSchema: Schema<IVideo> = new Schema(
 );
 
 // Export the model to prevent recompiling issues
-const Video: Model<IVideo> = mongoose.models.Video || mongoose.model<IVideo>('Video', VideoSchema);
+const Video: Model<IVideo> = mongoose.models?.Video || mongoose.model<IVideo>('Video', VideoSchema);
 
 export default Video;

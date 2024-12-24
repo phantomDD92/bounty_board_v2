@@ -21,6 +21,6 @@ const TagSchema: Schema<ITag> = new Schema({
 });
 
 // Export the model to prevent recompiling issues
-const Tag: Model<ITag> = mongoose.models.Tag || mongoose.model<ITag>('Tag', TagSchema);
+const Tag: Model<ITag> = mongoose.models?.Tag || mongoose.model<ITag>('Tag', TagSchema);
 
 export default Tag;

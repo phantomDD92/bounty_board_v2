@@ -27,7 +27,9 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const [open, setOpen] = useState(false)
   const [qrData, setQrData] = useState('')
   const [loading, setLoading] = useState(false)
-  const [challenge, setChallengeID] = useState('')
+  const [challenge, setChallengeID] = useState<string | null>(null)
+
+  let checkInterval: string | number | NodeJS.Timeout | undefined;
 
   useEffect(() => {
     getSession()
@@ -40,8 +42,14 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   }, [])
 
   useEffect(() => {
-    if (challenge != '') {
-      const checkInterval = setInterval(async () => {
+    if (!open && checkInterval) {
+      clearInterval(checkInterval)
+      checkInterval = undefined;
+    }
+  }, [open])
+  useEffect(() => {
+    if (challenge) {
+      checkInterval = setInterval(async () => {
         checkLogin(challenge)
           .then(success => {
             if (success) {
@@ -49,15 +57,21 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
                 .then(session => {
                   setSession(session)
                   setOpen(false)
-                  clearInterval(checkInterval)
+                  if (checkInterval) {
+                    clearInterval(checkInterval)
+                    checkInterval = undefined;
+                  }
                 })
-                .catch(() => {})
+                .catch(() => { })
             }
           })
-          .catch(() => {})
+          .catch(() => { })
       }, 10000)
       return () => {
-        clearInterval(checkInterval)
+        if (checkInterval) {
+          clearInterval(checkInterval)
+          checkInterval = undefined;
+        }
       }
     }
   }, [challenge])
@@ -102,14 +116,18 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   }
 
   const handleLoginCancel = () => {
-    cancelLogin(challenge)
-      .then(() => {
-        toast.success('Login Request Canceled')
-        setOpen(false)
-      })
-      .catch(() => {
-        setOpen(false)
-      })
+    if (challenge) {
+      cancelLogin(challenge)
+        .then(() => {
+          toast.success('Login Request Canceled')
+          setOpen(false)
+          setChallengeID(null)
+        })
+        .catch(() => {
+          setOpen(false)
+          setChallengeID(null)
+        })
+    }
   }
 
   return (

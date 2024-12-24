@@ -2,7 +2,6 @@ const { randomBytes } = require('crypto');
 const { VerusIdInterface, primitives } = require('verusid-ts-client');
 const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, NEXT_PUBLIC_APP_URL } = process.env;
 
-const R_ADDRESS_VERSION = 60;
 const I_ADDRESS_VERSION = 102;
 
 const registeredChallengeIDs = new Set();
@@ -49,7 +48,7 @@ export async function createLoginRequest() {
       CHAIN_IADDRESS
     );
     registeredChallengeIDs.add(challengeID);
-    console.log("Login Request Signed Correctly: ", _reso, challengeID);
+    console.log("Login Request Signed Correctly: ", _reso, challengeID, registeredChallengeIDs);
     return { deepLink: retval.toWalletDeeplinkUri(), challengeID: challengeID };
   } catch (e) {
     console.log("Whoops something went wrong: ", e);
@@ -60,8 +59,8 @@ export async function createLoginRequest() {
 export async function verifyLoginRequest(data:any) {
   const loginRequest = new primitives.LoginConsentResponse(data)
   const verifiedLogin = await VerusId.verifyLoginConsentResponse(loginRequest)
-  console.log("Is login signature Verified? : ", verifiedLogin);
   const challengeID = loginRequest.decision.request.challenge.challenge_id;
+  console.log("Is login signature Verified? : ", verifiedLogin, challengeID, registeredChallengeIDs);
   if (!verifiedLogin || registeredChallengeIDs.has(challengeID) === false) {
     return false;
   }
