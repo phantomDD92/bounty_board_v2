@@ -40,7 +40,6 @@ export async function createSession(res: NextResponse, user: IUser) {
   const session = await encrypt({ id: user._id, name: user.name, role: user.role, iaddress: user.iaddress })
   res.cookies.set('session', session, {
     httpOnly: true,
-    secure: true,
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',

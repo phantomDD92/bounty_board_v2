@@ -47,6 +47,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
       checkInterval = undefined;
     }
   }, [open])
+
   useEffect(() => {
     if (challenge) {
       checkInterval = setInterval(async () => {
@@ -56,13 +57,14 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
               getSession()
                 .then(session => {
                   setSession(session)
+                  clearInterval(checkInterval)
                   setOpen(false)
-                  if (checkInterval) {
-                    clearInterval(checkInterval)
-                    checkInterval = undefined;
-                  }
                 })
-                .catch(() => { })
+                .catch(() => { 
+                  toast.warning('Login Failed.')
+                  clearInterval(checkInterval)
+                  setOpen(false);
+                })
             }
           })
           .catch(() => { })

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cancelLoginRequest, createLoginRequest, getLoginRequest } from '@/lib/verus';
 import UserService from '@/lib/service/UserService';
 import { Role } from '@/lib/models/User';
+import { createSession } from '@/lib/session';
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function PUT(req: NextRequest) {
   try {
     const { challenge } = await req.json();
     const data = await getLoginRequest(challenge);
-    if (data) {
+    if (!data) {
       return NextResponse.json({ success: false });
     }
     const {name, iaddress} = data;
@@ -42,7 +43,9 @@ export async function PUT(req: NextRequest) {
       await newUser.save();
       user = newUser
     }
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true });
+    createSession(response, user);
+    return response;
   } catch (error) {
     return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
   }

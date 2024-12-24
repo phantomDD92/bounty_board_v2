@@ -96,7 +96,7 @@ const CodeCard = (props: CodeCardProps) => {
   }
 
   const handleCodeCopy = async () => {
-    if (snippets && snippets.length) {
+    if (snippets && snippets.length && navigator.clipboard) {
         await navigator.clipboard.writeText(snippets[selected].code);
         toast.success("Copy Code Success");
     }
