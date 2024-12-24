@@ -34,6 +34,6 @@ const InfraSchema: Schema<IInfra> = new Schema(
 );
 
 // Export the model to prevent recompiling issues
-const Infra: Model<IInfra> = mongoose.models.Infra || mongoose.model<IInfra>('Infra', InfraSchema);
+const Infra: Model<IInfra> = mongoose.models?.Infra || mongoose.model<IInfra>('Infra', InfraSchema);
 
 export default Infra;

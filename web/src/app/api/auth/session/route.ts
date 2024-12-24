@@ -66,11 +66,11 @@ export async function GET(req: NextRequest) {
     const session = await getSession();
     if (!session) {
       // User is not authenticated
-      return NextResponse.json({message: "Unauthorized"}, { status: 401 });
+      return NextResponse.json({ success: true });
     }
     return NextResponse.json({ success: true, session });
   } catch (error) {
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: true });
   }
 }
 
@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await deleteSession()
-    return NextResponse.json({ success: true});
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }

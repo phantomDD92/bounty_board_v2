@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cancelLoginRequest, createLoginRequest, getLoginRequest } from '@/lib/verus';
+import UserService from '@/lib/service/UserService';
+import { Role } from '@/lib/models/User';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,9 +14,9 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {challenge} = await req.json();
+    const { challenge } = await req.json();
     await cancelLoginRequest(challenge);
-    return NextResponse.json({ success: true});
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
@@ -22,12 +24,27 @@ export async function DELETE(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const {challenge} = await req.json();
+    const { challenge } = await req.json();
     const data = await getLoginRequest(challenge);
-    console.log(data);
-    return NextResponse.json({ success: data != undefined });
+    if (data) {
+      return NextResponse.json({ success: false });
+    }
+    const {name, iaddress} = data;
+    // check parameters validation
+    if (!iaddress || !name) {
+      return NextResponse.json({ success: false });
+    }
+    // find user, if not found, create a user
+    let user = await UserService.getUserByAddress(iaddress);
+    if (!user) {
+      const isAdmin = await UserService.isFirstUser();
+      const newUser = await UserService.createUser({ name, iaddress, role: isAdmin ? Role.ADMIN : Role.USER });
+      await newUser.save();
+      user = newUser
+    }
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
   }
 }
 
