@@ -142,8 +142,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
             anymore and you will be able to start working and submit your work.
           </Typography>
         </Alert>
-        <div  className='mb-4 text-wrap' dangerouslySetInnerHTML={{ __html: bountyData?.description || "" }} />
-
+        <Typography dangerouslySetInnerHTML={{__html: bountyData?.description || ""}} className='mb-4 text-wrap break-words'/>
         <Button variant='contained' className='mb-8'>
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
           I'm interested

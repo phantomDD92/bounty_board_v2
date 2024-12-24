@@ -12,9 +12,9 @@ import '@assets/iconify-icons/generated-icons.css'
 import Providers from '@/components/Providers'
 
 export const metadata = {
-  title: 'Materio - Material Design Next.js Admin Template',
+  title: 'Bounty Board',
   description:
-    'Materio - Material Design Next.js Admin Dashboard Template - is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.'
+    'Bounty board'
 }
 
 const RootLayout = ({ children }: ChildrenType) => {

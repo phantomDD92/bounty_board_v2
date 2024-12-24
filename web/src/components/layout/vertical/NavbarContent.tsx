@@ -15,10 +15,10 @@ import { useSession } from '@/context/SessionContext'
 const NavbarContent = () => {
   // const router = useRouter();
   const { session, logout } = useSession()
-  const handleLogout = async () => {
-    if (logout) await logout();
-    // router.reload()
-  }
+  // const handleLogout = async () => {
+  //   if (logout) await logout();
+  //   // router.reload()
+  // }
 
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
@@ -26,7 +26,7 @@ const NavbarContent = () => {
         <NavToggle />
       </div>
       <div className='flex items-center'>
-        <UserDropdown name={session?.name} admin onLogout={handleLogout}/>
+        <UserDropdown name={session?.name} admin />
       </div>
     </div>
   )

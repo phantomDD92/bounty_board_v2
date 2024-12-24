@@ -110,7 +110,7 @@ const CodeCard = (props: CodeCardProps) => {
             <Typography variant='h5' className='hover:text-primary'>
               {title}
             </Typography>
-            <div className='mt-4' dangerouslySetInnerHTML={{ __html: description }} />
+            <Typography dangerouslySetInnerHTML={{__html: description}} className='mt-4 text-wrap break-words'/>
           </Grid>
           <Grid item xs={12} md={6} lg={6} className='flex flex-col'>
             {snippets && snippets.length > 0 && (

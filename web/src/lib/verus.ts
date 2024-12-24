@@ -1,11 +1,12 @@
+const NodeCache = require('node-cache');
 const { randomBytes } = require('crypto');
 const { VerusIdInterface, primitives } = require('verusid-ts-client');
 const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, NEXT_PUBLIC_APP_URL } = process.env;
-
 const I_ADDRESS_VERSION = 102;
 
 const registeredChallengeIDs = new Set();
 const verifiedChallengeIDs = new Map();
+const challengeCache = new NodeCache();
 
 const VerusId = new VerusIdInterface(CHAIN, API);
 
@@ -18,7 +19,6 @@ function generateChallengeID(len = 20) {
 
 export async function createLoginRequest() {
   try {
-    console.log(PRIVATE_KEY, SIGNING_IADDRESS);
     const challengeID = generateChallengeID();
     const retval = await VerusId.createLoginConsentRequest(
       SIGNING_IADDRESS,
@@ -47,7 +47,12 @@ export async function createLoginRequest() {
       null,
       CHAIN_IADDRESS
     );
+    // register challenge into cache
+    let registers = challengeCache.get("registers") || [];
+    registers.push(challengeID);
+    challengeCache.set(registers);
     registeredChallengeIDs.add(challengeID);
+
     console.log("Login Request Signed Correctly: ", _reso, challengeID, registeredChallengeIDs);
     return { deepLink: retval.toWalletDeeplinkUri(), challengeID: challengeID };
   } catch (e) {
@@ -60,7 +65,9 @@ export async function verifyLoginRequest(data:any) {
   const loginRequest = new primitives.LoginConsentResponse(data)
   const verifiedLogin = await VerusId.verifyLoginConsentResponse(loginRequest)
   const challengeID = loginRequest.decision.request.challenge.challenge_id;
-  console.log("Is login signature Verified? : ", verifiedLogin, challengeID, registeredChallengeIDs);
+  // check in cache
+  let registers = challengeCache.get("registers");
+  console.log("Is login signature Verified? : ", verifiedLogin, challengeID, registeredChallengeIDs, registers);
   if (!verifiedLogin || registeredChallengeIDs.has(challengeID) === false) {
     return false;
   }
