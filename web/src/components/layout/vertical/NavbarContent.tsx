@@ -9,15 +9,15 @@ import UserDropdown from '@components/layout/shared/UserDropdown'
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
 import { useSession } from '@/context/SessionContext'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 
 
 const NavbarContent = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const { session, logout } = useSession()
   const handleLogout = async () => {
     if (logout) await logout();
-    router.reload()
+    // router.reload()
   }
 
   return (

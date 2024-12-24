@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useState, useEffect } from 'react'
 import { CodeType } from '@/types/valueTypes'
 import CodeCard from '@/components/CodeCard'
+import { getCodeList } from '@/lib/api'
 // import { getCodeList } from '@/libs/api'
 
 const CodeList = () => {
@@ -17,13 +18,13 @@ const CodeList = () => {
   const [data, setData] = useState<CodeType[]>([])
   const [page, setPage] = useState(0)
 
-  // useEffect(() => {
-  //   getCodeList()
-  //     .then(newItems => {
-  //       setItems(newItems)
-  //     })
-  //     .catch(() => {})
-  // }, [getCodeList])
+  useEffect(() => {
+    getCodeList()
+      .then(newData => {
+        setItems(newData)
+      })
+      .catch(() => { })
+  }, [getCodeList])
 
   useEffect(() => {
     let newData = items || []

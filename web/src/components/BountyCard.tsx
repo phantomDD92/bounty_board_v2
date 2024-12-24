@@ -14,28 +14,28 @@ const BountyCard = (props: BountyCardProps) => {
   const { bounty } = props
 
   function bountyToUserDate(bounty: BountyType) {
-    if (moment().diff(moment(bounty.date_created), 'year', false) > 1) {
-      return `${moment().diff(moment(bounty.date_created), 'year', false)} years ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'year', false) == 1) {
+    if (moment().diff(moment(bounty.createdAt), 'year', false) > 1) {
+      return `${moment().diff(moment(bounty.createdAt), 'year', false)} years ago by ${bounty.creator.name}`
+    } else if (moment().diff(moment(bounty.createdAt), 'year', false) == 1) {
       return `a year ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'month', false) > 1) {
-      return `${moment().diff(moment(bounty.date_created), 'month', false)} months ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'month', false) == 1) {
+    } else if (moment().diff(moment(bounty.createdAt), 'month', false) > 1) {
+      return `${moment().diff(moment(bounty.createdAt), 'month', false)} months ago by ${bounty.creator.name}`
+    } else if (moment().diff(moment(bounty.createdAt), 'month', false) == 1) {
       return `a month ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'day', false) > 1) {
-      return `${moment().diff(moment(bounty.date_created), 'day', false)} days ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'day', false) == 1) {
+    } else if (moment().diff(moment(bounty.createdAt), 'day', false) > 1) {
+      return `${moment().diff(moment(bounty.createdAt), 'day', false)} days ago by ${bounty.creator.name}`
+    } else if (moment().diff(moment(bounty.createdAt), 'day', false) == 1) {
       return `a day ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'hour', false) > 1) {
-      return `${moment().diff(moment(bounty.date_created), 'hour', false)} hours ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'hour', false) == 1) {
+    } else if (moment().diff(moment(bounty.createdAt), 'hour', false) > 1) {
+      return `${moment().diff(moment(bounty.createdAt), 'hour', false)} hours ago by ${bounty.creator.name}`
+    } else if (moment().diff(moment(bounty.createdAt), 'hour', false) == 1) {
       return `a hour ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'minute', false) > 1) {
-      return `${moment().diff(moment(bounty.date_created), 'minute', false)} minutes ago by ${bounty.creator.name}`
-    } else if (moment().diff(moment(bounty.date_created), 'minute', false) == 1) {
+    } else if (moment().diff(moment(bounty.createdAt), 'minute', false) > 1) {
+      return `${moment().diff(moment(bounty.createdAt), 'minute', false)} minutes ago by ${bounty.creator.name}`
+    } else if (moment().diff(moment(bounty.createdAt), 'minute', false) == 1) {
       return `a minute ago by ${bounty.creator.name}`
     } else {
-      return `${moment().diff(moment(bounty.date_created), 'second', false)} seconds ago by ${bounty.creator.name}`
+      return `${moment().diff(moment(bounty.createdAt), 'second', false)} seconds ago by ${bounty.creator.name}`
     }
   }
 
@@ -60,6 +60,7 @@ const BountyCard = (props: BountyCardProps) => {
   }
 
   function stringAvatar(name: string) {
+    console.log(name);
     return {
       sx: {
         bgcolor: stringToColor(name)
@@ -86,32 +87,22 @@ const BountyCard = (props: BountyCardProps) => {
           <Typography fontSize='small' color='secondary'>
             {bountyToUserDate(bounty)}
           </Typography>
-          <TagsList tags={bounty.tags}/>
+          <TagsList tags={bounty.skills} />
         </div>
-        <div>
-          {bounty.is_auction ? (
-            <Chip label='Open to Bids' variant='outlined' onClick={() => {}} />
-          ) : (
-            <>
-              <div className='flex flex-col items-center gap-1'>
-                <Chip
-                  color='primary'
-                  label={
-                    bounty.reward_type == 'fixed'
-                      ? `${bounty.reward_amount} in ${bounty.reward_token}`
-                      : `${bounty.reward_amount} in ${bounty.reward_token} / hour`
-                  }
-                  variant='outlined'
-                />
-                {/* {bounty.reward.price && (
+
+        <div className='flex flex-col items-center gap-1'>
+          <Chip
+            color='primary'
+            label={bounty.reward}
+            variant='outlined'
+          />
+          {/* {bounty.reward.price && (
                     <Typography fontSize='small' color='secondary'>{`$ ${bounty.reward.price}`}</Typography>
                   )} */}
-              </div>
-            </>
-          )}
         </div>
+
       </div>
-    </div>
+    </div >
   )
 }
 

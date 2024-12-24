@@ -7,20 +7,22 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addInfra } from '@/lib/api'
+import { addInfra, updateInfra } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { InfraParamType } from '@/types/valueTypes'
+import { InfraParamType, InfraType } from '@/types/valueTypes'
 import TiptapEditor from '@/components/TiptapEditor'
+import { useEffect } from 'react'
 // Type Imports
 
 type Props = {
+  data?: InfraType,
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
   // setData: (data: VideoType[]) => void
 }
 
-const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
+const AddInfraDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   // Hooks
   const {
     control,
@@ -35,13 +37,27 @@ const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
     }
   })
 
+  useEffect(() => {
+    if (open && data) {
+      resetForm({
+        description: data.description,
+        title: data.title,
+        url: data.url,
+      });
+    }
+  }, [open, data])
   // Handle Form Submit
-  const handleFormSubmit = async (data: InfraParamType) => {
+  const handleFormSubmit = async (params: InfraParamType) => {
     try {
-      await addInfra(data);
+      if (data) {
+        console.log("Update : ", data._id, params)
+        await updateInfra(data._id, params);
+      } else {
+        await addInfra(params);
+      }
       resetForm({ title: '', url: '', description: '' });
       onUpdate && onUpdate();
-      toast.success("Add Infra Success");
+      toast.success(data ? `Update Infra Success`: 'Add Infra Success');
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -63,7 +79,7 @@ const AddInfraDrawer = ({ open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>Add Infra</Typography>
+        <Typography variant='h5'>{data ? 'Edit Infra' : 'Add Infra'}</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>

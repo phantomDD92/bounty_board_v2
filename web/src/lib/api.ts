@@ -57,13 +57,11 @@ export async function deleteVideo(id: string) {
 
 // Infra related api calls
 export async function addInfra(params: InfraParamType) {
-  try {
-    await axios.post('/api/infra', params);
-  } catch (error: any) {
-    if (error?.response?.data?.message)
-      throw new Error(error?.response?.data?.message)
-    throw error;
-  }
+  await axios.post('/api/infra', params);
+}
+
+export async function updateInfra(infraId:string, params: InfraParamType) {
+  await axios.put(`/api/infra/${infraId}`, params);
 }
 
 export async function getInfraList() {
@@ -136,6 +134,11 @@ export async function getApprovedBountyList({ search, sort, tags, page, size }: 
 export async function getBountyList() {
   const resp = await axios.get('/api/bounties/all');
   return resp.data?.bounties;
+}
+
+export async function getBounty(bountyId: string) {
+  const resp = await axios.get(`/api/bounties/${bountyId}`);
+  return resp.data?.bounty;
 }
 
 // Bounty related apis

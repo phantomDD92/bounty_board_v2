@@ -14,6 +14,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
 import { InfraType } from '@/types/valueTypes'
+import { getInfraList } from '@/lib/api'
 // import { getInfraList } from '@/libs/api'
 
 const InfraList = () => {
@@ -21,13 +22,13 @@ const InfraList = () => {
   const [data, setData] = useState<InfraType[]>([])
   const [page, setPage] = useState(0)
 
-  // useEffect(() => {
-    // getInfraList()
-    //   .then(items => {
-    //     setData(items)
-    //   })
-    //   .catch(() => {})
-  // }, [getInfraList])
+  useEffect(() => {
+    getInfraList()
+      .then(items => {
+        setData(items)
+      })
+      .catch(() => {})
+  }, [getInfraList])
 
   useEffect(() => {
     let newData = data || []
@@ -50,9 +51,7 @@ const InfraList = () => {
                         <Typography variant='h5' component={Link} href={item.url} className='hover:text-primary mb-2'>
                           {item.title}
                         </Typography>
-                        <Typography component='pre' className='text-wrap'>
-                          {item.description}
-                        </Typography>
+                        <Typography dangerouslySetInnerHTML={{__html: item.description}} className='text-wrap break-words'/>
                       </div>
                     </div>
                   </div>

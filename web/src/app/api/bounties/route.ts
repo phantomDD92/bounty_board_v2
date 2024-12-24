@@ -22,11 +22,15 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: NextRequest, {params}: {params: {search: string, sort: string, tags: string, page: string, size: string}}) {
+export async function GET(request: NextRequest, { params}: { params: { search: string, sort: string, tags: string, page: string, size: string } }) {
   try {
     await dbConnect();
-
-    const bounties = await Bounty.find({ status: BountyStatus.APPROVED }).sort({ createdAt: -1 }); // Sort by newest first
+    const bounties = await Bounty.find({ status: BountyStatus.APPROVED })
+      .populate("creator", "name")
+      .populate("skills")
+      // .sort(sort)
+      // .skip((parseInt(page) - 1) * parseInt(size))
+      // .limit(parseInt(size)); // Sort by newest first
     return NextResponse.json({ success: true, bounties });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

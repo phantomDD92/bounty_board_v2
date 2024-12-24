@@ -41,7 +41,7 @@ import tableStyles from '@core/styles/table.module.css'
 import { InfraType } from '@/types/valueTypes'
 import { deleteInfra, getInfraList } from '@/lib/api'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader } from '@mui/material'
+import { CardHeader, Tooltip } from '@mui/material'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -115,15 +115,16 @@ const InfraListTable = () => {
       .then(newData => {
         setData(newData)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [getInfraList])
 
   const handleUpdateData = async () => {
     try {
       setOpen(false)
+      setSelected(undefined)
       const newData = await getInfraList()
       setData(newData)
-    } catch (error: any) {}
+    } catch (error: any) { }
   }
 
   const handleDeleteData = async (data: any) => {
@@ -195,9 +196,16 @@ const InfraListTable = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton size='small' onClick={() => setSelected(row.original)}>
-              <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
-            </IconButton>
+            <Tooltip title="Edit">
+              <IconButton size='small' onClick={() => { setSelected(row.original); setOpen(true) }}>
+                <i className='ri-edit-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton size='small' onClick={() => { setSelected(row.original); setConfirmShow(true); }}>
+                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -326,7 +334,7 @@ const InfraListTable = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
       </Card>
-      <AddVideoDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <AddVideoDrawer open={open} data={selected} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
       <ConfirmDialog
         open={confirmShow}
         data={selected}

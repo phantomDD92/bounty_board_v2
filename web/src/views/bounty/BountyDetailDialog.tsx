@@ -26,6 +26,7 @@ import { TimelineOppositeContent } from '@mui/lab'
 import { dateToString } from '@/utils/string'
 // import { useAuth } from '@/context/AuthContext'
 import { useSession } from '@/context/SessionContext'
+import { getBounty } from '@/lib/api'
 
 type CommentItemProps = {
   key: string
@@ -94,8 +95,7 @@ type Props = {
 const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
   const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
-  // const { session, token } = useAuth()
-  const {session} = useSession();
+  const { session } = useSession();
   const handleClose = () => {
     setOpen(false)
     // setBountyData(data)
@@ -114,20 +114,21 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
     // }
   }
 
-  // useEffect(() => {
-  //   if (open && data) {
-  //     setBountyData(data)
-  //     getBountyDetail(data.id)
-  //       .then(newData => {
-  //         setBountyData(newData)
-  //       })
-  //       .catch(() => {})
-  //   }
-  // }, [open, data])
+  useEffect(() => {
+    if (open && data) {
+      getBounty(data._id)
+        .then(newData => {
+          console.log(newData);
+          setBountyData(newData)
+        })
+        .catch(() => { })
+    }
+  }, [open, data])
+
   return (
     <Dialog fullWidth open={open} onClose={handleClose} maxWidth='lg' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-8 mb-4'>
-        <div className='flex justify-between items-center mb-4'>
+        <div className='flex justify-between items-center mb-2'>
           <div>{bountyData?.title}</div>
         </div>
         <TagsList tags={data?.skills || []} />
@@ -141,9 +142,8 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
             anymore and you will be able to start working and submit your work.
           </Typography>
         </Alert>
-        <Typography component='pre' className='mb-4 text-wrap'>
-          {bountyData?.description}
-        </Typography>
+        <div  className='mb-4 text-wrap' dangerouslySetInnerHTML={{ __html: bountyData?.description || "" }} />
+
         <Button variant='contained' className='mb-8'>
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
           I'm interested

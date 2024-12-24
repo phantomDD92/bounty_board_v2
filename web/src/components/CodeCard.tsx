@@ -17,6 +17,7 @@ import MenuList from '@mui/material/MenuList'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { CodeSnippetType } from '@/types/valueTypes'
+import { toast } from 'react-toastify'
 
 type Props = {
   snippets: CodeSnippetType[]
@@ -94,6 +95,13 @@ const CodeCard = (props: CodeCardProps) => {
     setSelected(id)
   }
 
+  const handleCodeCopy = async () => {
+    if (snippets && snippets.length) {
+        await navigator.clipboard.writeText(snippets[selected].code);
+        toast.success("Copy Code Success");
+    }
+  }
+
   return (
     <div className='border rounded bs-full min-w-64'>
       <div className='flex flex-col gap-4 p-5'>
@@ -102,24 +110,26 @@ const CodeCard = (props: CodeCardProps) => {
             <Typography variant='h5' className='hover:text-primary'>
               {title}
             </Typography>
-            <Typography component='pre' className='text-wrap'>
-              {description}
-            </Typography>
+            <div className='mt-4' dangerouslySetInnerHTML={{ __html: description }} />
           </Grid>
           <Grid item xs={12} md={6} lg={6} className='flex flex-col'>
-            <div className='flex gap-1 justify-end'>
-              {snippets && snippets.length > 0 && (
+            {snippets && snippets.length > 0 && (
+              <div className='flex gap-1 justify-between'>
                 <LanguageSelector snippets={snippets} onChange={handleLanguageChange} />
-              )}
-            </div>
+                <Button startIcon="" onClick={handleCodeCopy}>
+                <i className='ri-file-copy-line text-base mr-2'></i> <span>Copy</span></Button>
+              </div>
+            )}
+
             <SyntaxHighlighter
-              className=''
               language={snippets && snippets.length > 0 ? snippets[selected].language : ''}
               style={materialDark}
               showLineNumbers={true}
+              wrapLines={true}
+              lineProps={{ style: { whiteSpace: 'pre-wrap' } }}
               wrapLongLines={true}
             >
-              {snippets && snippets.length > 0 && snippets[selected].snippet}
+              {snippets && snippets.length > 0 && snippets[selected].code}
             </SyntaxHighlighter>
           </Grid>
         </Grid>
