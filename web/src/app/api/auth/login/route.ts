@@ -26,14 +26,14 @@ export async function DELETE(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const { challenge } = await req.json();
-    const data = await getLoginRequest(challenge);
+    const { exist, data } = await getLoginRequest(challenge);
     if (!data) {
-      return NextResponse.json({ success: false });
+      return NextResponse.json({ verus: exist ? 'pending' : 'cancel' });
     }
-    const {name, iaddress} = data;
+    const { name, iaddress } = data;
     // check parameters validation
     if (!iaddress || !name) {
-      return NextResponse.json({ success: false });
+      return NextResponse.json({ verus: 'error' });
     }
     // find user, if not found, create a user
     let user = await UserService.getUserByAddress(iaddress);
@@ -43,11 +43,11 @@ export async function PUT(req: NextRequest) {
       await newUser.save();
       user = newUser
     }
-    const response = NextResponse.json({ success: true });
+    const response = NextResponse.json({ verus: 'success' });
     createSession(response, user);
     return response;
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ verus: 'error', message: 'Internal server error' }, { status: 500 });
   }
 }
 

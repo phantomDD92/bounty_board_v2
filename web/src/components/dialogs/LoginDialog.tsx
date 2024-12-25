@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
 import QRCode from 'react-qr-code'
-import { Box, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 
 type LoginDialogProps = {
   open: boolean
@@ -29,19 +29,6 @@ const LoginDialog = ({ open, qrCode, onClose, loading }: LoginDialogProps) => {
     }
   }, [qrCode, open])
 
-  // useEffect(() => {
-  //   const counterInterval = setInterval(() => {
-  //     console.log("$$$$ : ", counter)
-  //     setCounter(counter - 1);
-  //   }, 1000)
-  //   return () => clearInterval(counterInterval)
-  // }, [])
-  const counterToTime = (value: number) => {
-    console.log('### :', value)
-    const min = Math.floor(value / 60)
-    const sec = value % 60
-    return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
-  }
   return (
     <Dialog open={open} onClose={onClose} maxWidth='md' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col items-center sm:pbs-8 sm:pbe-8 sm:pli-8'>

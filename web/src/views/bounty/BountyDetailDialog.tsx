@@ -118,7 +118,6 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
     if (open && data) {
       getBounty(data._id)
         .then(newData => {
-          console.log(newData);
           setBountyData(newData)
         })
         .catch(() => { })

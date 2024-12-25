@@ -1,6 +1,6 @@
 'use client'
 
-import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin } from '@/lib/api'
+import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin, checkVerus } from '@/lib/api'
 import { createContext, useContext, useEffect, useState } from 'react'
 import LoginDialog from '@/components/dialogs/LoginDialog'
 import { toast } from 'react-toastify'
@@ -32,6 +32,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   let checkInterval: string | number | NodeJS.Timeout | undefined;
 
   useEffect(() => {
+    checkVerus().then(() => { }).catch(() => { });
     getSession()
       .then(session => {
         setSession(session)
@@ -52,23 +53,35 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
     if (challenge) {
       checkInterval = setInterval(async () => {
         checkLogin(challenge)
-          .then(success => {
-            if (success) {
+          .then(status => {
+            console.log(status);
+            if (status == "success") {
+              console.log("##### 1")
               getSession()
                 .then(session => {
                   setSession(session)
                   clearInterval(checkInterval)
                   setOpen(false)
                 })
-                .catch(() => { 
+                .catch(() => {
                   toast.warning('Login Failed.')
                   clearInterval(checkInterval)
                   setOpen(false);
                 })
+            } else if (status == "cancel" || status == "error") {
+              console.log("##### 2")
+              toast.error('Login Request Canceled.')
+              clearInterval(checkInterval)
+              setOpen(false)
             }
           })
-          .catch(() => { })
-      }, 10000)
+          .catch(() => {
+            console.log("##### 3")
+            toast.error('Login Request Failed.')
+            clearInterval(checkInterval)
+            setOpen(false);
+          })
+      }, 5000)
       return () => {
         if (checkInterval) {
           clearInterval(checkInterval)

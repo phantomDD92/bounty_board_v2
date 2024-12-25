@@ -50,7 +50,6 @@ const AddInfraDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   const handleFormSubmit = async (params: InfraParamType) => {
     try {
       if (data) {
-        console.log("Update : ", data._id, params)
         await updateInfra(data._id, params);
       } else {
         await addInfra(params);

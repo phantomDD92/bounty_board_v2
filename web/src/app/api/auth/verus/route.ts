@@ -4,7 +4,6 @@ import {  verifyLoginRequest } from '@/lib/verus';
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    console.log(data);
     await verifyLoginRequest(data);
     return new Response(JSON.stringify(true), {
       status: 200, headers: {

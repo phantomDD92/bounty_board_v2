@@ -60,7 +60,6 @@ const BountyCard = (props: BountyCardProps) => {
   }
 
   function stringAvatar(name: string) {
-    console.log(name);
     return {
       sx: {
         bgcolor: stringToColor(name)

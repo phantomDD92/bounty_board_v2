@@ -14,16 +14,4 @@ services:
       - .env.dev
     command: >
       sh -c "yarn install && yarn dev"
-    depends_on: 
-      - mongodb
 
-  mongodb:
-    container_name: mongodb
-    image: mongo:5.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data:/data/db
-
-volumes:
-  data:

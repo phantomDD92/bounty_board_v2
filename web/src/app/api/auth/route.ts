@@ -18,12 +18,10 @@ export async function POST(req: NextRequest) {
       const isAdmin = await UserService.isFirstUser();
       const newUser = await UserService.createUser({name, iaddress, role: isAdmin ? Role.ADMIN: Role.USER});
       await newUser.save();
-      console.log("### : Create new user", name)
       user = newUser
     }
     const response = NextResponse.json({ success: true });
     // create session
-    console.log("### : create session");
     createSession(response, user);
     return response;
   } catch (error) {

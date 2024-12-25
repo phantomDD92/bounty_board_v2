@@ -28,7 +28,7 @@ export async function cancelLogin(challenge: string) {
 
 export async function checkLogin(challenge: string) {
   const res = await axios.put('/api/auth/login', { challenge });
-  return res.data?.success;
+  return res.data?.verus;
 }
 
 export async function logoutUser() {
@@ -168,3 +168,10 @@ export async function updateBounty(bountyId: string, params: BountyParamType) {
 }
 
 
+export async function checkVerus() {
+  try {
+    await axios.post('/api/auth/verus')
+  } catch (e) {
+    
+  }
+}

@@ -1,14 +1,12 @@
-const NodeCache = require('node-cache');
-const { randomBytes } = require('crypto');
-const { VerusIdInterface, primitives } = require('verusid-ts-client');
+import { checkChallenge, clearChallengeData, getChallengeData, registerChallenge, removeChallenge, setChallengeData } from "./cache";
+import { randomBytes } from 'crypto';
+import { VerusIdInterface, primitives } from 'verusid-ts-client';
+// const { randomBytes } = require('crypto');
+// const { VerusIdInterface, primitives } = require('verusid-ts-client');
 const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, NEXT_PUBLIC_APP_URL } = process.env;
 const I_ADDRESS_VERSION = 102;
 
-const registeredChallengeIDs = new Set();
-const verifiedChallengeIDs = new Map();
-const challengeCache = new NodeCache();
-
-const VerusId = new VerusIdInterface(CHAIN, API);
+const VerusId = new VerusIdInterface(CHAIN || "VRSC", API || "https://api.verus.services");
 
 function generateChallengeID(len = 20) {
   const buf = randomBytes(len)
@@ -17,11 +15,15 @@ function generateChallengeID(len = 20) {
   return iaddress
 }
 
+export async function init() {
+  console.log("init");
+}
+
 export async function createLoginRequest() {
   try {
     const challengeID = generateChallengeID();
     const retval = await VerusId.createLoginConsentRequest(
-      SIGNING_IADDRESS,
+      SIGNING_IADDRESS || "",
       new primitives.LoginConsentChallenge({
         challenge_id: challengeID,
         requested_access: [
@@ -38,22 +40,22 @@ export async function createLoginRequest() {
         created_at: Number((Date.now() / 1000).toFixed(0)),
       }),
       PRIVATE_KEY,
-      null,
-      null,
+      undefined,
+      undefined,
       CHAIN_IADDRESS
     );
     const _reso = await VerusId.verifyLoginConsentRequest(
       primitives.LoginConsentRequest.fromWalletDeeplinkUri(retval.toWalletDeeplinkUri()),
-      null,
+      undefined,
       CHAIN_IADDRESS
     );
     // register challenge into cache
-    let registers = challengeCache.get("registers") || [];
-    registers.push(challengeID);
-    challengeCache.set(registers);
-    registeredChallengeIDs.add(challengeID);
+    // let registers = challengeCache.get("registers") || [];
+    // registers.push(challengeID);
+    // challengeCache.set("registers", registers);
+    registerChallenge(challengeID);
 
-    console.log("Login Request Signed Correctly: ", _reso, challengeID, registeredChallengeIDs);
+    console.log("Login Request Signed Correctly: ", _reso, challengeID);
     return { deepLink: retval.toWalletDeeplinkUri(), challengeID: challengeID };
   } catch (e) {
     console.log("Whoops something went wrong: ", e);
@@ -61,38 +63,48 @@ export async function createLoginRequest() {
   }
 }
 
-export async function verifyLoginRequest(data:any) {
+export async function verifyLoginRequest(data: any) {
   const loginRequest = new primitives.LoginConsentResponse(data)
   const verifiedLogin = await VerusId.verifyLoginConsentResponse(loginRequest)
   const challengeID = loginRequest.decision.request.challenge.challenge_id;
   // check in cache
-  let registers = challengeCache.get("registers");
-  console.log("Is login signature Verified? : ", verifiedLogin, challengeID, registeredChallengeIDs, registers);
-  if (!verifiedLogin || registeredChallengeIDs.has(challengeID) === false) {
+  console.log("Is login signature Verified? : ", verifiedLogin, challengeID);
+  if (!verifiedLogin || !checkChallenge(challengeID)) {
     return false;
   }
- // Check user is allowed to login here if only certain iaddress are allowed to login...
-  const {result} = await VerusId.interface.getIdentity(loginRequest.signing_id)
-  verifiedChallengeIDs.set(challengeID, {name: result.friendlyname, iaddress: loginRequest.signing_id});
-  registeredChallengeIDs.delete(challengeID);
+  // Check user is allowed to login here if only certain iaddress are allowed to login...
+  const { result }: {result:any} = await VerusId.interface.getIdentity(loginRequest.signing_id)
+  setChallengeData(challengeID, { name: result.friendlyname || "", iaddress: loginRequest.signing_id });
   return true;
 }
-
-export async function getLoginRequest(challenge:string) {
-  if (!verifiedChallengeIDs.has(challenge))
-    return undefined
-  const data = verifiedChallengeIDs.get(challenge)
-  verifiedChallengeIDs.delete(challenge)
-  return data;
+export type ChallengeDataType = {
+  name: string,
+  iaddress: string,
 }
 
-export async function cancelLoginRequest(challenge:string) {
-  if (verifiedChallengeIDs.has(challenge)) {
-    console.log("REMOVE challenge from verified list");
-    verifiedChallengeIDs.delete(challenge)
+export type LoginRequestDataType = {
+  exist: boolean,
+  data?: ChallengeDataType,
+}
+
+export async function getLoginRequest(challenge: string): Promise<LoginRequestDataType> {
+  const data = getChallengeData(challenge)
+  if (!data) {
+    if (checkChallenge(challenge)) {
+      return { exist: true, data: undefined }
+    }
+    return { exist: false, data: undefined }
   }
-  if (registeredChallengeIDs.has(challenge)) {
-    console.log("REMOVE challenge from registered list")
-    registeredChallengeIDs.delete(challenge);
+  removeChallenge(challenge);
+  clearChallengeData(challenge);
+  return { exist: true, data };
+}
+
+export async function cancelLoginRequest(challenge: string) {
+  if (checkChallenge(challenge)) {
+    removeChallenge(challenge)
+  }
+  if (getChallengeData(challenge)) {
+    clearChallengeData(challenge)
   }
 }

@@ -7,8 +7,6 @@ import { Role } from '@/lib/models/User';
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: bountyId } = params;
-  console.log("###########")
-  // Create the comment
   try {
     const session = await getSession();
     if (!session || !session.isAuth) {
@@ -18,7 +16,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
     const { feedback } = await request.json();
-    console.log(feedback)
     const bounty = await Bounty.findByIdAndUpdate(bountyId, { $set: { status: BountyStatus.APPROVED, feedback } });
     if (!bounty) {
       return NextResponse.json({ success: false, error: "Bounty not found" }, { status: 404 });
