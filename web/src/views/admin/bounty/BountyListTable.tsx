@@ -117,7 +117,7 @@ const BountyListTable = () => {
       .then(newData => {
         setData(newData)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [getBountyList])
 
   useEffect(() => {
@@ -197,7 +197,7 @@ const BountyListTable = () => {
       }),
       columnHelper.accessor('status', {
         header: 'Status',
-        cell: ({ row }) => <Chip label={row.original.status} color='primary' />
+        cell: ({ row }) => <Chip label={row.original.status} color={row.original.status == "approved" ? 'primary' : row.original.status == "rejected" ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',

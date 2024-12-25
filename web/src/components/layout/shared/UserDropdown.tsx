@@ -136,21 +136,21 @@ const UserDropdown = ({ name, onLogout, admin }: Props) => {
                     )}
                   </MenuItem>
                   <Divider className='mlb-1' />
-                  {!admin &&
-                    <div className='flex items-center plb-2 pli-4'>
-                      <Button
-                        fullWidth
-                        variant='contained'
-                        color='error'
-                        size='small'
-                        endIcon={<i className='ri-logout-box-r-line' />}
-                        onClick={handleUserLogout}
-                        sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
-                      >
-                        Logout
-                      </Button>
-                    </div>
-                  }
+                  {/* {!admin && */}
+                  <div className='flex items-center plb-2 pli-4'>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      color='error'
+                      size='small'
+                      endIcon={<i className='ri-logout-box-r-line' />}
+                      onClick={handleUserLogout}
+                      sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                  {/* } */}
                 </MenuList>
               </ClickAwayListener>
             </Paper>

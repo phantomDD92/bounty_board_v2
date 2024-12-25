@@ -1,6 +1,7 @@
 'use client'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { CopyBlock, railscast } from 'react-code-blocks';
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+// import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import Grid from '@mui/material/Grid'
 import { CodeCardProps } from '@/types/widgetTypes'
 // React Imports
@@ -49,7 +50,7 @@ const LanguageSelector = ({ snippets, onChange }: Props) => {
   return (
     <>
       <ButtonGroup variant='outlined' ref={anchorRef} aria-label='split button' size='small'>
-        <Button>{snippets[selectedIndex].language}</Button>
+        <Button className='min-w-[100px]'>{snippets[selectedIndex].language}</Button>
         <Button
           className='pli-0'
           aria-haspopup='menu'
@@ -97,8 +98,8 @@ const CodeCard = (props: CodeCardProps) => {
 
   const handleCodeCopy = async () => {
     if (snippets && snippets.length && navigator.clipboard) {
-        await navigator.clipboard.writeText(snippets[selected].code);
-        toast.success("Copy Code Success");
+      await navigator.clipboard.writeText(snippets[selected].code);
+      toast.success("Copy Code Success");
     }
   }
 
@@ -110,18 +111,29 @@ const CodeCard = (props: CodeCardProps) => {
             <Typography variant='h5' className='hover:text-primary'>
               {title}
             </Typography>
-            <Typography dangerouslySetInnerHTML={{__html: description}} className='mt-4 text-wrap break-words'/>
+            <Typography dangerouslySetInnerHTML={{ __html: description }} className='mt-4 text-wrap break-words' />
           </Grid>
-          <Grid item xs={12} md={6} lg={6} className='flex flex-col'>
+          <Grid item xs={12} md={6} lg={6} className='flex flex-col gap-2'>
             {snippets && snippets.length > 0 && (
               <div className='flex gap-1 justify-between'>
                 <LanguageSelector snippets={snippets} onChange={handleLanguageChange} />
-                <Button startIcon="" onClick={handleCodeCopy}>
-                <i className='ri-file-copy-line text-base mr-2'></i> <span>Copy</span></Button>
+                {/* <Button startIcon="" onClick={handleCodeCopy}>
+                  <i className='ri-file-copy-line text-base mr-2'></i>
+                  <span>Copy</span>
+                </Button> */}
               </div>
             )}
-
-            <SyntaxHighlighter
+            {
+              snippets && snippets.length > 0 &&
+              <CopyBlock
+                language={snippets[selected].language}
+                text={snippets[selected].code}
+                showLineNumbers={true}
+                wrapLongLines={true}
+                theme={railscast}
+              />
+            }
+            {/* <SyntaxHighlighter
               language={snippets && snippets.length > 0 ? snippets[selected].language : ''}
               style={materialDark}
               showLineNumbers={true}
@@ -130,7 +142,7 @@ const CodeCard = (props: CodeCardProps) => {
               wrapLongLines={true}
             >
               {snippets && snippets.length > 0 && snippets[selected].code}
-            </SyntaxHighlighter>
+            </SyntaxHighlighter> */}
           </Grid>
         </Grid>
       </div>

@@ -7,20 +7,21 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addTag } from '@/lib/api'
+import { addTag, updateTag } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { TagParamType } from '@/types/valueTypes'
+import { TagParamType, TagType } from '@/types/valueTypes'
+import { useEffect } from 'react'
 // Type Imports
 
 type Props = {
   open: boolean
+  data?: TagType
   onClose?: () => void
   onUpdate?: () => void
-  // setData: (data: VideoType[]) => void
 }
 
 
-const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
+const TagEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
   // Hooks
   const {
     control,
@@ -34,16 +35,36 @@ const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
     }
   })
 
+  useEffect(() => {
+    if (open && data) {
+      resetForm({
+        _id: data._id,
+        name: data.name
+      })
+    }
+  }, [open, data])
+
   // Handle Form Submit
-  const handleFormSubmit = async (data: TagParamType) => {
-    addTag(data)
-      .then(() => {
-        resetForm({ _id: '', name: '' })
-        onUpdate && onUpdate()
-      })
-      .catch(error => {
-        toast.error(error.message)
-      })
+  const handleFormSubmit = async (params: TagParamType) => {
+    if (data) {
+      updateTag(params._id, params)
+        .then(() => {
+          resetForm({ _id: '', name: '' })
+          onUpdate && onUpdate()
+        })
+        .catch(error => {
+          toast.error(error.message)
+        })
+    } else {
+      addTag(params)
+        .then(() => {
+          resetForm({ _id: '', name: '' })
+          onUpdate && onUpdate()
+        })
+        .catch(error => {
+          toast.error(error.message)
+        })
+    }
   }
 
   // Handle Form Reset
@@ -62,7 +83,7 @@ const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>Add Tag</Typography>
+        <Typography variant='h5'>{data ? 'Edit Tag' : 'Add Tag'}</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>
@@ -77,6 +98,7 @@ const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
             render={({ field }) => (
               <TextField
                 {...field}
+                disabled={data != undefined}
                 fullWidth
                 label='ID'
                 placeholder='Enter a tag ID...'
@@ -100,7 +122,7 @@ const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
           />
           <div className='flex items-center gap-4'>
             <Button variant='contained' type='submit'>
-              Add
+              {data ? 'Update' : 'Add'}
             </Button>
             <Button variant='outlined' color='error' type='reset' onClick={handleReset}>
               Discard
@@ -112,4 +134,4 @@ const AddTagDrawer = ({ open, onClose, onUpdate }: Props) => {
   )
 }
 
-export default AddTagDrawer
+export default TagEditDrawer

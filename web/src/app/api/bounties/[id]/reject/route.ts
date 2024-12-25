@@ -16,7 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (session.role != Role.ADMIN) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
-    const {feedback} = await request.json();
+    const { feedback } = await request.json();
     const bounty = await Bounty.findByIdAndUpdate(bountyId, { $set: { status: BountyStatus.REJECTED, feedback } });
     if (!bounty) {
       return NextResponse.json({ success: false, error: "Bounty not found" }, { status: 404 });

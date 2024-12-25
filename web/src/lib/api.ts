@@ -106,13 +106,11 @@ export async function deleteCode(id: string) {
 
 // Tag related api calls
 export async function addTag(params: TagParamType) {
-  try {
     await axios.post('/api/tags', params);
-  } catch (error: any) {
-    if (error?.response?.data?.message)
-      throw new Error(error?.response?.data?.message)
-    throw error;
-  }
+}
+
+export async function updateTag(tagId: string, params: TagParamType) {
+  await axios.put(`/api/tags/${tagId}`, params);
 }
 
 export async function getTagList() {
@@ -172,6 +170,6 @@ export async function checkVerus() {
   try {
     await axios.post('/api/auth/verus')
   } catch (e) {
-    
+
   }
 }

@@ -49,10 +49,6 @@ export async function createLoginRequest() {
       undefined,
       CHAIN_IADDRESS
     );
-    // register challenge into cache
-    // let registers = challengeCache.get("registers") || [];
-    // registers.push(challengeID);
-    // challengeCache.set("registers", registers);
     registerChallenge(challengeID);
 
     console.log("Login Request Signed Correctly: ", _reso, challengeID);

@@ -18,27 +18,27 @@ type Props = {
 
 const VideoCard = ({ item }: Props) => {
   return (
-    <div className="video-container">
-      <iframe
-        src="https://www.youtube.com/watch?v=IrvXJz2WxhY"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title="YouTube Video Player"
-      ></iframe>
-    </div>
-    // <Link href={item.url} >
-    // <div className='border rounded bs-full'>
-    //   <div className='mli-2 mbs-2 overflow-hidden rounded'>
-    //     <video className='w-full h-auto' controls>
-    //       <source src="https://www.youtube.com/watch?v=IrvXJz2WxhY" type="video/mp4" />
-    //     </video>
-    //   </div>
-    //   <div className='flex flex-col gap-2 p-5'>
-    //     <Typography variant='h5'>{item.title}</Typography>
-    //   </div>
+    // <div className="video-container">
+    //   <iframe
+    //     src="https://www.youtube.com/watch?v=IrvXJz2WxhY"
+    //     frameBorder="0"
+    //     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    //     allowFullScreen
+    //     title="YouTube Video Player"
+    //   ></iframe>
     // </div>
-    // </Link>
+    <Link href={item.url} >
+      <div className='border rounded bs-full'>
+        <div className='mli-2 mbs-2 overflow-hidden rounded'>
+          <video className='w-full h-auto' controls>
+            <source src={item.url} />
+          </video>
+        </div>
+        <div className='flex flex-col gap-2 p-5'>
+          <Typography variant='h5'>{item.title}</Typography>
+        </div>
+      </div>
+    </Link>
   )
 }
 

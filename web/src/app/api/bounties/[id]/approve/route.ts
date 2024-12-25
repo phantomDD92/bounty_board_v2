@@ -7,6 +7,7 @@ import { Role } from '@/lib/models/User';
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: bountyId } = params;
+  // Create the comment
   try {
     const session = await getSession();
     if (!session || !session.isAuth) {
