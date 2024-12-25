@@ -33,7 +33,7 @@ import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // Component Imports
-import AddVideoDrawer from './AddInfraDrawer'
+import AddVideoDrawer from './InfraEditDrawer'
 import { toast } from 'react-toastify'
 
 // Style Imports

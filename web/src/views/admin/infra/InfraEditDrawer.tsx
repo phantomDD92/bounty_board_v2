@@ -22,7 +22,7 @@ type Props = {
   // setData: (data: VideoType[]) => void
 }
 
-const AddInfraDrawer = ({ data, open, onClose, onUpdate }: Props) => {
+const InfraEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   // Hooks
   const {
     control,
@@ -139,4 +139,4 @@ const AddInfraDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   )
 }
 
-export default AddInfraDrawer
+export default InfraEditDrawer

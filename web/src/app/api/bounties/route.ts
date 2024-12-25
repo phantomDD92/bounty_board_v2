@@ -24,8 +24,8 @@ export async function POST(request: Request) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    // console.log(searchParams);
+    const searchParams = request.nextUrl.searchParams;
+    console.log(searchParams);
     await dbConnect();
     const bounties = await Bounty.find({ status: BountyStatus.APPROVED })
       .populate("creator", "name")
