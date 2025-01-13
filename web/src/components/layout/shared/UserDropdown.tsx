@@ -37,13 +37,14 @@ const BadgeContentSpan = styled('span')({
 type Props = {
   name?: string
   admin?: boolean
+  adminPage?: boolean
   onLogout?: () => void
 }
 
-const UserDropdown = ({ name, onLogout, admin }: Props) => {
+const UserDropdown = ({ name, onLogout, admin, adminPage }: Props) => {
   // States
   const [open, setOpen] = useState(false)
- 
+
   // Refs
   const anchorRef = useRef<HTMLDivElement>(null)
 
@@ -124,8 +125,8 @@ const UserDropdown = ({ name, onLogout, admin }: Props) => {
             <Paper className={settings.skin === 'bordered' ? 'border shadow-none' : 'shadow-lg'}>
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
-                  <MenuItem className='gap-3' onClick={handleHomeClicked}>
-                    {admin ? (
+                  {admin && <MenuItem className='gap-3' onClick={handleHomeClicked}>
+                    {adminPage ? (
                       <>
                         <i className='ri-home-line' />
                         <Typography color='text.primary'>Home</Typography>
@@ -136,7 +137,7 @@ const UserDropdown = ({ name, onLogout, admin }: Props) => {
                         <Typography color='text.primary'>Dashboard</Typography>
                       </>
                     )}
-                  </MenuItem>
+                  </MenuItem>}
                   <Divider className='mlb-1' />
                   {/* {!admin && */}
                   <div className='flex items-center plb-2 pli-4'>

@@ -11,7 +11,7 @@ export async function getSession() {
 export async function loginSimulate() {
   try {
     await axios.post('/api/auth',
-      { iaddress: 'iKX5wGESZQFRQzhTV7dYGdsXq2o3uwyTd1', name: 'CCC.bitcoins@' }
+      { iaddress: 'iAv9tYEyNBP73aFmFyxqDPzisMLdTPAdtk', name: 'BBB.bitcoins@' }
     );
   } catch (error: any) {
     throw error;
@@ -185,4 +185,11 @@ export async function checkVerus() {
   } catch (e) {
 
   }
+}
+
+// User related apis
+export async function getUserList() {
+  const resp = await axios.get('/api/users');
+
+  return resp.data?.users;
 }

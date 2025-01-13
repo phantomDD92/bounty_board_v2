@@ -18,17 +18,17 @@ import { useSession } from '@/context/SessionContext'
 
 // Component Imports
 import NavToggle from './NavToggle'
+import { Role } from '@/lib/models/User'
 
 const NavbarContent = () => {
   // Hooks
   const { isBreakpointReached } = useHorizontalNav()
-  const { login, logout, session } = useSession()
-
-  // const { testLogin, logout, session } = useSession()
+  // const { login, logout, session } = useSession()
+  const { testLogin, logout, session } = useSession()
 
   const handleLoginClick = async () => {
-    // if (testLogin) await testLogin()
-    if (login) await login();
+    if (testLogin) await testLogin()
+    // if (login) await login();
   }
 
   const handleLogout = async () => {
@@ -46,7 +46,7 @@ const NavbarContent = () => {
       </div>
       <div className='flex items-center'>
         {session && session.isAuth ? (
-          <UserDropdown name={session?.name} onLogout={handleLogout} />
+          <UserDropdown name={session?.name} onLogout={handleLogout} admin={session.role == Role.ADMIN} />
         ) : (
           <Button onClick={handleLoginClick} variant='contained'>
             Login

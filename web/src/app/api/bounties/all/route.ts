@@ -20,8 +20,7 @@ export async function GET() {
 
     const bounties = await Bounty.find().populate('creator').sort({ createdAt: -1 }); // Sort by newest first
 
-    
-return NextResponse.json({ success: true, bounties });
+    return NextResponse.json({ success: true, bounties });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

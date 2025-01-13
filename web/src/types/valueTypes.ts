@@ -7,6 +7,8 @@ export type SkillType = {
 export type UserType = {
   name: string,
   iaddress: string,
+  role: string,
+  createdAt: Date,
 };
 
 export type SessionType = {
