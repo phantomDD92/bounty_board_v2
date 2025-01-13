@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+
+import type { Document, Model} from 'mongoose';
 
 // Define the Tag interface for TypeScript
 export interface ITag extends Document {

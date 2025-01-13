@@ -1,9 +1,12 @@
 'use client'
 
-import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin, checkVerus } from '@/lib/api'
 import { createContext, useContext, useEffect, useState } from 'react'
-import LoginDialog from '@/components/dialogs/LoginDialog'
+
 import { toast } from 'react-toastify'
+
+import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin, checkVerus } from '@/lib/api'
+
+import LoginDialog from '@/components/dialogs/LoginDialog'
 
 type Session = {
   isAuth: boolean
@@ -17,7 +20,6 @@ type SessionContextType = {
   testLogin: () => void
   logout: () => void
   login?: () => void
-  // setSession: (session: Session) => void;
 }
 
 const SessionContext = createContext<SessionContextType | null>(null)
@@ -55,6 +57,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         checkLogin(challenge)
           .then(status => {
             console.log(status);
+
             if (status == "success") {
               console.log("##### 1")
               getSession()
@@ -82,6 +85,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
             setOpen(false);
           })
       }, 5000)
+
       return () => {
         if (checkInterval) {
           clearInterval(checkInterval)
@@ -107,15 +111,15 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const login = async () => {
     setLoading(true)
     setOpen(true)
-    // Using fetch to send the POST request
 
+    // Using fetch to send the POST request
     requestLogin()
       .then((data: any) => {
         setLoading(false)
         setQrData(data.deepLink)
         setChallengeID(data.challengeID)
       })
-      .catch((error: any) => {
+      .catch(() => {
         toast.error('Login Request Failed')
       })
   }
@@ -155,8 +159,10 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
 
 export const useSession = () => {
   const context = useContext(SessionContext)
+
   if (!context) {
     throw new Error('useSession must be used within a SessionProvider')
   }
+
   return context
 }

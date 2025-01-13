@@ -9,16 +9,24 @@ import Grid from '@mui/material/Grid'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Pagination from '@mui/material/Pagination'
+import { Button, ButtonBase } from '@mui/material'
+
+// Component Imports
+import BountyCard from '@/components/BountyCard'
+
+// Lib Imports
+import { getApprovedBountyList } from '@/lib/api'
+
+// Context Imports
+import { useSession } from '@/context/SessionContext'
 
 // Type Imports
-import { BountyType, TagType } from '@/types/valueTypes'
-import BountyCard from '@/components/BountyCard'
-import { Button, ButtonBase } from '@mui/material'
+import type { BountyType, TagType } from '@/types/valueTypes'
+
+// Other Imports
 import BountyDetail from './BountyDetailDialog'
-import { getApprovedBountyList } from '@/lib/api'
-import { useSession } from '@/context/SessionContext'
 import BountyCreateDialog from './BountyCreateDialog'
-// import { getBountyList } from '@/libs/api'
+
 
 type Props = {
   search: string
@@ -40,10 +48,11 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
         setData(items)
       })
       .catch(() => {})
-  }, [getApprovedBountyList, search, sort, selectedTags, page])
+  }, [search, sort, selectedTags, page])
 
   useEffect(() => {
-    let newData = data || []
+    const newData = data || []
+
     if (page > Math.ceil(newData.length / 12)) setPage(0)
     setData(newData)
   }, [data, page])

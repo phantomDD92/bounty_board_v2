@@ -1,6 +1,6 @@
 'use client'
+
 // React Imports
-import type { ChangeEvent } from 'react'
 import { useState, useEffect } from 'react'
 
 // Next Imports
@@ -13,9 +13,13 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
-import { InfraType } from '@/types/valueTypes'
+
+// Lib Imports
 import { getInfraList } from '@/lib/api'
-// import { getInfraList } from '@/libs/api'
+
+// Type Imports
+import type { InfraType } from '@/types/valueTypes'
+
 
 const InfraList = () => {
   // States
@@ -28,10 +32,11 @@ const InfraList = () => {
         setData(items)
       })
       .catch(() => {})
-  }, [getInfraList])
+  }, [])
 
   useEffect(() => {
-    let newData = data || []
+    const newData = data || []
+
     if (page > Math.ceil(newData.length / 12)) setPage(0)
     setData(newData)
   }, [data, page])

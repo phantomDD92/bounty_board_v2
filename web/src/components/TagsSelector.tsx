@@ -1,17 +1,18 @@
+// React Imports
+import { useState } from 'react'
+
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 
 // Types Imports
-import { useState } from 'react'
-import { TagType } from '@/types/valueTypes'
+import type { TagType } from '@/types/valueTypes'
 
 export type Props = {
   title?: string,
   description?: string,
-  // value?: string[],
   tags?: TagType[],
-  onChange?: Function,
+  onChange?: (value:string[]) => void,
 }
 
 const TagsSelector = ({title, description, tags, onChange}: Props) => {
@@ -20,9 +21,11 @@ const TagsSelector = ({title, description, tags, onChange}: Props) => {
 
   const handleTagClick = (tag: string) => {
     if (value.includes(tag)) {
-      var index = value.indexOf(tag)
+      const index = value.indexOf(tag)
+      
       if (index !== -1) {
         const cloneValue = value.slice()
+
         cloneValue.splice(index, 1)
         setValue(cloneValue)
         onChange && onChange(cloneValue)

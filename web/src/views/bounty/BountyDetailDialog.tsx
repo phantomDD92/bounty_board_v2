@@ -18,15 +18,22 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
 import { Alert, AlertTitle } from '@mui/material'
-import { BountyType, CommentType } from '@/types/valueTypes'
-// import { createComment, getBountyDetail } from '@/lib/api'
-import TagsList from '@/components/TagsList'
-import Link from 'next/link'
 import { TimelineOppositeContent } from '@mui/lab'
+
+// Component Imports
+import TagsList from '@/components/TagsList'
+
+// Util Imports
 import { dateToString } from '@/utils/string'
-// import { useAuth } from '@/context/AuthContext'
+
+// Context Imports
 import { useSession } from '@/context/SessionContext'
+
+// Lib Imports
 import { getBounty } from '@/lib/api'
+
+// Type Imports
+import type { BountyType, CommentType } from '@/types/valueTypes'
 
 type CommentItemProps = {
   key: string
@@ -55,14 +62,16 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
 }
 
 type CommentEditorProps = {
-  onSend: Function
+  onSend: (value:string) => void
 }
 
 const CommentEditor = ({ onSend }: CommentEditorProps) => {
   const [comment, setComment] = useState<string>('')
+
   const handleSendClick = () => {
     onSend && onSend(comment)
   }
+
   return (
     <Grid container spacing={5}>
       <Grid item xs={12}>
@@ -96,24 +105,15 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
   const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
   const { session } = useSession();
+  
   const handleClose = () => {
     setOpen(false)
-    // setBountyData(data)
   }
 
-  const handleCommentSend = async (text: string) => {
-    // if (accessToken && data) {
-    //   createComment(accessToken, data.id, text)
-    //     .then(() => {
-    //       return getBountyDetail(data.id)
-    //     })
-    //     .then(data => {
-    //       setBountyData(data)
-    //     })
-    //     .catch(() => {})
-    // }
-  }
+  const handleCommentSend = () => {
 
+  }
+  
   useEffect(() => {
     if (open && data) {
       getBounty(data._id)
@@ -144,7 +144,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
         <Typography dangerouslySetInnerHTML={{__html: bountyData?.description || ""}} className='mb-4 text-wrap break-words'/>
         <Button variant='contained' className='mb-8'>
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
-          I'm interested
+          I&apos;m interested
         </Button>
         {session?.isAuth && <CommentEditor onSend={handleCommentSend} />}
         <Timeline className='p-4'>

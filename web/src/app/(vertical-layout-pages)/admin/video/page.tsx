@@ -1,5 +1,6 @@
-import VideoListTable from '@/views/admin/video/VideoListTable'
 import { Grid } from '@mui/material'
+
+import VideoListTable from '@/views/admin/video/VideoListTable'
 
 export default async function Page() {
   return (

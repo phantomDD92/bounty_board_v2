@@ -22,7 +22,7 @@ const LoginDialog = ({ open, qrCode, onClose, loading }: LoginDialogProps) => {
   const [QRData, setQRData] = useState(
     'i5jtwbp6zymeay9llnraglgjqgdrffsau4://x-callback-url/i3dQmgjq8L8XFGQUrs9Gpo8zvPWqs1KMtV/?i3dQmgjq8L8XFGQUrs9Gpo8zvPWqs1KMtV=Aa4uvSgsLAWiinJ7Go12_G6zOcUB_SsBGvW4AVxk05q0TGDq2DF_n1qbbExRobYwnNAZkWro16MN8qBxfV00Et3vHSRMeg9ysAUJ8BfPPdpjudQGAUkCBYT7MgABQR-3-LuR769M0LAIDMxQl-cgyOYFukiG9H7ZGUGMha949ih-VOicpuSgVaOvaLOFtMqY7SbkpCzAX761Kttn_BBqGSnAPo-o1JwfjbV2JpOK-1fENZwBjhSOz1LC-qIqk63NVdk0Y3PJUaUF5T_uWGcAAAAAAAAAAbqJxOWocEcouGM6Y-K9sqH6R6uuAQAAAAAAAAH9XMC6IZhHkmyGV3ojVlgCp2DnGQEkaHR0cDovLzQ1LjguMTQ2LjM1OjgwMDAvdmVydXNpZGxvZ2luVnuah7FxMfbust0L3RkezkpdYDsBAQA'
   )
-  // const [counter, setCounter] = useState(300)
+
   useEffect(() => {
     if (open && qrCode) {
       setQRData(qrCode)

@@ -4,13 +4,18 @@ import type { ChildrenType, Direction } from '@core/types'
 
 // Context Imports
 import { VerticalNavProvider } from '@menu/contexts/verticalNavContext'
-import { SettingsProvider } from '@core/contexts/settingsContext'
+
 import ThemeProvider from '@components/theme'
 
 // Util Imports
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
+import { SettingsProvider } from '@core/contexts/settingsContext'
+
 import { SessionProvider } from '@/context/SessionContext'
+
+
 import AppReactToastify from '@/lib/styles/AppReactToastify'
+
 type Props = ChildrenType & {
   direction: Direction
 }

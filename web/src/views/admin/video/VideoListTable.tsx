@@ -12,6 +12,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
+import { CardHeader, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -30,17 +31,22 @@ import {
 } from '@tanstack/react-table'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
+import { toast } from 'react-toastify'
 
 // Component Imports
-import VideoEditDrawer from './VideoEditDrawer'
-import { toast } from 'react-toastify'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { VideoType } from '@/types/valueTypes'
+
+// Lib Imports
 import { deleteVideo, getVideoList } from '@/lib/api'
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader, Tooltip } from '@mui/material'
+
+// Type Imports
+import type { VideoType } from '@/types/valueTypes'
+
+// Other Imports
+import VideoEditDrawer from './VideoEditDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -125,7 +131,6 @@ const VideoListTable = () => {
       })
       .catch(error => {
         toast.error(error.message)
-        // setOpen(false);
       })
   }
 
@@ -136,6 +141,7 @@ const VideoListTable = () => {
       await deleteVideo(data._id)
       toast.success('Delete Video Success')
       const newData = await getVideoList()
+
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)

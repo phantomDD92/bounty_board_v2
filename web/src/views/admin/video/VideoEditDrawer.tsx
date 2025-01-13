@@ -1,3 +1,6 @@
+// React Imports
+import { useEffect } from 'react'
+
 // MUI Imports
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -5,20 +8,22 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addVideo } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { VideoType } from '@/types/valueTypes'
-import { useEffect } from 'react'
+
+// Lib Imports
+import { addVideo } from '@/lib/api'
+
 // Type Imports
+import type { VideoType } from '@/types/valueTypes'
 
 type Props = {
   open: boolean
   data?: VideoType,
   onClose?: () => void
   onUpdate?: () => void
-  // setData: (data: VideoType[]) => void
 }
 
 type FormValues = {
@@ -47,7 +52,7 @@ const VideoEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
         url: data.url
       })
     }
-  }, [open, data])
+  }, [resetForm, open, data])
 
   // Handle Form Submit
   const handleFormSubmit = async (data: FormValues) => {

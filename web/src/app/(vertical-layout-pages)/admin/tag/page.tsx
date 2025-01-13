@@ -1,6 +1,6 @@
-import TagListTable from '@/views/admin/tag/TagListTable'
 import { Grid } from '@mui/material'
 
+import TagListTable from '@/views/admin/tag/TagListTable'
 
 export default async function Page() {
   return (

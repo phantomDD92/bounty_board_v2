@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import dbConnect from "@/lib/mongoose";
 import Tag from "@/lib/models/Tag";
 import { getSession } from "@/lib/session";
@@ -89,12 +90,15 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     await dbConnect();
     const session = await getSession();
+
     if (!session || !session.isAuth) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
+
     if (session.role != Role.ADMIN) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
+
     const tagId = params.id;
     const { name } = await request.json();
     const updatedTag = await Tag.findByIdAndUpdate(tagId, { $set: { name } }, { new: true, });
@@ -145,12 +149,15 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   try {
     await dbConnect();
     const session = await getSession();
+
     if (!session || !session.isAuth) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
+
     if (session.role != Role.ADMIN) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
+
     const tagId = params.id;
     const deletedTag = await Tag.findByIdAndDelete(tagId);
 

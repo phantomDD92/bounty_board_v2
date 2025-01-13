@@ -1,8 +1,10 @@
 import moment from 'moment'
+
 export const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`)
 export const withoutSuffix = (str: string, suffix: string) =>
   str.endsWith(suffix) ? str.slice(0, -suffix.length) : str
 export const withoutPrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str.slice(prefix.length) : str)
+
 export const dateUserToString = (date:string, username:string) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago by ${username}`
@@ -28,6 +30,7 @@ export const dateUserToString = (date:string, username:string) => {
     return `${moment().diff(moment(date), 'second', false)} seconds ago by ${username}`
   }
 }
+
 export const dateToString = (date:Date) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago`

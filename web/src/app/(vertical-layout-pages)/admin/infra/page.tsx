@@ -1,6 +1,6 @@
-import InfraListTable from '@/views/admin/infra/InfraListTable'
 import { Grid } from '@mui/material'
 
+import InfraListTable from '@/views/admin/infra/InfraListTable'
 
 export default async function Page() {
   return (

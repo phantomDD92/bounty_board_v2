@@ -1,10 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server';
+
 import {  verifyLoginRequest } from '@/lib/verus';
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+
     await verifyLoginRequest(data);
+
     return new Response(JSON.stringify(true), {
       status: 200, headers: {
         'Content-Type': 'application/json'

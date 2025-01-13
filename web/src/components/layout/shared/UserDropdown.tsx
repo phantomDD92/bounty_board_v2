@@ -19,10 +19,10 @@ import MenuList from '@mui/material/MenuList'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
+import { MenuItem } from '@mui/material'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
-import { MenuItem } from '@mui/material'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -43,6 +43,7 @@ type Props = {
 const UserDropdown = ({ name, onLogout, admin }: Props) => {
   // States
   const [open, setOpen] = useState(false)
+ 
   // Refs
   const anchorRef = useRef<HTMLDivElement>(null)
 
@@ -79,6 +80,7 @@ const UserDropdown = ({ name, onLogout, admin }: Props) => {
     else
       router.replace('/admin');
   }
+
   return (
     <>
       <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>

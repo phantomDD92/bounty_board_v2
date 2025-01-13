@@ -1,5 +1,8 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-import { IComment } from "./Comment";
+import mongoose, { Schema } from 'mongoose';
+
+import type { Document, Model} from 'mongoose';
+
+import type { IComment } from "@/lib/models/Comment";
 
 // Interfaces for referenced fields
 interface IUser {

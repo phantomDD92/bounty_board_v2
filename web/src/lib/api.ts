@@ -1,8 +1,10 @@
-import { BountyParamType, BountySearchType, BountyType, CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
 import axios from 'axios'
+
+import type { BountyParamType, BountySearchType, CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
 
 export async function getSession() {
   const res = await axios.get("/api/auth/session");
+
   return res.data?.session;
 }
 
@@ -18,16 +20,19 @@ export async function loginSimulate() {
 
 export async function requestLogin() {
   const res = await axios.post('/api/auth/login');
+
   return res.data;
 }
 
 export async function cancelLogin(challenge: string) {
   const res = await axios.delete('/api/auth/login', { data: { challenge } });
+
   return res.data;
 }
 
 export async function checkLogin(challenge: string) {
   const res = await axios.put('/api/auth/login', { challenge });
+
   return res.data?.verus;
 }
 
@@ -48,6 +53,7 @@ export async function addVideo(params: VideoParamType) {
 
 export async function getVideoList() {
   const resp = await axios.get('/api/video');
+
   return resp.data?.videos;
 }
 
@@ -66,6 +72,7 @@ export async function updateInfra(infraId:string, params: InfraParamType) {
 
 export async function getInfraList() {
   const resp = await axios.get('/api/infra');
+
   return resp.data?.infra;
 }
 
@@ -97,6 +104,7 @@ export async function addCodeSnippet(code: CodeType, params: CodeSnippetType) {
 
 export async function getCodeList() {
   const resp = await axios.get('/api/code');
+
   return resp.data?.codes;
 }
 
@@ -115,6 +123,7 @@ export async function updateTag(tagId: string, params: TagParamType) {
 
 export async function getTagList() {
   const resp = await axios.get('/api/tags');
+
   return resp.data?.tags;
 }
 
@@ -125,23 +134,27 @@ export async function deleteTag(id: string) {
 // Bounty related apis
 export async function getApprovedBountyList({ search, sort, tags, page, size }: BountySearchType) {
   const resp = await axios.get('/api/bounties', { params: { search, sort, tags: tags.join(","), page, size } });
+
   return resp.data?.bounties;
 }
 
 // Bounty related apis
 export async function getBountyList() {
   const resp = await axios.get('/api/bounties/all');
+
   return resp.data?.bounties;
 }
 
 export async function getBounty(bountyId: string) {
   const resp = await axios.get(`/api/bounties/${bountyId}`);
+
   return resp.data?.bounty;
 }
 
 // Bounty related apis
 export async function getUserBountyList() {
   const resp = await axios.get('/api/bounties/me');
+
   return resp.data?.bounties;
 }
 

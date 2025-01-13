@@ -12,9 +12,12 @@ import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
+import { CardHeader, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
+import { toast } from 'react-toastify'
+import { htmlToText } from 'html-to-text'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -31,17 +34,17 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Component Imports
-import AddCodeDrawer from './AddCodeDrawer'
-import { toast } from 'react-toastify'
-
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { CodeType } from '@/types/valueTypes'
+
 import { deleteCode, getCodeList } from '@/lib/api'
+
+// Component Imports
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader, Tooltip } from '@mui/material'
-import { htmlToText } from 'html-to-text'
+
+import type { CodeType } from '@/types/valueTypes'
+
+import AddCodeDrawer from './AddCodeDrawer'
 import AddCodeSnippetDrawer from './AddCodeSnippetDrawer'
 
 declare module '@tanstack/table-core' {
@@ -118,13 +121,14 @@ const CodeListTable = () => {
         setData(newData)
       })
       .catch(() => {})
-  }, [getCodeList])
+  }, [])
 
   const handleUpdateData = async () => {
     try {
       setSnippetShow(false);
       setOpen(false)
       const newData = await getCodeList()
+
       setData(newData)
     } catch (error: any) {}
   }
@@ -136,6 +140,7 @@ const CodeListTable = () => {
       await deleteCode(data._id)
       toast.success('Delete Code Success')
       const newData = await getCodeList()
+
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)

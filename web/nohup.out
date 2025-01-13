@@ -1,0 +1,731 @@
+yarn run v1.22.22
+$ next dev
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 10.8s
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 28.9s (3793 modules)
+ GET /bounty 200 in 20117ms
+ GET /bounty 200 in 523ms
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 10.5s (3787 modules)
+ GET /infra 200 in 11839ms
+ ○ Compiling /[...not-found] ...
+ ✓ Compiled /[...not-found] in 3s (3793 modules)
+ GET /_next/static/css/app/styles.css.map 200 in 4749ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /api/auth/verus in 1690ms (2064 modules)
+ ✓ Compiled /api/auth/login in 3ms (2369 modules)
+ ✓ Compiled in 1ms (2371 modules)
+ ✓ Compiled in 1ms (2371 modules)
+ GET /api/infra 200 in 8888ms
+ GET /_next/webpack-hmr 200 in 8571ms
+ ✓ Compiled in 3ms (2371 modules)
+ POST /api/auth/verus 500 in 10200ms
+ POST /api/auth/verus 500 in 10215ms
+ GET /api/auth/session 200 in 10231ms
+ ✓ Compiled in 1ms (2371 modules)
+ GET /api/infra 200 in 2881ms
+ GET /api/auth/session 200 in 2109ms
+(node:410464) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Login Request Signed Correctly:  true iLQaEE5SwcZkW66j3YFyxQR2kkwkcYpCE7
+ POST /api/auth/login 200 in 12840ms
+Cache : Set(0) {}
+ PUT /api/auth/login 200 in 235ms
+ ○ Compiling /api/bounties ...
+ ✓ Compiled /api/bounties in 2.9s (2369 modules)
+ ✓ Compiled (2372 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 5534ms
+ GET /api/tags 200 in 5564ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 61ms
+ GET /api/tags 200 in 48ms
+ ○ Compiling /code ...
+ ✓ Compiled /code in 16.1s (5333 modules)
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 2s (2613 modules)
+ GET /api/code 200 in 2281ms
+ GET /api/code 200 in 53ms
+ ○ Compiling /admin/bounty ...
+ ✓ Compiled /admin/bounty in 6.2s (4413 modules)
+ ○ Compiling /api/bounties/all ...
+ ✓ Compiled /api/bounties/all in 1427ms (1959 modules)
+ GET /api/bounties/all 200 in 1700ms
+ GET /api/bounties/all 200 in 40ms
+ ○ Compiling /admin/tag ...
+ ✓ Compiled /admin/video in 7.2s (4439 modules)
+ ○ Compiling /api/video ...
+ ✓ Compiled /api/video in 1533ms (1979 modules)
+ GET /api/video 200 in 1769ms
+ ○ Compiling /admin/code ...
+ ✓ Compiled /admin/code in 7.6s (4524 modules)
+ GET /api/video 200 in 7549ms
+ GET /api/code 200 in 53ms
+ GET /api/code 200 in 77ms
+ POST /api/code 201 in 94ms
+ GET /api/code 200 in 39ms
+ ○ Compiling /api/code/[id]/snippet ...
+ ✓ Compiled /api/code/[id]/snippet in 1179ms (1405 modules)
+ POST /api/code/676bf29b324b8d0b5af5922a/snippet 201 in 2786ms
+ GET /api/code 200 in 81ms
+ POST /api/code/676bf29b324b8d0b5af5922a/snippet 201 in 165ms
+ GET /api/code 200 in 39ms
+ POST /api/code/676bf29b324b8d0b5af5922a/snippet 201 in 176ms
+ GET /api/code 200 in 78ms
+ GET /api/video 200 in 526ms
+ GET /api/video 200 in 62ms
+ POST /api/video 201 in 139ms
+ GET /api/video 200 in 33ms
+ POST /api/video 201 in 112ms
+ GET /api/video 200 in 39ms
+ POST /api/video 201 in 95ms
+ GET /api/video 200 in 64ms
+ ○ Compiling /api/video/[id] ...
+ ✓ Compiled /api/video/[id] in 1251ms (161 modules)
+ DELETE /api/video/676bf30c324b8d0b5af59249 200 in 2774ms
+ GET /api/video 200 in 53ms
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 5.1s (2050 modules)
+ ○ Compiling /api/bounties ...
+ ✓ Compiled /api/tags in 2s (2053 modules)
+ ✓ Compiled (2056 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 2954ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 3852ms
+ ○ Compiling /api/auth/session ...
+ ✓ Compiled /api/auth/session in 1112ms (2058 modules)
+ DELETE /api/auth/session 200 in 1480ms
+ GET /api/tags 200 in 356ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 376ms
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 3.1s (2361 modules)
+Login Request Signed Correctly:  true iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2
+ POST /api/auth/login 200 in 8212ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 79ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 33ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 30ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 62ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 45ms
+Cache : Set(1) { 'iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2' }
+ PUT /api/auth/login 200 in 50ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /api/auth/verus in 1540ms (2357 modules)
+Cache : Set(0) {}
+ PUT /api/auth/login 200 in 1821ms
+Is login signature Verified? :  true iR1FQnMo3492NQJDh9kdtygQpMvtGFasR2
+Cache : Set(0) {}
+ POST /api/auth/verus 200 in 10129ms
+Login Request Signed Correctly:  true iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ
+ POST /api/auth/login 200 in 9519ms
+Cache : Set(1) { 'iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ' }
+ PUT /api/auth/login 200 in 65ms
+Cache : Set(1) { 'iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ' }
+ PUT /api/auth/login 200 in 52ms
+Cache : Set(1) { 'iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ' }
+ PUT /api/auth/login 200 in 54ms
+Is login signature Verified? :  true iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ
+Cache : Set(1) { 'iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ' }
+Cache : Set(1) { 'iGaaH9DhjSMwZphKpHsFfTdieB9dn3YLkZ' }
+ PUT /api/auth/login 200 in 69ms
+ POST /api/auth/verus 200 in 2193ms
+ PUT /api/auth/login 200 in 54ms
+ GET /api/auth/session 200 in 82ms
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 757ms (1508 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 763ms (1511 modules)
+ GET /api/infra 200 in 1036ms
+ GET /api/infra 200 in 38ms
+ ○ Compiling /code ...
+ ✓ Compiled /code in 2.4s (2076 modules)
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 1199ms (2079 modules)
+ GET /api/code 200 in 1371ms
+ GET /api/code 200 in 49ms
+ ○ Compiling /[...not-found] ...
+ ✓ Compiled /[...not-found] in 1520ms (2091 modules)
+ GET /_next/undefined 200 in 2480ms
+ GET /_next/undefined 200 in 240ms
+ GET /_next/undefined 200 in 217ms
+ GET /_next/undefined 200 in 205ms
+ GET /_next/undefined 200 in 237ms
+ ✓ Compiled in 5.3s (2517 modules)
+ ✓ Compiled in 2.2s (2517 modules)
+ ○ Compiling /bounty ...
+ ✓ Compiled /favicon.ico in 6.1s (1926 modules)
+ ✓ Compiled (1956 modules)
+ GET /bounty 200 in 423ms
+ GET /favicon.ico 200 in 50ms
+ GET /bounty 200 in 366ms
+ GET /favicon.ico 200 in 65ms
+ ○ Compiling /[...not-found] ...
+ ✓ Compiled /[...not-found] in 1224ms (844 modules)
+ GET /aaa9 200 in 2162ms
+ GET /aab9 200 in 239ms
+ GET /aaa9 200 in 332ms
+ GET /aab9 200 in 246ms
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 1805ms (1926 modules)
+ GET /bounty 200 in 3307ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 739ms (1956 modules)
+ GET /favicon.ico 200 in 994ms
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 1982ms (1961 modules)
+ GET /bounty 200 in 3233ms
+ GET /favicon.ico 200 in 43ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /[...not-found] in 3.2s (2079 modules)
+ ✓ Compiled (2399 modules)
+ POST /api/auth/verus 500 in 8983ms
+ POST /api/auth/verus 500 in 8951ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 9207ms
+ GET /api/auth/session 200 in 9188ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 9219ms
+ GET /_next/webpack-hmr 200 in 8175ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 157ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 160ms
+ GET /api/auth/session 200 in 164ms
+ GET /bounty 200 in 909ms
+ GET /favicon.ico 200 in 76ms
+ GET /favicon.ico 200 in 60ms
+ GET /api/tags 200 in 147ms
+ GET /api/auth/session 200 in 163ms
+ POST /api/auth/verus 500 in 180ms
+ POST /api/auth/verus 500 in 162ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 204ms
+ GET /_next/webpack-hmr 200 in 325ms
+ GET /api/auth/session 200 in 119ms
+ GET /api/tags 200 in 152ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 158ms
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 2.5s (2402 modules)
+ GET /api/infra 200 in 2846ms
+ ○ Compiling /video ...
+ ✓ Compiled /video in 5.2s (4912 modules)
+ GET /api/infra 200 in 4258ms
+ ○ Compiling /api/video ...
+ ✓ Compiled /code in 2.3s (2411 modules)
+ ✓ Compiled (2971 modules)
+ GET /api/video 200 in 6284ms
+ GET /api/video 200 in 53ms
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 1766ms (2974 modules)
+ GET /api/code 200 in 1952ms
+ GET /api/code 200 in 84ms
+ GET /api/infra 200 in 83ms
+ GET /api/infra 200 in 34ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 82ms
+ GET /api/tags 200 in 97ms
+ GET /api/tags 200 in 103ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 98ms
+ GET /bounty 200 in 1410ms
+ GET /favicon.ico 200 in 90ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 230ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 235ms
+ GET /api/auth/session 200 in 286ms
+ GET /api/tags 200 in 292ms
+ GET /api/tags 200 in 303ms
+ POST /api/auth/verus 500 in 494ms
+ GET /api/auth/session 200 in 123ms
+ GET /favicon.ico 200 in 123ms
+ POST /api/auth/verus 500 in 59ms
+ GET /_next/webpack-hmr 200 in 317ms
+ GET /api/infra 200 in 65ms
+ GET /api/infra 200 in 55ms
+ GET /api/video 200 in 67ms
+ GET /api/video 200 in 67ms
+ GET /api/code 200 in 69ms
+ GET /api/code 200 in 99ms
+ GET /api/infra 200 in 52ms
+ GET /api/infra 200 in 58ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 117ms
+ GET /api/tags 200 in 146ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 44ms
+ GET /api/tags 200 in 44ms
+ POST /api/bounties 201 in 135ms
+ GET /api/code 200 in 72ms
+ GET /api/code 200 in 68ms
+ GET /api/tags 200 in 78ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 56ms
+ GET /api/tags 200 in 66ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 80ms
+ GET /bounty 200 in 367ms
+ GET /favicon.ico 200 in 51ms
+ GET /api/v1/users/search 200 in 364ms
+ GET /bounty 200 in 361ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 214ms
+ POST /api/auth/verus 500 in 212ms
+ POST /api/auth/verus 500 in 203ms
+ GET /api/tags 200 in 248ms
+ GET /api/auth/session 200 in 249ms
+ GET /_next/webpack-hmr 200 in 363ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 127ms
+ GET /api/tags 200 in 157ms
+ GET /api/auth/session 200 in 164ms
+ ○ Compiling /admin/bounty ...
+ ✓ Compiled /admin/bounty in 5.1s (2442 modules)
+ ○ Compiling /api/bounties/all ...
+ ✓ Compiled /api/bounties/all in 1106ms (1673 modules)
+ GET /api/bounties/all 200 in 1364ms
+ GET /api/bounties/all 200 in 79ms
+ ○ Compiling /admin/infra ...
+ ✓ Compiled /admin/infra in 4.3s (4228 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 686ms (1401 modules)
+ GET /api/infra 200 in 824ms
+ ○ Compiling /admin/video ...
+ ✓ Compiled /admin/video in 946ms (1407 modules)
+ GET /api/infra 200 in 1921ms
+ ○ Compiling /admin/code ...
+ ✓ Compiled /admin/code in 2.6s (1417 modules)
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 1578ms (1420 modules)
+ GET /api/code 200 in 1762ms
+ GET /api/code 200 in 66ms
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 7.1s (1926 modules)
+ GET /bounty 200 in 8612ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 2.2s (1956 modules)
+ GET /favicon.ico 200 in 2473ms
+ GET /bounty 200 in 1452ms
+ GET /bounty 200 in 400ms
+ GET /favicon.ico 200 in 90ms
+ GET /favicon.ico 200 in 115ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /[...not-found] in 3.2s (2074 modules)
+ ✓ Compiled (2394 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ POST /api/auth/verus 500 in 10861ms
+ POST /api/auth/verus 500 in 10823ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 11155ms
+ GET /api/auth/session 200 in 11105ms
+ GET /api/tags 200 in 11184ms
+ GET /_next/webpack-hmr 200 in 9531ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 168ms
+ GET /api/auth/session 200 in 193ms
+ GET /api/tags 200 in 202ms
+ DELETE /api/auth/session 200 in 26ms
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 1273ms (2396 modules)
+Login Request Signed Correctly:  true i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3
+ POST /api/auth/login 200 in 6609ms
+Cache : Set(1) { 'i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3' }
+ PUT /api/auth/login 200 in 91ms
+Cache : Set(1) { 'i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3' }
+ PUT /api/auth/login 200 in 62ms
+Cache : Set(1) { 'i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3' }
+ PUT /api/auth/login 200 in 79ms
+Cache : Set(1) { 'i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3' }
+ PUT /api/auth/login 200 in 90ms
+Is login signature Verified? :  true i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3
+Cache : Set(1) { 'i8wBmZtod9myBYQ7zgprtjdriSdWnRCji3' }
+ POST /api/auth/verus 200 in 2167ms
+ PUT /api/auth/login 200 in 68ms
+ GET /api/auth/session 200 in 67ms
+ ○ Compiling /admin/bounty ...
+ ✓ Compiled /admin/bounty in 2.8s (1700 modules)
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 1719ms (1742 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 934ms (1745 modules)
+ GET /api/infra 200 in 1161ms
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 1259ms (2452 modules)
+ GET /api/infra 200 in 2554ms
+ GET /api/tags 200 in 122ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 124ms
+ GET /api/tags 200 in 44ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 71ms
+ POST /api/bounties 201 in 124ms
+ ○ Compiling /api/bounties/all ...
+ ✓ Compiled /api/bounties/all in 1206ms (2442 modules)
+ GET /api/bounties/all 200 in 1541ms
+ GET /api/bounties/all 200 in 70ms
+ ✓ Compiled /api/bounties/[id]/approve in 438ms (160 modules)
+ POST /api/bounties/676ce0f6324b8d0b5af592cd/approve 200 in 1960ms
+ GET /api/bounties/all 200 in 86ms
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 1382ms (2049 modules)
+ ○ Compiling /api/tags ...
+ ✓ Compiled /api/tags in 759ms (2051 modules)
+ ✓ Compiled (2054 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 2435ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 2514ms
+ GET /api/tags 200 in 156ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 184ms
+ GET /bounty 200 in 1245ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 2.2s (2081 modules)
+ GET /favicon.ico 200 in 2410ms
+ GET /favicon.ico 200 in 55ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 256ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /api/auth/verus in 978ms (2083 modules)
+ ✓ Compiled (2386 modules)
+ GET /api/tags 200 in 2170ms
+ ○ Compiling /[...not-found] ...
+ ✓ Compiled /[...not-found] in 1213ms (2398 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ POST /api/auth/verus 500 in 4618ms
+ POST /api/auth/verus 500 in 4616ms
+ GET /api/auth/session 200 in 4726ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 4171ms
+ GET /api/tags 200 in 2350ms
+ GET /_next/webpack-hmr 200 in 3529ms
+ GET /api/auth/session 200 in 110ms
+ ○ Compiling /api/bounties/[id] ...
+ ✓ Compiled /api/bounties/[id] in 1148ms (2400 modules)
+ GET /api/bounties/676ce0f6324b8d0b5af592cd 200 in 2493ms
+ GET /api/bounties/676ce0f6324b8d0b5af592cd 200 in 166ms
+ ○ Compiling /admin/bounty ...
+ ✓ Compiled /admin/bounty in 1468ms (2475 modules)
+ GET /api/bounties/all 200 in 85ms
+ GET /api/bounties/all 200 in 100ms
+ POST /api/bounties/676b19f5ec3b28ed6bd700e2/approve 200 in 177ms
+ GET /api/bounties/all 200 in 74ms
+ GET /bounty 200 in 938ms
+ GET /favicon.ico 200 in 92ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 222ms
+ GET /api/auth/session 200 in 253ms
+ GET /api/tags 200 in 261ms
+ POST /api/auth/verus 500 in 679ms
+ POST /api/auth/verus 500 in 665ms
+ GET /_next/webpack-hmr 200 in 787ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 161ms
+ GET /api/tags 200 in 199ms
+ GET /api/auth/session 200 in 208ms
+ GET /api/bounties/676b19f5ec3b28ed6bd700e2 200 in 152ms
+ ○ Compiling /video ...
+ ✓ Compiled /video in 2.4s (1112 modules)
+ ○ Compiling /api/video ...
+ ✓ Compiled /api/video in 1896ms (1208 modules)
+ GET /api/video 200 in 2241ms
+ GET /api/video 200 in 47ms
+ GET /video 200 in 1173ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 674ms (1232 modules)
+ GET /favicon.ico 200 in 900ms
+ GET /favicon.ico 200 in 65ms
+ ○ Compiling /api/auth/verus ...
+ ✓ Compiled /api/auth/verus in 761ms (1234 modules)
+ ✓ Compiled /[...not-found] in 2ms (1537 modules)
+ GET /api/video 200 in 4543ms
+ ✓ Compiled in 2ms (1549 modules)
+ ✓ Compiled in 1ms (1549 modules)
+ GET /api/auth/session 200 in 8727ms
+ ✓ Compiled in 1ms (1549 modules)
+ POST /api/auth/verus 500 in 9665ms
+ POST /api/auth/verus 500 in 9630ms
+ ✓ Compiled in 1ms (1549 modules)
+ GET /api/video 200 in 5884ms
+ GET /_next/webpack-hmr 200 in 9834ms
+ GET /api/auth/session 200 in 2904ms
+ GET /video 200 in 835ms
+ GET /video 200 in 323ms
+ GET /api/video 200 in 140ms
+ GET /api/auth/session 200 in 122ms
+ POST /api/auth/verus 500 in 361ms
+ POST /api/auth/verus 500 in 355ms
+ GET /api/video 200 in 89ms
+ GET /api/auth/session 200 in 94ms
+ GET /_next/webpack-hmr 200 in 378ms
+ ○ Compiling /code ...
+ ✓ Compiled /code in 7.4s (1643 modules)
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 2000ms (1764 modules)
+ GET /api/code 200 in 2337ms
+ GET /api/code 200 in 77ms
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 2.2s (1083 modules)
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 5.8s (1931 modules)
+ ○ Compiling /api/bounties ...
+ ✓ Compiled /api/tags in 3.8s (2052 modules)
+ ✓ Compiled (2055 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 4250ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 5128ms
+ GET /api/tags 200 in 77ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 92ms
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 949ms (2058 modules)
+ GET /api/infra 200 in 1154ms
+ GET /api/infra 200 in 47ms
+ ○ Compiling /video ...
+ ✓ Compiled /video in 1624ms (2063 modules)
+ ○ Compiling /api/video ...
+ ✓ Compiled /api/video in 2.2s (2067 modules)
+ GET /api/video 200 in 2414ms
+ ○ Compiling /code ...
+ ✓ Compiled /code in 3.5s (2627 modules)
+ GET /api/video 200 in 5045ms
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 2.7s (2630 modules)
+ GET /api/code 200 in 2850ms
+ GET /api/code 200 in 56ms
+ ○ Compiling /admin/video ...
+ ✓ Compiled /admin/video in 3.3s (2698 modules)
+ GET /api/video 200 in 72ms
+ GET /api/video 200 in 47ms
+ ○ Compiling /admin/bounty ...
+ ✓ Compiled /admin/bounty in 4s (1324 modules)
+ ○ Compiling /api/bounties/all ...
+ ✓ Compiled /api/bounties/all in 1096ms (1351 modules)
+ GET /api/bounties/all 200 in 1484ms
+ GET /api/bounties/all 200 in 92ms
+ GET /api/bounties/all 200 in 148ms
+ GET /api/bounties/all 200 in 124ms
+ ○ Compiling /admin/infra ...
+ ✓ Compiled /admin/infra in 2.4s (1398 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 926ms (1401 modules)
+ GET /api/infra 200 in 1981ms
+ GET /api/bounties/all 200 in 132ms
+ GET /api/bounties/all 200 in 78ms
+ GET /api/infra 200 in 93ms
+ ○ Compiling /admin/video ...
+ ✓ Compiled /admin/video in 911ms (1407 modules)
+ ○ Compiling /api/video ...
+ ✓ Compiled /api/video in 1586ms (1411 modules)
+ GET /api/video 200 in 1800ms
+ GET /api/video 200 in 72ms
+ ○ Compiling /admin/code ...
+ ✓ Compiled /admin/code in 2.9s (1421 modules)
+ ○ Compiling /bounty ...
+ ✓ Compiled /bounty in 6.1s (2185 modules)
+ GET /bounty 200 in 9318ms
+ ○ Compiling /api/code ...
+ ✓ Compiled /api/code in 1481ms (2188 modules)
+ GET /api/code 200 in 1756ms
+ GET /api/code 200 in 105ms
+ GET /bounty 200 in 1081ms
+ ○ Compiling /[...not-found] ...
+ ✓ Compiled /[...not-found] in 2.1s (2155 modules)
+ ✓ Compiled (2475 modules)
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ POST /api/auth/verus 500 in 7970ms
+ POST /api/auth/verus 500 in 7951ms
+ GET /api/auth/session 200 in 8309ms
+ GET /api/tags 200 in 8341ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 8342ms
+ GET /_next/webpack-hmr 200 in 8802ms
+ GET /api/auth/session 200 in 172ms
+URLSearchParams {
+  'search' => '',
+  'sort' => '-date_created',
+  'tags' => '',
+  'page' => '0',
+  'size' => '10' }
+ GET /api/tags 200 in 212ms
+ GET /api/bounties?search=&sort=-date_created&tags=&page=0&size=10 200 in 232ms
+ ○ Compiling /infra ...
+ ✓ Compiled /infra in 1507ms (2480 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 821ms (1527 modules)
+ GET /api/infra 200 in 1033ms
+ GET /api/infra 200 in 75ms
+ ○ Compiling /admin/video ...
+ ✓ Compiled /admin/video in 4s (1269 modules)
+ ○ Compiling /api/video ...
+ ✓ Compiled /api/video in 1483ms (1297 modules)
+ GET /api/video 200 in 1787ms
+ GET /api/video 200 in 120ms
+ ○ Compiling /admin/infra ...
+ ✓ Compiled /admin/infra in 1473ms (1389 modules)
+ ○ Compiling /api/infra ...
+ ✓ Compiled /api/infra in 808ms (1392 modules)
+ GET /api/infra 200 in 1083ms
+ GET /api/infra 200 in 84ms
+ GET /api/video 200 in 121ms
+ GET /api/video 200 in 86ms

@@ -10,19 +10,20 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+
+// Component Imports
 import TagsSelector from '@/components/TagsSelector'
-import { TagType } from '@/types/valueTypes'
-import { useEffect, useState } from 'react'
-import { getTagList } from '@/lib/api'
-// import {  getTagList } from '@/libs/api'
+
+// Type Imports
+import type { TagType } from '@/types/valueTypes'
 
 type Props = {
   search: string
   sort: string
   tags: TagType[]
-  onSearchChange?: Function
-  onSortChange?: Function
-  onTagsChange?: Function
+  onSearchChange?: (value:string) => void,
+  onSortChange?: (value:string) => void
+  onTagsChange?: (value:any) => void
 }
 
 const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTagsChange }: Props) => {

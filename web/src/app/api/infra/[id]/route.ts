@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server';
+
 import dbConnect from '@/lib/mongoose';
 import Infra from '@/lib/models/Infra';
 import { getSession } from '@/lib/session';
@@ -100,27 +102,37 @@ import { Role } from '@/lib/models/User';
  */
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
+
   try {
     const session = await getSession();
+
     if (!session || !session.isAuth) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
+
     if (session.role != Role.ADMIN) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
+
     const { id } = params;
     const { title, description, url } = await req.json();
+
     if (!title || !description || !url) {
       return NextResponse.json({ success: false, error: "Title, Description, and URL are required." }, { status: 400 });
     }
+
     const updatedInfra = await Infra.findByIdAndUpdate(id, { $set: { title, description, url } }, { new: true });
+
     if (!updatedInfra) {
       return NextResponse.json({ success: false, error: "Infra not found" }, { status: 404 });
     }
-    return NextResponse.json({ success: true });
+
+    
+return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error updating infra:', error);
-    return NextResponse.json({ success: false, error: "Server error occurred" }, { status: 500 });
+    
+return NextResponse.json({ success: false, error: "Server error occurred" }, { status: 500 });
   }
 }
 
@@ -174,23 +186,30 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
  */
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
+
   try {
     const session = await getSession();
+
     if (!session || !session.isAuth) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
+
     if (session.role != Role.ADMIN) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
+
     const { id } = params;
     const deletedInfra = await Infra.findByIdAndDelete(id);
 
     if (!deletedInfra) {
       return NextResponse.json({ success: false, error: "Infra not found" }, { status: 404 });
     }
-    return NextResponse.json({ success: true });
+
+    
+return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting infra:', error);
-    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
+    
+return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }

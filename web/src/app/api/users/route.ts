@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
 import dbConnect from '@/lib/mongoose';
 import User from '@/lib/models/User';
 
@@ -38,6 +39,8 @@ import User from '@/lib/models/User';
 export async function GET() {
   await dbConnect(); // Connect to MongoDB
   const users = await User.find({});
-  return NextResponse.json(users);
+
+  
+return NextResponse.json(users);
 }
 

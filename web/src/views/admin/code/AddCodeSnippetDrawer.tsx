@@ -5,24 +5,25 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+import { MenuItem, Select } from '@mui/material'
+
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addCode, addCodeSnippet } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { CodeParamType, CodeSnippetType, CodeType } from '@/types/valueTypes'
-import TiptapEditor from '@/components/TiptapEditor'
-import CodeEditor from '@/components/CodeEditor'
-import { MenuItem, Select } from '@mui/material'
+
+import { addCodeSnippet } from '@/lib/api'
 import { Language } from '@/lib/models/Code'
+
 import languageData from '@/data/LanguageData'
+
 // Type Imports
+import type { CodeSnippetType, CodeType } from '@/types/valueTypes'
 
 type Props = {
   data: CodeType
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
-  // setData: (data: VideoType[]) => void
 }
 
 const AddCodeSnippetDrawer = ({ data, open, onClose, onUpdate }: Props) => {

@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation'
+
 // MUI Imports
 import Button from '@mui/material/Button'
 
@@ -17,16 +19,20 @@ import ScrollToTop from '@core/components/scroll-to-top'
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 import { getSession } from '@/lib/session'
 import { Role } from '@/lib/models/User'
-import { redirect } from 'next/navigation'
+
+
 
 const Layout = async ({ children }: ChildrenType) => {
+
   // Vars
   const mode = getMode()
   const systemMode = getSystemMode()
   const session = await getSession()
+
   if (!session || !session.isAuth || session.role != Role.ADMIN) {
     redirect('/')
   }
+  
   return (
     <>
       <VerticalLayout

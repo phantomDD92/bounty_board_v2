@@ -12,11 +12,13 @@ import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { htmlToText } from 'html-to-text'
+import { CardHeader, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
+import { htmlToText } from 'html-to-text'
 import { rankItem } from '@tanstack/match-sorter-utils'
+import { toast } from 'react-toastify'
 import {
   createColumnHelper,
   flexRender,
@@ -32,16 +34,18 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Component Imports
-import AddVideoDrawer from './InfraEditDrawer'
-import { toast } from 'react-toastify'
-
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { InfraType } from '@/types/valueTypes'
+
 import { deleteInfra, getInfraList } from '@/lib/api'
+
+// Component Imports
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader, Tooltip } from '@mui/material'
+
+// View Imports
+import AddVideoDrawer from './InfraEditDrawer'
+
+import type { InfraType } from '@/types/valueTypes'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -116,13 +120,14 @@ const InfraListTable = () => {
         setData(newData)
       })
       .catch(() => { })
-  }, [getInfraList])
+  }, [])
 
   const handleUpdateData = async () => {
     try {
       setOpen(false)
       setSelected(undefined)
       const newData = await getInfraList()
+
       setData(newData)
     } catch (error: any) { }
   }
@@ -134,6 +139,7 @@ const InfraListTable = () => {
       await deleteInfra(data._id)
       toast.success('Delete Infra Success')
       const newData = await getInfraList()
+
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)

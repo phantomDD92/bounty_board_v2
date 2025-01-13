@@ -3,10 +3,12 @@ import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import Avatar from '@mui/material/Avatar'
 
-// Types Imports
-import { BountyCardProps } from '@/types/widgetTypes'
-import { BountyType } from '@/types/valueTypes'
 import moment from 'moment'
+
+// Types Imports
+import type { BountyCardProps } from '@/types/widgetTypes'
+import type { BountyType } from '@/types/valueTypes'
+
 import TagsList from './TagsList'
 
 const BountyCard = (props: BountyCardProps) => {
@@ -52,6 +54,7 @@ const BountyCard = (props: BountyCardProps) => {
 
     for (i = 0; i < 3; i += 1) {
       const value = (hash >> (i * 8)) & 0xff
+
       color += `00${value.toString(16)}`.slice(-2)
     }
     /* eslint-enable no-bitwise */

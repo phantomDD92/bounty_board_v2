@@ -1,3 +1,6 @@
+// React Imports
+import { useEffect } from 'react'
+
 // MUI Imports
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -5,21 +8,22 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addInfra, updateInfra } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { InfraParamType, InfraType } from '@/types/valueTypes'
+
+import { addInfra, updateInfra } from '@/lib/api'
+
+import type { InfraParamType, InfraType } from '@/types/valueTypes'
+
 import TiptapEditor from '@/components/TiptapEditor'
-import { useEffect } from 'react'
-// Type Imports
 
 type Props = {
   data?: InfraType,
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
-  // setData: (data: VideoType[]) => void
 }
 
 const InfraEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
@@ -45,7 +49,8 @@ const InfraEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
         url: data.url,
       });
     }
-  }, [open, data])
+  }, [resetForm, open, data])
+
   // Handle Form Submit
   const handleFormSubmit = async (params: InfraParamType) => {
     try {
@@ -54,6 +59,7 @@ const InfraEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
       } else {
         await addInfra(params);
       }
+
       resetForm({ title: '', url: '', description: '' });
       onUpdate && onUpdate();
       toast.success(data ? `Update Infra Success`: 'Add Infra Success');

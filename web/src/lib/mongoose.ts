@@ -22,7 +22,9 @@ async function dbConnect() {
       bufferCommands: false,
     });
   }
+
   cached.conn = await cached.promise;
+
   return cached.conn;
 }
 

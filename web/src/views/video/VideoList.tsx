@@ -1,16 +1,19 @@
 'use client'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import Pagination from '@mui/material/Pagination'
-import Typography from '@mui/material/Typography'
-import LinkPreview from '@/components/LinkPreview'
+
+// React Imports
 import { useState, useEffect } from 'react'
-import { VideoType } from '@/types/valueTypes'
-import { getVideoList } from '@/lib/api'
+
+// Next Imports
 import Link from 'next/link'
-// import { getVideoList } from '@/libs/api'
+
+// MUI Imports
+import { Grid, Card, CardContent, CardHeader, Pagination, Typography } from '@mui/material'
+
+// Lib Imports
+import { getVideoList } from '@/lib/api'
+
+// Type Imports
+import type { VideoType } from '@/types/valueTypes'
 
 type Props = {
   item: VideoType
@@ -18,15 +21,7 @@ type Props = {
 
 const VideoCard = ({ item }: Props) => {
   return (
-    // <div className="video-container">
-    //   <iframe
-    //     src="https://www.youtube.com/watch?v=IrvXJz2WxhY"
-    //     frameBorder="0"
-    //     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    //     allowFullScreen
-    //     title="YouTube Video Player"
-    //   ></iframe>
-    // </div>
+
     <Link href={item.url} >
       <div className='border rounded bs-full'>
         <div className='mli-2 mbs-2 overflow-hidden rounded'>
@@ -48,7 +43,8 @@ const VideoList = () => {
   const [page, setPage] = useState(0)
 
   useEffect(() => {
-    let newData = data || []
+    const newData = data || []
+
     if (page > Math.ceil(newData.length / 12)) setPage(0)
     setData(newData)
   }, [data, page])
@@ -59,7 +55,7 @@ const VideoList = () => {
         setData(items)
       })
       .catch(() => { })
-  }, [getVideoList])
+  }, [])
 
   return (
     <Card>

@@ -1,6 +1,6 @@
-import CodeListTable from '@/views/admin/code/CodeListTable'
 import { Grid } from '@mui/material'
 
+import CodeListTable from '@/views/admin/code/CodeListTable'
 
 export default async function Page() {
   return (

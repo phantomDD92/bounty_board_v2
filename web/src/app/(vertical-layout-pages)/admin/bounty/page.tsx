@@ -1,5 +1,6 @@
-import BountyListTable from '@/views/admin/bounty/BountyListTable'
 import { Grid } from '@mui/material'
+
+import BountyListTable from '@/views/admin/bounty/BountyListTable'
 
 
 export default async function Page() {

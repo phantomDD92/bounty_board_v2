@@ -1,12 +1,13 @@
 'use client'
-import { CopyBlock, railscast } from 'react-code-blocks';
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-// import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import Grid from '@mui/material/Grid'
-import { CodeCardProps } from '@/types/widgetTypes'
+
 // React Imports
 import { useRef, useState } from 'react'
+
 import type { SyntheticEvent } from 'react'
+
+import { CopyBlock, railscast } from 'react-code-blocks';
+
+import Grid from '@mui/material/Grid'
 
 import Grow from '@mui/material/Grow'
 import Paper from '@mui/material/Paper'
@@ -17,12 +18,14 @@ import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import { CodeSnippetType } from '@/types/valueTypes'
-import { toast } from 'react-toastify'
+
+import type { CodeCardProps } from '@/types/widgetTypes'
+import type { CodeSnippetType } from '@/types/valueTypes'
+
 
 type Props = {
   snippets: CodeSnippetType[]
-  onChange?: Function
+  onChange?: (value:number) => void
 }
 
 const LanguageSelector = ({ snippets, onChange }: Props) => {
@@ -96,12 +99,12 @@ const CodeCard = (props: CodeCardProps) => {
     setSelected(id)
   }
 
-  const handleCodeCopy = async () => {
-    if (snippets && snippets.length && navigator.clipboard) {
-      await navigator.clipboard.writeText(snippets[selected].code);
-      toast.success("Copy Code Success");
-    }
-  }
+  // const handleCodeCopy = async () => {
+  //   if (snippets && snippets.length && navigator.clipboard) {
+  //     await navigator.clipboard.writeText(snippets[selected].code);
+  //     toast.success("Copy Code Success");
+  //   }
+  // }
 
   return (
     <div className='border rounded bs-full min-w-64'>

@@ -3,22 +3,20 @@
 // Third-party Imports
 import classnames from 'classnames'
 
-// Component Imports
-import NavToggle from './NavToggle'
 import UserDropdown from '@components/layout/shared/UserDropdown'
+
 // Util Imports
 import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
+
 import { useSession } from '@/context/SessionContext'
-// import { useRouter } from 'next/router'
+
+// Component Imports
+import NavToggle from './NavToggle'
 
 
 const NavbarContent = () => {
-  // const router = useRouter();
-  const { session, logout } = useSession()
-  // const handleLogout = async () => {
-  //   if (logout) await logout();
-  //   // router.reload()
-  // }
+
+  const { session } = useSession()
 
   return (
     <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>

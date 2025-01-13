@@ -1,6 +1,7 @@
 // MUI Imports
 import Chip from '@mui/material/Chip'
-import { TagParamType } from '@/types/valueTypes'
+
+import type { TagParamType } from '@/types/valueTypes'
 
 type Props = {
   tags: TagParamType[]

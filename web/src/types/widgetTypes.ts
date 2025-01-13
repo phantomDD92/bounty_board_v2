@@ -1,11 +1,10 @@
-import { BountyType,  CodeType, TagType } from "./valueTypes"
+import type { BountyType,  CodeType, TagType } from "./valueTypes"
 
 export type TagsSelectorProps = {
   title?: string,
   description?: string,
-  // value?: string[],
   tags?: TagType[],
-  onChange?: Function,
+  onChange?: (value:any) => void,
 }
 
 export type BountyCardProps = {

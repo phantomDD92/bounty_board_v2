@@ -1,24 +1,28 @@
+// React Imports
+import { useState } from 'react'
+
 // MUI Imports
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+
 // Third-party Imports
-import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { BountyType, FeedbackParamType, InfraParamType } from '@/types/valueTypes'
-import TiptapEditor from '@/components/TiptapEditor'
-import { useState } from 'react'
+
 import { approveBounty, rejectBounty } from '@/lib/api'
+
+import TiptapEditor from '@/components/TiptapEditor'
+
 // Type Imports
+import type { BountyType } from '@/types/valueTypes'
 
 type Props = {
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
   data?: BountyType
-  // setData: (data: VideoType[]) => void
 }
 
 const BountyApproveDrawer = ({ open, data, onClose, onUpdate }: Props) => {
@@ -38,19 +42,20 @@ const BountyApproveDrawer = ({ open, data, onClose, onUpdate }: Props) => {
     }
   }
 
-    // Handle Form Submit
-    const handleReject = async () => {
-      try {
-        if (data) {
-          await rejectBounty(data._id, feedback)
-          setFeedback('')
-          toast.success('Reject Bounty')
-          onUpdate && onUpdate()
-        }
-      } catch (error: any) {
-        toast.error(error.message)
+  // Handle Form Submit
+  const handleReject = async () => {
+    try {
+      if (data) {
+        await rejectBounty(data._id, feedback)
+        setFeedback('')
+        toast.success('Reject Bounty')
+        onUpdate && onUpdate()
       }
+    } catch (error: any) {
+      toast.error(error.message)
     }
+  }
+
   // Handle Form Reset
   const handleReset = () => {
     onClose && onClose()

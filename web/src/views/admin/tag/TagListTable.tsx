@@ -11,10 +11,12 @@ import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import { CardHeader, Tooltip } from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
 
 // Third-party Imports
 import classnames from 'classnames'
+import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -31,16 +33,20 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-// Component Imports
-import TagEditDrawer from './TagEditDrawer'
-import { toast } from 'react-toastify'
-
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { TagType } from '@/types/valueTypes'
+
+// Lib Imports
 import { deleteTag, getTagList } from '@/lib/api'
+
+// Component Imports
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
-import { CardHeader, Tooltip } from '@mui/material'
+
+// Type Import
+import type { TagType } from '@/types/valueTypes'
+
+// Other Imports
+import TagEditDrawer from './TagEditDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -125,7 +131,6 @@ const TagListTable = () => {
       })
       .catch(error => {
         toast.error(error.message)
-        // setOpen(false);
       })
   }
 
@@ -136,6 +141,7 @@ const TagListTable = () => {
       await deleteTag(data._id)
       toast.success('Delete Tag Success')
       const newData = await getTagList()
+
       setData(newData)
     } catch (error: any) {
       toast.error(error.message)

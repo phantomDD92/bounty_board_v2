@@ -1,15 +1,24 @@
 'use client'
+
+// React Imports
+import { useState, useEffect } from 'react'
+
+// MUI Imports
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
-import { useState, useEffect } from 'react'
-import { CodeType } from '@/types/valueTypes'
+
+// Component Imports
 import CodeCard from '@/components/CodeCard'
+
+// Lib Imports
 import { getCodeList } from '@/lib/api'
-// import { getCodeList } from '@/libs/api'
+
+// Type Imports
+import type { CodeType } from '@/types/valueTypes'
 
 const CodeList = () => {
   const [items, setItems] = useState<CodeType[]>([])
@@ -24,10 +33,11 @@ const CodeList = () => {
         setItems(newData)
       })
       .catch(() => { })
-  }, [getCodeList])
+  }, [])
 
   useEffect(() => {
-    let newData = items || []
+    const newData = items || []
+
     if (page > Math.ceil(newData.length / 12)) setPage(0)
     setData(newData)
   }, [items, page])

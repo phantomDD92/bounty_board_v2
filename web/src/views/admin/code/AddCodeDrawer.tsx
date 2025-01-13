@@ -5,19 +5,22 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+
 // Third-party Imports
 import { useForm, Controller } from 'react-hook-form'
-import { addCode } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { CodeParamType } from '@/types/valueTypes'
+
+import { addCode } from '@/lib/api'
+
 import TiptapEditor from '@/components/TiptapEditor'
+
 // Type Imports
+import type { CodeParamType } from '@/types/valueTypes'
 
 type Props = {
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
-  // setData: (data: VideoType[]) => void
 }
 
 const AddCodeDrawer = ({ open, onClose, onUpdate }: Props) => {

@@ -1,10 +1,20 @@
 'use client'
+
+// React Imports
+import { useEffect, useState } from 'react'
+
+// MUI Imports
+import Grid from '@mui/material/Grid'
+
+// Lib Imports
 import { getTagList } from '@/lib/api'
-import { TagType } from '@/types/valueTypes'
+
+// View Imports
 import BountyFilter from '@/views/bounty/BountyFilter'
 import BountyList from '@/views/bounty/BountyList'
-import Grid from '@mui/material/Grid'
-import { SetStateAction, useEffect, useState } from 'react'
+
+// Type Imports
+import type { TagType } from '@/types/valueTypes'
 
 const BountyView = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
@@ -17,8 +27,8 @@ const BountyView = () => {
       .then(newData => {
         setTags(newData)
       })
-      .catch(() => {})
-  }, [getTagList])
+      .catch(() => { })
+  }, [])
 
   return (
     <Grid container spacing={6}>
@@ -28,7 +38,7 @@ const BountyView = () => {
           sort={sort}
           tags={tags}
           onSearchChange={(value: string) => setSearch(value)}
-          onSortChange={(value: SetStateAction<string>) => setSort(value)}
+          onSortChange={(value: string) => setSort(value)}
           onTagsChange={(tags: string[]) => setSelectedTags(tags)}
         />
       </Grid>

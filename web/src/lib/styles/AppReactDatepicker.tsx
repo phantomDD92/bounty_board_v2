@@ -494,6 +494,7 @@ const StyledReactDatePicker = styled(Box)<BoxProps>(({ theme }) => {
 const AppReactDatepicker = (props: Props) => {
   // Props
   const { boxProps, label, ...rest } = props
+  
   return (
     <StyledReactDatePicker {...boxProps}>
       {label && <Typography>{label}</Typography>}

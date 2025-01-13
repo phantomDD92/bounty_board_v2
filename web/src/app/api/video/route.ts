@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+
 import dbConnect from '@/lib/mongoose';
 import Video from '@/lib/models/Video';
 import { getSession } from "@/lib/session";
 import { Role } from "@/lib/models/User";
-import VideoService from "@/lib/service/VideoService";
+
 
 /**
  * @swagger
@@ -56,18 +57,24 @@ import VideoService from "@/lib/service/VideoService";
 export async function POST(request: Request) {
   try {
     const session = await getSession();
+
     if (!session || !session.isAuth) {
-      return NextResponse.json({success: false, error: "Authentication required"}, {status: 401})
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
+
     if (session.role != Role.ADMIN) {
-      return NextResponse.json({success: false, error: "Permission required"}, {status: 403})
+      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
+
     await dbConnect();
     const { title, url } = await request.json();
+
     if (!url || !title) {
       return NextResponse.json({ success: false, message: "URL, Title is required" }, { status: 400 });
     }
-    const newVideo = await VideoService.create({title, url})
+    
+    const newVideo = await Video.create({ title, url })
+
     return NextResponse.json({ success: true, data: newVideo }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -112,6 +119,7 @@ export async function GET() {
   try {
     await dbConnect();
     const videos = await Video.find().sort({ createdAt: -1 }); // Sort by newest first
+
     return NextResponse.json({ success: true, videos });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

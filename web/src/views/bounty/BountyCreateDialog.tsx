@@ -1,30 +1,32 @@
+'use client'
+
+// MUI Imports
 import {
-  Checkbox,
+  Select,
+  MenuItem,
   Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  FormHelperText,
   Grid,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
   TextField
 } from '@mui/material'
-// MUI Imports
 import Button from '@mui/material/Button'
+
 // Third-party Imports
-import { useForm, Controller } from 'react-hook-form'
-import { addBounty, addInfra } from '@/lib/api'
 import { toast } from 'react-toastify'
-import { BountyParamType, InfraParamType, TagType } from '@/types/valueTypes'
-import TiptapEditor from '@/components/TiptapEditor'
-// Styled Component Imports
+import { useForm, Controller } from 'react-hook-form'
+
+// Lib Imports
+import { addBounty } from '@/lib/api'
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
-import { useState } from 'react'
+
+// Component Imports
+import TiptapEditor from '@/components/TiptapEditor'
+
+// Type Imports
+import type { BountyParamType, TagType } from '@/types/valueTypes'
 
 type Props = {
   open: boolean
@@ -62,6 +64,7 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
       contact: ''
     }
   })
+
   // Handle Form Submit
   const handleFormSubmit = async (data: BountyParamType) => {
     try {
@@ -76,14 +79,15 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
 
   const getSkillName = (skill: string) => {
     const tag = tags.find(item => item._id == skill)
+
     return tag?.name
   }
 
   // Handle Form Reset
-  const handleReset = () => {
-    resetForm({ description: '', title: '', skills: [], reward: '', deadline: new Date(), contact: '' })
-    onClose && onClose()
-  }
+  // const handleReset = () => {
+  //   resetForm({ description: '', title: '', skills: [], reward: '', deadline: new Date(), contact: '' })
+  //   onClose && onClose()
+  // }
 
   return (
     <Dialog fullWidth open={open} onClose={onClose} maxWidth='lg' scroll='body'>
@@ -130,7 +134,7 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
                     label='Skills'
                     fullWidth
                     MenuProps={MenuProps}
-                    renderValue={selected => {
+                    renderValue={(selected:any) => {
                       return (
                         <div className='flex flex-wrap gap-1'>
                           {(selected as unknown as string[]).map(value => (

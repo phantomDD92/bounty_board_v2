@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+
+import type { Document, Model} from 'mongoose';
 
 // Define the Video interface for TypeScript
 export interface IVideo extends Document {

@@ -1,13 +1,16 @@
-import useLinkPreview from 'use-link-preview'
-import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+
+import useLinkPreview from 'use-link-preview'
+
+import Typography from '@mui/material/Typography'
 
 type Props = {
   url: string
 }
+
 function LinkPreview(props: Props) {
   const { url } = props
-  const { metadata, isLoading, isError } = useLinkPreview(url)
+  const { metadata } = useLinkPreview(url)
 
   // Usage example
   return (
@@ -26,19 +29,6 @@ function LinkPreview(props: Props) {
         </div>
       )}
     </Link>
-    // <>
-    //   {isLoading && <div>loading...</div>}
-    //   {isError && <div>error</div>}
-    //   {metadata && (
-    //     <>
-    //       <h3>{metadata.title}</h3>
-    //       <p>{metadata.description}</p>
-    //       <p>{metadata.domain}</p>
-    //       <img src={metadata.img || ''} />
-    //       <p>{metadata.requestUrl}</p>
-    //     </>
-    //   )}
-    // </>
   )
 }
 
