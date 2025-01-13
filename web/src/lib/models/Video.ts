@@ -1,12 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 // Define the Video interface for TypeScript
 export interface IVideo extends Document {
-  createdAt: Date;
   url: string;
   title: string;
+  creator: mongoose.Schema.Types.ObjectId,
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Create the Mongoose schema for Video
@@ -20,6 +22,11 @@ const VideoSchema: Schema<IVideo> = new Schema(
       type: String,
       required: true,
       default: "#",
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model
+      required: true,
     },
   },
   {

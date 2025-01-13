@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 // Interface for a Comment
 export interface IComment extends Document {

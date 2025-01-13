@@ -1,12 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 // Define the Infra interface for TypeScript
 export interface IInfra extends Document {
   title: string;
   description: string;
   url: string;
+  creator: mongoose.Schema.Types.ObjectId,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +29,11 @@ const InfraSchema: Schema<IInfra> = new Schema(
       type: String,
       required: true,
       default: '',
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model
+      required: true,
     },
   },
   {

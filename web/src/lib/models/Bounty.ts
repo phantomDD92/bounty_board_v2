@@ -1,16 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 import type { IComment } from "@/lib/models/Comment";
-
-// Interfaces for referenced fields
-interface IUser {
-  _id: mongoose.Schema.Types.ObjectId;
-  iaddress: string;
-  name: string;
-}
-
 interface ITag {
   _id: string;
   name: string;
@@ -29,7 +21,7 @@ export interface IBounty extends Document {
   title: string;
   description: string;
   skills: ITag["_id"][]; // Array of tag IDs
-  creator: IUser["_id"];
+  creator: mongoose.Schema.Types.ObjectId,
   reward: string;
   deadline: Date;
   contact: string,

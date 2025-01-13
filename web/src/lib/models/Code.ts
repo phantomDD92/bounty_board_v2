@@ -1,11 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 // Define the Code interface for TypeScript
 export interface ICode extends Document {
   title: string;
   description: string;
+  creator: mongoose.Schema.Types.ObjectId,
   snippets: [{
     language: string;
     code: string;
@@ -55,6 +56,11 @@ const CodeSchema: Schema<ICode> = new Schema(
       type: String,
       required: true,
       default: '',
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model
+      required: true,
     },
     snippets: [{
       language: {
