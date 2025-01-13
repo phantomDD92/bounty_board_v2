@@ -113,11 +113,11 @@ export async function GET() {
   try {
     const tags = await Tag.find({});
 
-    
+
 return NextResponse.json({ success: true, tags});
   } catch (error) {
     console.error('Error fetching tags:', error);
-    
+
 return NextResponse.json(
       { message: 'Server error occurred' },
       { status: 500 }
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
 
@@ -147,11 +147,11 @@ export async function POST(req: NextRequest) {
     const newTag = new Tag({ _id, name });
 
     await newTag.save();
-    
+
 return NextResponse.json({ success: true, }, { status: 201 });
   } catch (error) {
     console.error('Error creating tag:', error);
-    
+
 return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }

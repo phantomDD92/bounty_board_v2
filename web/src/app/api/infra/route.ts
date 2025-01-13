@@ -54,11 +54,11 @@ export async function GET() {
   try {
     const infraList = await Infra.find({});
 
-    
+
 return NextResponse.json({ success: true, infra: infraList });
   } catch (error) {
     console.error('Error fetching infra list:', error);
-    
+
 return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
 
@@ -150,11 +150,11 @@ export async function POST(req: NextRequest) {
     const newInfra = new Infra({ title, description, url });
 
     await newInfra.save();
-    
+
 return NextResponse.json({ success: true, }, { status: 201 });
   } catch (error) {
     console.error('Error creating infra:', error);
-    
+
 return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

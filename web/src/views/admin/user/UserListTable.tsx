@@ -37,10 +37,12 @@ import { toast } from 'react-toastify'
 import tableStyles from '@core/styles/table.module.css'
 
 // Lib Imports
-import { getUserList } from '@/lib/api'
+import { getUserList, setUserRole } from '@/lib/api'
 
 // Type Imports
 import type { UserType } from '@/types/valueTypes'
+import { Role } from '@/lib/models/User'
+import { useSession } from '@/context/SessionContext'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -102,10 +104,10 @@ const columnHelper = createColumnHelper<UserWithActionsType>()
 
 const UserListTable = () => {
   // States
-  const [open, setOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
+  const { session } = useSession();
 
   useEffect(() => {
     getUserList()
@@ -115,17 +117,29 @@ const UserListTable = () => {
       .catch(() => { })
   }, [])
 
-  const handleUpdateData = async () => {
-    setOpen(false)
-    getUserList()
+  const handleToAdmin = (user: UserWithActionsType) => {
+    setUserRole(user._id, true)
+      .then(() => {
+        toast.success("User role updated successfully!")
+        return getUserList()
+      })
       .then(newData => {
         setData(newData)
       })
-      .catch(error => {
-        toast.error(error.message)
-      })
+      .catch(() => { })
   }
 
+  const handleToUser = (user: UserWithActionsType) => {
+    setUserRole(user._id, false)
+      .then(() => {
+        toast.success("User role updated successfully!")
+        return getUserList()
+      })
+      .then(newData => {
+        setData(newData)
+      })
+      .catch(() => { })
+  }
 
   const columns = useMemo<ColumnDef<UserWithActionsType, any>[]>(
     () => [
@@ -163,23 +177,41 @@ const UserListTable = () => {
         header: 'Address',
         cell: ({ row }) => <Typography>{row.original.iaddress}</Typography>
       }),
+      columnHelper.accessor('role', {
+        header: 'Role',
+        cell: ({ row }) => <Typography>{row.original.role == Role.USER ? "User" : "Admin"}</Typography>
+      }),
       columnHelper.accessor('actions', {
         header: 'Actions',
-        cell: ({ row }) => (
-          <div className='flex items-center'>
-            <Tooltip title="Edit">
-              <IconButton
-                size='small'
-                onClick={() => {
-                  // setSelected(row.original)
-                  // setOpen(true)
-                }}
-              >
-                <i className='ri-edit-line text-[22px] text-textSecondary' />
-              </IconButton>
-            </Tooltip>
-          </div>
-        ),
+        cell: ({ row }) =>
+          session?.role == Role.SUPER ?
+            <div className='flex items-center'>
+              {row.original.role == Role.USER ?
+                <Tooltip title="To Admin">
+                  <IconButton
+                    size='small'
+                    onClick={() => handleToAdmin(row.original)}
+                  >
+                    <i className='ri-user-shared-line text-[22px] text-textSecondary' />
+                  </IconButton>
+                </Tooltip>
+                :
+                row.original.role == Role.ADMIN ?
+                  <Tooltip title="To User">
+                    <IconButton
+                      size='small'
+                      onClick={() => handleToUser(row.original)}
+                    >
+                      <i className='ri-user-received-line text-[22px] text-textSecondary' />
+                    </IconButton>
+                  </Tooltip>
+                  :
+                  <></>
+              }
+
+            </div>
+            : <></>
+        ,
         enableSorting: false
       })
     ],

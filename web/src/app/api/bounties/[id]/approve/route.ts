@@ -9,17 +9,17 @@ import { Role } from '@/lib/models/User';
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: bountyId } = params;
-  
+
   // Create the comment
-  
+
   try {
     const session = await getSession();
-    
+
     if (!session || !session.isAuth) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
 

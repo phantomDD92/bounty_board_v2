@@ -5,6 +5,7 @@ export type SkillType = {
 };
 
 export type UserType = {
+  _id: string,
   name: string,
   iaddress: string,
   role: string,

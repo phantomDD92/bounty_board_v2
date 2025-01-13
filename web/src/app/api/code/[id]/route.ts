@@ -36,7 +36,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 });
     }
 
@@ -48,7 +48,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ success: false, error: "Code not found" }, { status: 404 });
     }
 
-    
+
 return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });

@@ -11,7 +11,7 @@ export async function getSession() {
 export async function loginSimulate() {
   try {
     await axios.post('/api/auth',
-      { iaddress: 'iAv9tYEyNBP73aFmFyxqDPzisMLdTPAdtk', name: 'BBB.bitcoins@' }
+      { iaddress: 'iKX5wGESZQFRQzhTV7dYGdsXq2o3uwyTd1', name: 'CCC.bitcoins@' }
     );
   } catch (error: any) {
     throw error;
@@ -66,7 +66,7 @@ export async function addInfra(params: InfraParamType) {
   await axios.post('/api/infra', params);
 }
 
-export async function updateInfra(infraId:string, params: InfraParamType) {
+export async function updateInfra(infraId: string, params: InfraParamType) {
   await axios.put(`/api/infra/${infraId}`, params);
 }
 
@@ -114,7 +114,7 @@ export async function deleteCode(id: string) {
 
 // Tag related api calls
 export async function addTag(params: TagParamType) {
-    await axios.post('/api/tags', params);
+  await axios.post('/api/tags', params);
 }
 
 export async function updateTag(tagId: string, params: TagParamType) {
@@ -192,4 +192,8 @@ export async function getUserList() {
   const resp = await axios.get('/api/users');
 
   return resp.data?.users;
+}
+
+export async function setUserRole(userId: string, isAdmin: boolean) {
+  await axios.put(`/api/users/${userId}`, { isAdmin });
 }

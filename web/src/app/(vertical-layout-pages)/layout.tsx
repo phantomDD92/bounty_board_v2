@@ -29,10 +29,10 @@ const Layout = async ({ children }: ChildrenType) => {
   const systemMode = getSystemMode()
   const session = await getSession()
 
-  if (!session || !session.isAuth || session.role != Role.ADMIN) {
+  if (!session || !session.isAuth || session.role == Role.USER) {
     redirect('/')
   }
-  
+
   return (
     <>
       <VerticalLayout

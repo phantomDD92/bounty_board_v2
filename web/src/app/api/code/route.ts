@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({success: false, error: "Authentication required"}, {status: 401})
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({success: false, error: "Permission required"}, {status: 403})
     }
 
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     const newData = await Code.create({title, description, snippets})
 
-    
+
 return NextResponse.json({ success: true, data: newData }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -38,7 +38,7 @@ export async function GET() {
     await dbConnect();
     const codes = await Code.find().sort({ createdAt: -1 }); // Sort by newest first
 
-    
+
 return NextResponse.json({ success: true, codes });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

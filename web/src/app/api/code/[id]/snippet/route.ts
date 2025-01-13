@@ -13,7 +13,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     const codeId = params.id;
 
     await Code.findByIdAndUpdate(codeId, { $push: { snippets: { language, code } } });
-    
+
 return NextResponse.json({ success: true }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

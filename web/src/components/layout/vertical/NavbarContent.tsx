@@ -25,7 +25,7 @@ const NavbarContent = () => {
         <NavToggle />
       </div>
       <div className='flex items-center'>
-        <UserDropdown name={session?.name} admin={session?.role == Role.ADMIN} adminPage />
+        <UserDropdown name={session?.name} admin={session?.role == Role.USER} adminPage />
       </div>
     </div>
   )

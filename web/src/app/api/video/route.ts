@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
     }
 
-    if (session.role != Role.ADMIN) {
+    if (session.role == Role.USER) {
       return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
     }
 
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     if (!url || !title) {
       return NextResponse.json({ success: false, message: "URL, Title is required" }, { status: 400 });
     }
-    
+
     const newVideo = await Video.create({ title, url })
 
     return NextResponse.json({ success: true, data: newVideo }, { status: 201 });

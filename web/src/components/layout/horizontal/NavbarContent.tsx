@@ -46,7 +46,7 @@ const NavbarContent = () => {
       </div>
       <div className='flex items-center'>
         {session && session.isAuth ? (
-          <UserDropdown name={session?.name} onLogout={handleLogout} admin={session.role == Role.ADMIN} />
+          <UserDropdown name={session?.name} onLogout={handleLogout} admin={session.role != Role.USER} />
         ) : (
           <Button onClick={handleLoginClick} variant='contained'>
             Login

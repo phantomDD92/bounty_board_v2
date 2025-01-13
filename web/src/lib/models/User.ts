@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 import type { Document, Model} from 'mongoose';
 
 export const Role = {
+  SUPER: "super",
   ADMIN: "admin",
   USER: "user",
 };
