@@ -83,7 +83,7 @@ export default function TiptapEditor({ value, minHeight, onChange, label }: Tipt
         <CardContent className='p-0'>
           <EditorToolbar editor={editor} />
           <Divider className='mli-5' />
-          <EditorContent editor={editor} className={`bs-[150px] min-h-[${minHeight || 150}px] overflow-y-auto flex`} />
+          <EditorContent editor={editor} className={`bs-[150px] min-h-[${minHeight || 200}px] overflow-y-auto flex`} />
         </CardContent>
       </Card>
     </>

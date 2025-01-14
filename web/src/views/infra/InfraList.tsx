@@ -13,6 +13,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
+import { Button } from '@mui/material'
 
 // Lib Imports
 import { getInfraList } from '@/lib/api'
@@ -20,18 +21,23 @@ import { getInfraList } from '@/lib/api'
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
 
+import { useSession } from '@/context/SessionContext'
+import InfraCreateDialog from './InfraCreateDialog'
+
 
 const InfraList = () => {
   // States
   const [data, setData] = useState<InfraType[]>([])
   const [page, setPage] = useState(0)
+  const [createShow, setCreateShow] = useState(false)
+  const { session } = useSession()
 
   useEffect(() => {
     getInfraList()
       .then(items => {
         setData(items)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   useEffect(() => {
@@ -43,7 +49,20 @@ const InfraList = () => {
 
   return (
     <Card>
-      <CardHeader title='Infra List' subheader={`Total ${data.length} infra founded`} />
+      <div className='flex justify-between items-center mr-4'>
+        <CardHeader title='Infra List' subheader={`Total ${data.length} infra founded`} />
+        {session?.isAuth && (
+          <Button
+            variant='contained'
+            className='max-sm:is-full is-auto'
+            onClick={() => setCreateShow(true)}
+            startIcon={<i className='ri-add-line' />}
+          >
+            Create
+          </Button>
+        )}
+      </div>
+
       <CardContent className='flex flex-col gap-6'>
         {data.length > 0 ? (
           <Grid container spacing={6}>
@@ -53,10 +72,10 @@ const InfraList = () => {
                   <div className='border rounded bs-full min-w-64 min-h-60'>
                     <div className='flex flex-col gap-4 p-5'>
                       <div className='flex flex-col gap-1'>
-                        <Typography variant='h5' component={Link} href={item.url} className='hover:text-primary mb-2'>
+                        <Typography variant='h5' className='hover:text-primary mb-2'>
                           {item.title}
                         </Typography>
-                        <Typography dangerouslySetInnerHTML={{__html: item.description}} className='text-wrap break-words'/>
+                        <Typography dangerouslySetInnerHTML={{ __html: item.description }} className='text-wrap break-words' />
                       </div>
                     </div>
                   </div>
@@ -78,6 +97,7 @@ const InfraList = () => {
             onChange={(e, page) => setPage(page - 1)}
           />
         </div>
+        <InfraCreateDialog open={createShow} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

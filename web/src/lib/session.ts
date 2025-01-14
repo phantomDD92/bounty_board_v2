@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 
 import { SignJWT, jwtVerify } from 'jose'
 
-import {getUserById} from '@/lib/service/UserService'
+import { getUserById } from '@/lib/service/UserService'
 
 import type { IUser } from '@/lib/models/User'
 
@@ -84,7 +84,7 @@ export const getSession = async () => {
   const session = await decrypt(cookie)
 
   if (!session || !session?.id) {
-    
+
     return undefined
   }
 
@@ -95,6 +95,6 @@ export const getSession = async () => {
   if (!user)
     return undefined;
 
-  return { isAuth: true, userId: user._id, name: user.name, role: user.role, iaddress: user.iaddress }
+  return { isAuth: true, userId: user._id, name: user.name, role: user.role, iaddress: user.iaddress, submittedAt: user.submittedAt }
 }
 

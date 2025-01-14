@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/mongoose';
-import Infra from '@/lib/models/Infra';
 import { getSession } from '@/lib/session';
 import User, { Role } from '@/lib/models/User';
 

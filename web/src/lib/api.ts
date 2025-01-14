@@ -158,7 +158,6 @@ export async function getUserBountyList() {
   return resp.data?.bounties;
 }
 
-// Bounty related apis
 export async function addBounty(params: BountyParamType) {
   await axios.post('/api/bounties', params);
 }

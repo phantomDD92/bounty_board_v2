@@ -14,7 +14,7 @@ export interface IUser extends Document {
   iaddress: string;
   name: string;
   role: string;
-  submitedAt: Date;
+  submittedAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,7 +37,7 @@ const UserSchema: Schema<IUser> = new Schema(
       enum: Object.values(Role),
       default: Role.USER,
     },
-    submitedAt: {
+    submittedAt: {
       type: Date,
       default: Date.now,
     }
