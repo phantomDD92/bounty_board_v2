@@ -14,11 +14,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const session = await getSession();
 
     if (!checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
     if (!checkSuperAdmin(session)) {
-      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
     const { id } = params;
@@ -27,14 +27,14 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const updateUser = await User.findByIdAndUpdate(id, { $set: { role: isAdmin ? UserRole.ADMIN : UserRole.NORMAL } });
 
     if (!updateUser) {
-      return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error updating user:', error);
 
-    return NextResponse.json({ success: false, error: "Server error occurred" }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Server error occurred" }, { status: 500 });
   }
 }
 

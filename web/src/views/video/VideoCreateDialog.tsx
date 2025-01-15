@@ -49,7 +49,7 @@ const VideoCreateDialog = ({ open, onClose, onUpdate }: Props) => {
     createVideo(data).then(() => {
       resetForm({ title: '', url: '' })
       onClose && onClose()
-      toast.success('Video submitted successfully')
+      toast.success('Video added successfully')
     }).catch((error: any) => {
       toast.error(error.message)
     })

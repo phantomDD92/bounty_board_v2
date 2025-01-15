@@ -54,7 +54,7 @@ const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
     createInfra(data).then(() => {
       resetForm({ description: '', title: '', url: '' })
       onClose && onClose()
-      toast.success('Infra submitted successfully')
+      toast.success('Infra added successfully')
     }).catch((error: any) => {
       toast.error(error.message)
     })

@@ -15,17 +15,17 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const session = await getSession();
 
     if (!checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
     const bounty = await Bounty.findById(bountyId);
 
     if (!bounty) {
-      return NextResponse.json({ success: false, error: "Bounty not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
     }
 
     if (!checkOwner(session, bounty.creator.toString())) {
-      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
     await Bounty.findByIdAndDelete(bounty._id);

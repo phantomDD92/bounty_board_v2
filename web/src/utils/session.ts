@@ -9,7 +9,8 @@ export function checkAuthenticated(session: any): boolean {
 }
 
 export function checkRateLimited(session: any): boolean {
-  return session?.submittedAt && moment().diff(session.submittedAt, "minute") >= systemConfig.submissionInterval
+  console.log("### :", session?.submittedAt, (moment().diff(session.submittedAt, "minute") >= systemConfig.submissionInterval))
+  return session?.submittedAt && (moment().diff(session.submittedAt, "minute") >= systemConfig.submissionInterval)
 }
 
 export function checkAdmin(session: any): boolean {

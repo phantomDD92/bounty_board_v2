@@ -20,7 +20,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching infra list:', error);
 
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -30,11 +30,11 @@ export async function POST(req: NextRequest) {
     const session = await getSession();
 
     if (!session || !checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
     if (!checkRateLimited(session)) {
-      return NextResponse.json({ success: false, error: "Submission rate limited" }, { status: 403 })
+      return NextResponse.json({ success: false, message: "Submission rate limited" }, { status: 403 })
     }
 
     const { title, description, url } = await req.json();

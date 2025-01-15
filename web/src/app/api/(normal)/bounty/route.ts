@@ -5,7 +5,7 @@ import dbConnect from '@/lib/mongoose';
 import { getSession } from "@/lib/session";
 import Bounty from "@/lib/models/Bounty";
 import User from "@/lib/models/User";
-import { checkAuthenticated } from "@/utils/session";
+import { checkAuthenticated, checkRateLimited } from "@/utils/session";
 import { PublishStatus } from "@/types/enumTypes";
 
 // create bounty
@@ -15,7 +15,11 @@ export async function POST(request: Request) {
     const session = await getSession();
 
     if (!checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
+    }
+
+    if (!checkRateLimited(session)) {
+      return NextResponse.json({ success: false, message: "Submission rate limited" }, { status: 403 })
     }
 
     const { title, description, skills, reward, deadline, contact } = await request.json();
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data: newData }, { status: 201 });
   } catch (error: any) {
 
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
 
@@ -50,7 +54,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, bounties });
   } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
 

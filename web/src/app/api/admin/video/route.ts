@@ -13,18 +13,18 @@ export async function GET() {
     const session = await getSession();
 
     if (!session || !checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
     if (!checkAdmin(session)) {
-      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
     const video = await Video.find().populate('creator').sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, video });
   } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
 

@@ -71,7 +71,7 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
       await createBounty(data)
       resetForm({ description: '', title: '', skills: [], reward: '', deadline: new Date(), contact: '' })
       onUpdate && onUpdate()
-      toast.success('Add Bounty Success')
+      toast.success('Bounty added successfully');
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -114,12 +114,28 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Controller
+            <Controller
+                name='description'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    multiline
+                    minRows={10}
+                    label='Description'
+                    placeholder='Enter a bounty description...'
+                    {...(errors.description && { error: true, helperText: 'This field is required.' })}
+                  />
+                )}
+              />
+              {/* <Controller
                 name='description'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => <TiptapEditor {...field} label='Description' />}
-              />
+              /> */}
             </Grid>
             <Grid item xs={6}>
               <Controller
@@ -133,7 +149,7 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
                     variant='outlined'
                     label='Skills'
                     fullWidth
-                    MenuProps={MenuProps}
+                    // MenuProps={MenuProps}
                     renderValue={(selected:any) => {
                       return (
                         <div className='flex flex-wrap gap-1'>

@@ -23,7 +23,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
     return NextResponse.json({ success: true, data: updatedCode });
   } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
 
@@ -33,11 +33,11 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const session = await getSession();
 
     if (!checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 });
     }
 
     if (!checkAdmin(session)) {
-      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 });
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 });
     }
 
     await dbConnect();
@@ -45,12 +45,12 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const deletedVideo = await Code.findByIdAndDelete(codeId);
 
     if (!deletedVideo) {
-      return NextResponse.json({ success: false, error: "Code not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Code not found" }, { status: 404 });
     }
 
 
 return NextResponse.json({ success: true });
   } catch (error: any) {
-    return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }

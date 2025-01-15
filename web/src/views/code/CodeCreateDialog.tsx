@@ -52,7 +52,7 @@ const CodeCreateDialog = ({ open, onClose }: Props) => {
     createCode(data).then(() => {
       resetForm({ title: '', description: '', snippets: [] })
       onClose && onClose()
-      toast.success('Infra submitted successfully')
+      toast.success('Code added successfully')
     }).catch((error: any) => {
       toast.error(error.message)
     })

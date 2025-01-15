@@ -27,11 +27,11 @@ export async function POST(req: NextRequest) {
     const session = await getSession();
 
     if (!checkAuthenticated(session)) {
-      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
     if (!checkAdmin(session)) {
-      return NextResponse.json({ success: false, error: "Permission required" }, { status: 403 })
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
     const { _id, name } = await req.json();
