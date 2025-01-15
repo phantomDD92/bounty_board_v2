@@ -63,6 +63,7 @@ export function getRoleName(role: number): string {
     case UserRole.NORMAL:
       return "User";
     case UserRole.SUPER:
+      return "Super Admin";
     case UserRole.ADMIN:
       return "Admin";
     default:

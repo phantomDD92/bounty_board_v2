@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 // Lib Imports
-import { createTag, updateTag } from '@/lib/api'
+import { createTagForAdmin, updateTagForAdmin } from '@/lib/api'
 
 // Type Imports
 import type { TagParamType, TagType } from '@/types/valueTypes'
@@ -53,8 +53,9 @@ const TagEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
   // Handle Form Submit
   const handleFormSubmit = async (params: TagParamType) => {
     if (data) {
-      updateTag(params._id, params)
+      updateTagForAdmin(params._id, params)
         .then(() => {
+          toast.success('Update tag successfully')
           resetForm({ _id: '', name: '' })
           onUpdate && onUpdate()
         })
@@ -62,7 +63,7 @@ const TagEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
           toast.error(error.message)
         })
     } else {
-      createTag(params)
+      createTagForAdmin(params)
         .then(() => {
           resetForm({ _id: '', name: '' })
           onUpdate && onUpdate()

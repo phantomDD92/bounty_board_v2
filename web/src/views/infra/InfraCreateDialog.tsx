@@ -26,7 +26,7 @@ import TiptapEditor from '@/components/TiptapEditor'
 // Type Imports
 import type { InfraParamType } from '@/types/valueTypes'
 
-const RichEditor = dynamic( () => import( '@/components/RichEditor' ), { ssr: false } )
+const RichEditor = dynamic(() => import('@/components/RichEditor'), { ssr: false })
 
 type Props = {
   open: boolean
@@ -76,6 +76,22 @@ const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Controller
+                name='title'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    label='Title'
+                    placeholder='Enter a infra title...'
+                    {...(errors.title && { error: true, helperText: 'This field is required.' })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
                 name='url'
                 control={control}
                 rules={{ required: true }}
@@ -92,28 +108,21 @@ const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name='title'
+                name='description'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     fullWidth
-                    label='Title'
-                    placeholder='Enter a infra title...'
-                    {...(errors.title && { error: true, helperText: 'This field is required.' })}
+                    multiline
+                    minRows={10}
+                    label='Description'
+                    placeholder='Enter a infra description...'
+                    {...(errors.description && { error: true, helperText: 'This field is required.' })}
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12}>
-              <RichEditor  />
-              {/* <Controller
-                name='description'
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => <RichEditor {...field} />}
-              /> */}
             </Grid>
           </Grid>
 

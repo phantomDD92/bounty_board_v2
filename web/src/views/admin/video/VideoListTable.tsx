@@ -40,7 +40,7 @@ import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import tableStyles from '@core/styles/table.module.css'
 
 // Lib Imports
-import { deleteVideoForUser, getVideoList } from '@/lib/api'
+import { getVideoListForAdmin } from '@/lib/api'
 
 // Type Imports
 import type { VideoType } from '@/types/valueTypes'
@@ -116,7 +116,7 @@ const VideoListTable = () => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
-    getVideoList()
+    getVideoListForAdmin()
       .then(newData => {
         setData(newData)
       })
@@ -125,27 +125,13 @@ const VideoListTable = () => {
 
   const handleUpdateData = async () => {
     setOpen(false)
-    getVideoList()
+    getVideoListForAdmin()
       .then(newData => {
         setData(newData)
       })
       .catch(error => {
         toast.error(error.message)
       })
-  }
-
-  const handleDeleteData = async (data: any) => {
-    try {
-      setSelected(undefined)
-      setConfirmShow(false)
-      await deleteVideoForUser(data._id)
-      toast.success('Delete Video Success')
-      const newData = await getVideoList()
-
-      setData(newData)
-    } catch (error: any) {
-      toast.error(error.message)
-    }
   }
 
   const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
@@ -339,16 +325,6 @@ const VideoListTable = () => {
         />
       </Card>
       <VideoEditDrawer open={open} data={selected} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
-      <ConfirmDialog
-        open={confirmShow}
-        data={selected}
-        question='Are you sure to delete?'
-        onCancel={() => {
-          setSelected(undefined)
-          setConfirmShow(false)
-        }}
-        onConfirm={handleDeleteData}
-      />
     </>
   )
 }

@@ -37,7 +37,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import tableStyles from '@core/styles/table.module.css'
 
 // Lib Imports
-import { deleteTag, getTagList } from '@/lib/api'
+import { deleteTagForAdmin, getTagList } from '@/lib/api'
 
 // Component Imports
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
@@ -125,6 +125,7 @@ const TagListTable = () => {
 
   const handleUpdateData = async () => {
     setOpen(false)
+    setSelected(undefined)
     getTagList()
       .then(newData => {
         setData(newData)
@@ -138,7 +139,7 @@ const TagListTable = () => {
     try {
       setConfirmShow(false)
       setSelected(undefined)
-      await deleteTag(data._id)
+      await deleteTagForAdmin(data._id)
       toast.success('Delete Tag Success')
       const newData = await getTagList()
 

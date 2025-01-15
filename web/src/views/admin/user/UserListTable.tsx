@@ -187,25 +187,25 @@ const UserListTable = () => {
         cell: ({ row }) =>
           checkSuperAdmin(session) ?
             <div className='flex items-center'>
-              {checkAdmin(row.original) ?
-                <Tooltip title="To User">
-                  <IconButton
-                    size='small'
-                    onClick={() => handleToUser(row.original)}
-                  >
-                    <i className='ri-user-shared-line text-[22px] text-textSecondary' />
-                  </IconButton>
-                </Tooltip>
-                :
-                <Tooltip title="To Admin">
-                  <IconButton
-                    size='small'
-                    onClick={() => handleToAdmin(row.original)}
-                  >
-                    <i className='ri-user-received-line text-[22px] text-textSecondary' />
-                  </IconButton>
-                </Tooltip>
-
+              {checkSuperAdmin(row.original) ?
+                <></>
+                : checkAdmin(row.original) ?
+                  <Tooltip title="To User">
+                    <IconButton
+                      size='small'
+                      onClick={() => handleToUser(row.original)}
+                    >
+                      <i className='ri-user-shared-line text-[22px] text-textSecondary' />
+                    </IconButton>
+                  </Tooltip>
+                  : <Tooltip title="To Admin">
+                    <IconButton
+                      size='small'
+                      onClick={() => handleToAdmin(row.original)}
+                    >
+                      <i className='ri-user-received-line text-[22px] text-textSecondary' />
+                    </IconButton>
+                  </Tooltip>
               }
 
             </div>

@@ -37,7 +37,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { deleteInfra, getInfraList } from '@/lib/api'
+import { getInfraListForAdmin } from '@/lib/api'
 
 // Component Imports
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
@@ -115,7 +115,7 @@ const InfraListTable = () => {
   const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
-    getInfraList()
+    getInfraListForAdmin()
       .then(newData => {
         setData(newData)
       })
@@ -126,24 +126,10 @@ const InfraListTable = () => {
     try {
       setOpen(false)
       setSelected(undefined)
-      const newData = await getInfraList()
+      const newData = await getInfraListForAdmin()
 
       setData(newData)
     } catch (error: any) { }
-  }
-
-  const handleDeleteData = async (data: any) => {
-    try {
-      setSelected(undefined);
-      setConfirmShow(false);
-      await deleteInfra(data._id)
-      toast.success('Delete Infra Success')
-      const newData = await getInfraList()
-
-      setData(newData)
-    } catch (error: any) {
-      toast.error(error.message)
-    }
   }
 
   const columns = useMemo<ColumnDef<InfraWithActionsType, any>[]>(
@@ -205,11 +191,6 @@ const InfraListTable = () => {
             <Tooltip title="Edit">
               <IconButton size='small' onClick={() => { setSelected(row.original); setOpen(true) }}>
                 <i className='ri-edit-line text-[22px] text-textSecondary' />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton size='small' onClick={() => { setSelected(row.original); setConfirmShow(true); }}>
-                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
           </div>
@@ -341,16 +322,6 @@ const InfraListTable = () => {
         />
       </Card>
       <AddVideoDrawer open={open} data={selected} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
-      <ConfirmDialog
-        open={confirmShow}
-        data={selected}
-        question='Are you sure to delete?'
-        onCancel={() => {
-          setSelected(undefined);
-          setConfirmShow(false);
-        }}
-        onConfirm={handleDeleteData}
-      />
     </>
   )
 }

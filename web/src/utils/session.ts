@@ -17,6 +17,7 @@ export function checkAdmin(session: any): boolean {
 }
 
 export function checkSuperAdmin(session: any): boolean {
+  console.log(session?.role == UserRole.SUPER)
   return session?.role == UserRole.SUPER;
 }
 
