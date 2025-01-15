@@ -41,8 +41,9 @@ import { getUserList, setUserRole } from '@/lib/api'
 
 // Type Imports
 import type { UserType } from '@/types/valueTypes'
-import { Role } from '@/lib/models/User'
 import { useSession } from '@/context/SessionContext'
+import { getRoleName } from '@/utils/string'
+import { checkAdmin, checkSuperAdmin } from '@/utils/session'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -179,34 +180,32 @@ const UserListTable = () => {
       }),
       columnHelper.accessor('role', {
         header: 'Role',
-        cell: ({ row }) => <Typography>{row.original.role == Role.USER ? "User" : "Admin"}</Typography>
+        cell: ({ row }) => <Typography>{getRoleName(row.original.role)}</Typography>
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) =>
-          session?.role == Role.SUPER ?
+          checkSuperAdmin(session) ?
             <div className='flex items-center'>
-              {row.original.role == Role.USER ?
-                <Tooltip title="To Admin">
+              {checkAdmin(row.original) ?
+                <Tooltip title="To User">
                   <IconButton
                     size='small'
-                    onClick={() => handleToAdmin(row.original)}
+                    onClick={() => handleToUser(row.original)}
                   >
                     <i className='ri-user-shared-line text-[22px] text-textSecondary' />
                   </IconButton>
                 </Tooltip>
                 :
-                row.original.role == Role.ADMIN ?
-                  <Tooltip title="To User">
-                    <IconButton
-                      size='small'
-                      onClick={() => handleToUser(row.original)}
-                    >
-                      <i className='ri-user-received-line text-[22px] text-textSecondary' />
-                    </IconButton>
-                  </Tooltip>
-                  :
-                  <></>
+                <Tooltip title="To Admin">
+                  <IconButton
+                    size='small'
+                    onClick={() => handleToAdmin(row.original)}
+                  >
+                    <i className='ri-user-received-line text-[22px] text-textSecondary' />
+                  </IconButton>
+                </Tooltip>
+
               }
 
             </div>

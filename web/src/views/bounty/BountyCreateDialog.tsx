@@ -19,7 +19,7 @@ import { toast } from 'react-toastify'
 import { useForm, Controller } from 'react-hook-form'
 
 // Lib Imports
-import { addBounty } from '@/lib/api'
+import { createBounty } from '@/lib/api'
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
 
 // Component Imports
@@ -68,7 +68,7 @@ const BountyCreateDialog = ({ open, tags, onClose, onUpdate }: Props) => {
   // Handle Form Submit
   const handleFormSubmit = async (data: BountyParamType) => {
     try {
-      await addBounty(data)
+      await createBounty(data)
       resetForm({ description: '', title: '', skills: [], reward: '', deadline: new Date(), contact: '' })
       onUpdate && onUpdate()
       toast.success('Add Bounty Success')

@@ -1,7 +1,7 @@
 import User from '@/lib/models/User';
 import dbConnect from '@/lib/mongoose';
 
-export const createUser = async ({ name, iaddress, role }: { name: string, iaddress: string, role: string }) => {
+export const createUser = async ({ name, iaddress, role }: { name: string, iaddress: string, role: number }) => {
   try {
     await dbConnect();  // Ensure DB connection
     const user = new User({ name, iaddress, role });

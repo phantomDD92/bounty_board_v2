@@ -18,7 +18,8 @@ import { useSession } from '@/context/SessionContext'
 
 // Component Imports
 import NavToggle from './NavToggle'
-import { Role } from '@/lib/models/User'
+
+import { UserRole } from '@/types/enumTypes'
 
 const NavbarContent = () => {
   // Hooks
@@ -46,7 +47,7 @@ const NavbarContent = () => {
       </div>
       <div className='flex items-center'>
         {session && session.isAuth ? (
-          <UserDropdown name={session?.name} onLogout={handleLogout} admin={session.role != Role.USER} />
+          <UserDropdown onLogout={handleLogout} session={session} />
         ) : (
           <Button onClick={handleLoginClick} variant='contained'>
             Login

@@ -2,11 +2,14 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
+import { Language, PublishStatus } from '@/types/enumTypes';
+
 // Define the Code interface for TypeScript
 export interface ICode extends Document {
   title: string;
   description: string;
   creator: mongoose.Schema.Types.ObjectId,
+  status: number,
   snippets: [{
     language: string;
     code: string;
@@ -15,34 +18,6 @@ export interface ICode extends Document {
   updatedAt: Date;
 }
 
-export const Language = {
-  ADA: 'ada',
-  ASPNET: 'aspnet',
-  BASH: 'bash',
-  C: 'c',
-  CPP: 'cpp',
-  CSHARP: 'csharp',
-  CSS: 'css',
-  DART: 'dart',
-  DOCKER: 'docker',
-  GO: 'go',
-  JAVA: 'java',
-  JAVASCRIPT: 'javascript',
-  KOTLIN: 'kotlin',
-  LUA: 'lua',
-  MATLAB: 'matlab',
-  OBJECTIVEC: 'objectivec',
-  PASCAL: 'pascal',
-  PERL: 'perl',
-  PHP: 'php',
-  PYTHON: 'python',
-  RUBY: 'ruby',
-  RUST: 'rust',
-  SOLIDITY: 'solidity',
-  SQL: 'sql',
-  TYPESCRIPT: 'typescript',
-  YAML: 'yaml',
-};
 
 // Create the Mongoose schema for Code
 const CodeSchema: Schema<ICode> = new Schema(
@@ -61,6 +36,11 @@ const CodeSchema: Schema<ICode> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    status: {
+      type: Number,
+      enum: Object.values(PublishStatus),
+      default: PublishStatus.PENDING,
     },
     snippets: [{
       language: {

@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider'
 // Third-party Imports
 import { toast } from 'react-toastify'
 
-import { approveBounty, rejectBounty } from '@/lib/api'
+import { publishBountyForAdmin } from '@/lib/api'
 
 import TiptapEditor from '@/components/TiptapEditor'
 
@@ -32,7 +32,7 @@ const BountyApproveDrawer = ({ open, data, onClose, onUpdate }: Props) => {
   const handleApprove = async () => {
     try {
       if (data) {
-        await approveBounty(data._id, feedback)
+        await publishBountyForAdmin(data._id, { feedback, approve: true })
         setFeedback('')
         toast.success('Approve Bounty')
         onUpdate && onUpdate()
@@ -46,7 +46,7 @@ const BountyApproveDrawer = ({ open, data, onClose, onUpdate }: Props) => {
   const handleReject = async () => {
     try {
       if (data) {
-        await rejectBounty(data._id, feedback)
+        await publishBountyForAdmin(data._id, { feedback, approve: false })
         setFeedback('')
         toast.success('Reject Bounty')
         onUpdate && onUpdate()

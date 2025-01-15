@@ -22,6 +22,7 @@ import { getInfraList } from '@/lib/api'
 import type { InfraType } from '@/types/valueTypes'
 
 import { useSession } from '@/context/SessionContext'
+
 import InfraCreateDialog from './InfraCreateDialog'
 
 
@@ -97,7 +98,10 @@ const InfraList = () => {
             onChange={(e, page) => setPage(page - 1)}
           />
         </div>
-        <InfraCreateDialog open={createShow} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)} />
+        <InfraCreateDialog
+          open={createShow}
+          onClose={() => setCreateShow(false)}
+          onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

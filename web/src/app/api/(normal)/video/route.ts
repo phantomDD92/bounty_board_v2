@@ -1,0 +1,49 @@
+import { NextResponse } from "next/server";
+
+import dbConnect from '@/lib/mongoose';
+import Video from '@/lib/models/Video';
+import User from "@/lib/models/User";
+
+import { getSession } from "@/lib/session";
+
+import { checkAuthenticated, checkRateLimited } from "@/utils/session";
+
+export async function POST(request: Request) {
+  try {
+    const session = await getSession();
+
+    if (!session || !checkAuthenticated(session)) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 })
+    }
+
+    if (checkRateLimited(session)) {
+      return NextResponse.json({ success: false, error: "Submission rate limited" }, { status: 403 })
+    }
+
+    await dbConnect();
+    const { title, url } = await request.json();
+
+    if (!url || !title) {
+      return NextResponse.json({ success: false, message: "URL, Title is required" }, { status: 400 });
+    }
+
+    await Video.create({ title, url, creator: session.userId })
+    await User.findByIdAndUpdate(session.userId, { $set: { submittedAt: new Date() } })
+
+    return NextResponse.json({ success: true }, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    await dbConnect();
+    const videos = await Video.find().sort({ createdAt: -1 }); // Sort by newest first
+
+    return NextResponse.json({ success: true, videos });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+

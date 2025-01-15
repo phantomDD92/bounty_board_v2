@@ -8,15 +8,8 @@ export type UserType = {
   _id: string,
   name: string,
   iaddress: string,
-  role: string,
+  role: number,
   createdAt: Date,
-};
-
-export type SessionType = {
-  name: string,
-  iaddress: string,
-  role: string,
-  isLogged: boolean,
 };
 
 export type CommentParamsType = {
@@ -51,7 +44,7 @@ export type BountyParamType = {
 
 export type BountyType = BountyParamType & {
   _id: string,
-  status: string,
+  status: number,
   feedback: string,
   creator: UserType,
   comments?: CommentType[],
@@ -67,9 +60,21 @@ export type VideoParamType = {
 
 export type VideoType = VideoParamType & {
   _id: string,
+  status: number,
+  feedback: string,
+  creator: UserType,
   createdAt: Date,
   updatedAt: Date,
 };
+
+export type SessionType = {
+  isAuth: boolean,
+  userId: string,
+  name: string,
+  iaddress: string
+  role: number,
+  submittedAt: Date,
+}
 
 export type InfraParamType = {
   title: string,
@@ -81,13 +86,16 @@ export type FeedbackParamType = {
   feedback: string,
 }
 
-export type FeedbackType = {
+export type PublishType = {
   feedback: string,
   approve: boolean,
 }
 
 export type InfraType = InfraParamType & {
   _id: string,
+  status: number,
+  feedback: string,
+  creator: UserType,
   createdAt: Date,
   updatedAt: Date,
 };
@@ -105,6 +113,9 @@ export type CodeParamType = {
 
 export type CodeType = CodeParamType & {
   _id: string,
+  status: number,
+  feedback: string,
+  creator: UserType,
   createdAt: Date,
   updatedAt: Date,
 };

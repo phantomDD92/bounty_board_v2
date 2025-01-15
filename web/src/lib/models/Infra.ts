@@ -2,12 +2,15 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
+import { PublishStatus } from '@/types/enumTypes';
+
 // Define the Infra interface for TypeScript
 export interface IInfra extends Document {
   title: string;
   description: string;
   url: string;
   creator: mongoose.Schema.Types.ObjectId,
+  status: number,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +37,11 @@ const InfraSchema: Schema<IInfra> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    status: {
+      type: Number,
+      enum: Object.values(PublishStatus),
+      default: PublishStatus.PENDING,
     },
   },
   {

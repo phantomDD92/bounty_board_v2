@@ -30,7 +30,7 @@ import { dateToString } from '@/utils/string'
 import { useSession } from '@/context/SessionContext'
 
 // Lib Imports
-import { getBounty } from '@/lib/api'
+import { getBountyDetail } from '@/lib/api'
 
 // Type Imports
 import type { BountyType, CommentType } from '@/types/valueTypes'
@@ -62,7 +62,7 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
 }
 
 type CommentEditorProps = {
-  onSend: (value:string) => void
+  onSend: (value: string) => void
 }
 
 const CommentEditor = ({ onSend }: CommentEditorProps) => {
@@ -105,7 +105,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
   const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
   const { session } = useSession();
-  
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -113,10 +113,10 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
   const handleCommentSend = () => {
 
   }
-  
+
   useEffect(() => {
     if (open && data) {
-      getBounty(data._id)
+      getBountyDetail(data._id)
         .then(newData => {
           setBountyData(newData)
         })
@@ -141,7 +141,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
             anymore and you will be able to start working and submit your work.
           </Typography>
         </Alert>
-        <Typography dangerouslySetInnerHTML={{__html: bountyData?.description || ""}} className='mb-4 text-wrap break-words'/>
+        <Typography dangerouslySetInnerHTML={{ __html: bountyData?.description || "" }} className='mb-4 text-wrap break-words' />
         <Button variant='contained' className='mb-8'>
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
           I&apos;m interested

@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 // Lib Imports
-import { addTag, updateTag } from '@/lib/api'
+import { createTag, updateTag } from '@/lib/api'
 
 // Type Imports
 import type { TagParamType, TagType } from '@/types/valueTypes'
@@ -62,7 +62,7 @@ const TagEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
           toast.error(error.message)
         })
     } else {
-      addTag(params)
+      createTag(params)
         .then(() => {
           resetForm({ _id: '', name: '' })
           onUpdate && onUpdate()

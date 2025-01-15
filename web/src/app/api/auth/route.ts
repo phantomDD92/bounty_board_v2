@@ -2,13 +2,13 @@ import type { NextRequest} from 'next/server';
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/mongoose';
-import { Role } from '@/lib/models/User';
 import { createSession } from '@/lib/session';
 import {createUser, getUserByAddress, isFirstUser} from '@/lib/service/UserService';
+import { UserRole } from '@/types/enumTypes';
 
 export async function POST(req: NextRequest) {
   await dbConnect();
-  
+
   try {
     const { iaddress, name } = await req.json();
 
@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
     let user = await getUserByAddress(iaddress);
 
     if (!user) {
-      const isAdmin = await isFirstUser();
-      const newUser = await createUser({name, iaddress, role: isAdmin ? Role.ADMIN: Role.USER});
+      const isFirst = await isFirstUser();
+      const newUser = await createUser({name, iaddress, role: isFirst ? UserRole.SUPER: UserRole.NORMAL});
 
       await newUser.save();
       user = newUser

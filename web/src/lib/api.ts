@@ -1,7 +1,18 @@
 import axios from 'axios'
 
-import type { BountyParamType, BountySearchType, CodeParamType, CodeSnippetType, CodeType, InfraParamType, TagParamType, VideoParamType } from '@/types/valueTypes';
+import type {
+  BountyParamType,
+  BountySearchType,
+  CodeParamType,
+  CodeSnippetType,
+  CodeType,
+  InfraParamType,
+  PublishType as PublishParamType,
+  TagParamType,
+  VideoParamType
+} from '@/types/valueTypes';
 
+// auth-related apis
 export async function getSession() {
   const res = await axios.get("/api/auth/session");
 
@@ -40,8 +51,67 @@ export async function logoutUser() {
   await axios.delete('/api/auth/session');
 }
 
-// Video related api calls
-export async function addVideo(params: VideoParamType) {
+// infra-related api
+export async function createInfra(params: InfraParamType) {
+  try {
+    await axios.post('/api/infra', params);
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getInfraList() {
+  try {
+    const resp = await axios.get('/api/infra');
+
+    return resp.data?.infra;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// video-related api for admin
+export async function getInfraListForAdmin() {
+  try {
+    const resp = await axios.get('/api/admin/infra');
+
+    return resp.data?.infra;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function publishInfraForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.put(`/api/admin/infra/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// infra-related api for current user
+export async function getInfraListForUser() {
+  try {
+    const resp = await axios.get('/api/me/infra');
+
+    return resp.data?.infra;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteInfraForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/infra/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// video-related api
+export async function createVideo(params: VideoParamType) {
   try {
     await axios.post('/api/video', params);
   } catch (error: any) {
@@ -52,37 +122,55 @@ export async function addVideo(params: VideoParamType) {
 }
 
 export async function getVideoList() {
-  const resp = await axios.get('/api/video');
+  try {
+    const resp = await axios.get('/api/video');
 
-  return resp.data?.videos;
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function deleteVideo(id: string) {
-  await axios.delete(`/api/video/${id}`);
+// video-related api for admin
+export async function getVideoListForAdmin() {
+  try {
+    const resp = await axios.get('/api/admin/video');
+
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-// Infra related api calls
-export async function addInfra(params: InfraParamType) {
-  await axios.post('/api/infra', params);
+export async function publishVideoForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.put(`/api/admin/video/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function updateInfra(infraId: string, params: InfraParamType) {
-  await axios.put(`/api/infra/${infraId}`, params);
+// video-related api for current user
+export async function getVideoListForUser() {
+  try {
+    const resp = await axios.get('/api/me/video');
+
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function getInfraList() {
-  const resp = await axios.get('/api/infra');
-
-  return resp.data?.infra;
+export async function deleteVideoForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/video/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function deleteInfra(id: string) {
-  await axios.delete(`/api/infra/${id}`);
-}
-
-
-// Code related api calls
-export async function addCode(params: CodeParamType) {
+// code-related api
+export async function createCode(params: CodeParamType) {
   try {
     await axios.post('/api/code', params);
   } catch (error: any) {
@@ -92,9 +180,77 @@ export async function addCode(params: CodeParamType) {
   }
 }
 
-export async function addCodeSnippet(code: CodeType, params: CodeSnippetType) {
+export async function getCodeList() {
   try {
-    await axios.post(`/api/code/${code._id}/snippet`, params);
+    const resp = await axios.get('/api/code');
+
+    return resp.data?.codes;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// code-related api for admin
+export async function getCodeListForAdmin() {
+  try {
+    const resp = await axios.get('/api/admin/code');
+
+    return resp.data?.codes;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function publishCodeForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.put(`/api/admin/code/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// code-related api for current user
+export async function getCodeListForUser() {
+  try {
+    const resp = await axios.get('/api/me/code');
+
+    return resp.data?.codes;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteCodeForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/code/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// Tag related api calls
+export async function createTagForAdmin(params: TagParamType) {
+  await axios.post('/api/admin/tag', params);
+}
+
+export async function updateTagForAdmin(tagId: string, params: TagParamType) {
+  await axios.put(`/api/admin/tag/${tagId}`, params);
+}
+
+export async function getTagList() {
+  const resp = await axios.get('/api/tag');
+
+  return resp.data?.tags;
+}
+
+export async function deleteTagForAdmin(id: string) {
+  await axios.delete(`/api/admin/tag/${id}`);
+}
+
+// bounty-related api
+export async function createBounty(params: BountyParamType) {
+  try {
+    await axios.post('/api/bounty', params);
   } catch (error: any) {
     if (error?.response?.data?.message)
       throw new Error(error?.response?.data?.message)
@@ -102,81 +258,63 @@ export async function addCodeSnippet(code: CodeType, params: CodeSnippetType) {
   }
 }
 
-export async function getCodeList() {
-  const resp = await axios.get('/api/code');
-
-  return resp.data?.codes;
-}
-
-export async function deleteCode(id: string) {
-  await axios.delete(`/api/code/${id}`);
-}
-
-// Tag related api calls
-export async function addTag(params: TagParamType) {
-  await axios.post('/api/tags', params);
-}
-
-export async function updateTag(tagId: string, params: TagParamType) {
-  await axios.put(`/api/tags/${tagId}`, params);
-}
-
-export async function getTagList() {
-  const resp = await axios.get('/api/tags');
-
-  return resp.data?.tags;
-}
-
-export async function deleteTag(id: string) {
-  await axios.delete(`/api/tags/${id}`);
-}
-
-// Bounty related apis
-export async function getApprovedBountyList({ search, sort, tags, page, size }: BountySearchType) {
-  const resp = await axios.get('/api/bounties', { params: { search, sort, tags: tags.join(","), page, size } });
-
-  return resp.data?.bounties;
-}
-
-// Bounty related apis
 export async function getBountyList() {
-  const resp = await axios.get('/api/bounties/all');
+  try {
+    const resp = await axios.get('/api/bounty');
 
-  return resp.data?.bounties;
+    return resp.data?.bounties || [];
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function getBounty(bountyId: string) {
-  const resp = await axios.get(`/api/bounties/${bountyId}`);
+export async function getBountyDetail(id:string) {
+  try {
+    const resp = await axios.get(`/api/bounty/${id}`);
 
-  return resp.data?.bounty;
+    return resp.data?.bounty;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-// Bounty related apis
-export async function getUserBountyList() {
-  const resp = await axios.get('/api/bounties/me');
+// video-related api for admin
+export async function getBountyListForAdmin() {
+  try {
+    const resp = await axios.get('/api/admin/bounty');
 
-  return resp.data?.bounties;
+    return resp.data?.bounties || [];
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-export async function addBounty(params: BountyParamType) {
-  await axios.post('/api/bounties', params);
+export async function publishBountyForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.put(`/api/admin/bounty/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-// Bounty related apis
-export async function approveBounty(bountyId: string, feedback: string) {
-  await axios.post(`/api/bounties/${bountyId}/approve`, { feedback });
+// video-related api for current user
+export async function getBountyListForUser() {
+  try {
+    const resp = await axios.get('/api/me/bounty');
+
+    return resp.data?.bounties || [];
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
 
-// Bounty related apis
-export async function rejectBounty(bountyId: string, feedback: string) {
-  await axios.post(`/api/bounties/${bountyId}/reject`, { feedback });
+export async function deleteBountyForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/bounty/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }
-
-// Bounty related apis
-export async function updateBounty(bountyId: string, params: BountyParamType) {
-  await axios.put(`/api/bounties/${bountyId}`, params);
-}
-
 
 export async function checkVerus() {
   try {
@@ -188,11 +326,11 @@ export async function checkVerus() {
 
 // User related apis
 export async function getUserList() {
-  const resp = await axios.get('/api/users');
+  const resp = await axios.get('/api/admin/user');
 
   return resp.data?.users;
 }
 
 export async function setUserRole(userId: string, isAdmin: boolean) {
-  await axios.put(`/api/users/${userId}`, { isAdmin });
+  await axios.put(`/api/admin/user/${userId}`, { isAdmin });
 }

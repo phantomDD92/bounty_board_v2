@@ -39,11 +39,11 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import tableStyles from '@core/styles/table.module.css'
 
 import { getBountyList } from '@/lib/api'
-import { BountyStatus } from '@/lib/models/Bounty'
 
 import type { BountyType } from '@/types/valueTypes'
 
 import BountyApproveDrawer from './BountyApproveDrawer'
+import { PublishStatus } from '@/types/enumTypes'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -123,7 +123,7 @@ const BountyListTable = () => {
 
   useEffect(() => {
     const fData = data?.filter(item => {
-      if (pendingOnly) return item.status == BountyStatus.PENDING
+      if (pendingOnly) return item.status == PublishStatus.PENDING
       else return true
     })
 
@@ -200,7 +200,7 @@ const BountyListTable = () => {
       }),
       columnHelper.accessor('status', {
         header: 'Status',
-        cell: ({ row }) => <Chip label={row.original.status} color={row.original.status == "approved" ? 'primary' : row.original.status == "rejected" ? "error" : "warning"} />
+        cell: ({ row }) => <Chip label={row.original.status} color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',

@@ -7,13 +7,25 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 // MUI Imports
-import { Grid, Card, CardContent, CardHeader, Pagination, Typography } from '@mui/material'
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Pagination,
+  Typography,
+  Button
+} from '@mui/material'
 
 // Lib Imports
 import { getVideoList } from '@/lib/api'
 
 // Type Imports
 import type { VideoType } from '@/types/valueTypes'
+
+import { useSession } from '@/context/SessionContext'
+import { checkAuthenticated } from '@/utils/session'
+import VideoCreateDialog from './VideoCreateDialog'
 
 type Props = {
   item: VideoType
@@ -41,6 +53,8 @@ const VideoList = () => {
   // States
   const [data, setData] = useState<VideoType[]>([])
   const [page, setPage] = useState(0)
+  const [createShow, setCreateShow] = useState(false)
+  const { session } = useSession()
 
   useEffect(() => {
     const newData = data || []
@@ -59,7 +73,19 @@ const VideoList = () => {
 
   return (
     <Card>
-      <CardHeader title='Video List' subheader={`Total ${data.length} videos founded`} />
+      <div className='flex justify-between items-center mr-4'>
+        <CardHeader title='Video List' subheader={`Total ${data.length} videos founded`} />
+        {checkAuthenticated(session) && (
+          <Button
+            variant='contained'
+            className='max-sm:is-full is-auto'
+            onClick={() => setCreateShow(true)}
+            startIcon={<i className='ri-add-line' />}
+          >
+            Create
+          </Button>
+        )}
+      </div>
       <CardContent className='flex flex-col gap-6'>
         {data.length > 0 ? (
           <Grid container spacing={6}>
@@ -83,6 +109,10 @@ const VideoList = () => {
             onChange={(e, page) => setPage(page - 1)}
           />
         </div>
+        <VideoCreateDialog
+          open={createShow}
+          onClose={() => setCreateShow(false)}
+          onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

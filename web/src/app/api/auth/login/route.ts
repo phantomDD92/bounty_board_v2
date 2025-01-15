@@ -2,9 +2,9 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { cancelLoginRequest, createLoginRequest, getLoginRequest } from '@/lib/verus';
-import { getUserByAddress, isFirstUser, createUser } from '@/lib/service/UserService';
-import { Role } from '@/lib/models/User';
+import UserService, { getUserByAddress, isFirstUser, createUser } from '@/lib/service/UserService';
 import { createSession } from '@/lib/session';
+import { UserRole } from '@/types/enumTypes';
 
 export async function POST() {
   try {
@@ -53,8 +53,8 @@ export async function PUT(req: NextRequest) {
     let user = await getUserByAddress(iaddress);
 
     if (!user) {
-      const isAdmin = await isFirstUser();
-      const newUser = await createUser({ name, iaddress, role: isAdmin ? Role.ADMIN : Role.USER });
+      const isFirst = await isFirstUser();
+      const newUser = await createUser({ name, iaddress, role: isFirst ? UserRole.SUPER: UserRole.NORMAL });
 
       await newUser.save();
       user = newUser

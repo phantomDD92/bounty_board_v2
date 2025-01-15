@@ -18,7 +18,8 @@ import ScrollToTop from '@core/components/scroll-to-top'
 // Util Imports
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 import { getSession } from '@/lib/session'
-import { Role } from '@/lib/models/User'
+import { UserRole } from '@/types/enumTypes'
+import { checkAdmin, checkAuthenticated } from '@/utils/session'
 
 
 
@@ -29,7 +30,7 @@ const Layout = async ({ children }: ChildrenType) => {
   const systemMode = getSystemMode()
   const session = await getSession()
 
-  if (!session || !session.isAuth || session.role == Role.USER) {
+  if (!checkAuthenticated(session) || !checkAdmin(session)) {
     redirect('/')
   }
 

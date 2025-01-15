@@ -9,6 +9,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { getUserById } from '@/lib/service/UserService'
 
 import type { IUser } from '@/lib/models/User'
+import { SessionType } from '@/types/valueTypes'
 
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
@@ -17,7 +18,7 @@ type SessionPayload = {
   id: string,
   name: string,
   iaddress: string,
-  role: string,
+  role: number,
 }
 
 export async function encrypt(payload: SessionPayload) {
@@ -42,7 +43,12 @@ export async function decrypt(session: string | undefined = ''): Promise<any> {
 
 export async function createSession(res: NextResponse, user: IUser) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  const session = await encrypt({ id: user._id, name: user.name, role: user.role, iaddress: user.iaddress })
+  const session = await encrypt({
+    id: user._id,
+    name: user.name,
+    role: user.role,
+    iaddress: user.iaddress
+  })
 
   res.cookies.set('session', session, {
     httpOnly: true,
@@ -78,7 +84,7 @@ export async function deleteSession() {
   cookieStore.delete('session')
 }
 
-export const getSession = async () => {
+export async function getSession(): Promise<SessionType | undefined> {
   const cookie = (await cookies()).get('session')?.value
 
   const session = await decrypt(cookie)
@@ -95,6 +101,13 @@ export const getSession = async () => {
   if (!user)
     return undefined;
 
-  return { isAuth: true, userId: user._id, name: user.name, role: user.role, iaddress: user.iaddress, submittedAt: user.submittedAt }
+  return {
+    isAuth: true,
+    userId: user._id,
+    name: user.name,
+    role: user.role,
+    iaddress: user.iaddress,
+    submittedAt: user.submittedAt
+  }
 }
 

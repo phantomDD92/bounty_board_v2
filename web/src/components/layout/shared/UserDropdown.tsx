@@ -23,6 +23,9 @@ import { MenuItem } from '@mui/material'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+import { checkAdmin } from '@/utils/session'
+import { SessionType } from '@/types/valueTypes'
+import Link from 'next/link'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -35,13 +38,12 @@ const BadgeContentSpan = styled('span')({
 })
 
 type Props = {
-  name?: string
-  admin?: boolean
-  adminPage?: boolean
+  session?: SessionType
+  dashboard?: boolean
   onLogout?: () => void
 }
 
-const UserDropdown = ({ name, onLogout, admin, adminPage }: Props) => {
+const UserDropdown = ({ onLogout, session, dashboard }: Props) => {
   // States
   const [open, setOpen] = useState(false)
 
@@ -76,10 +78,17 @@ const UserDropdown = ({ name, onLogout, admin, adminPage }: Props) => {
 
   const handleHomeClicked = (e: any) => {
     handleDropdownClose(e)
-    if (admin)
+    if (checkAdmin(session))
       router.replace('/');
     else
       router.replace('/admin');
+  }
+
+  const getAddress = (session: SessionType | undefined) => {
+    if (!session || !session?.iaddress)
+      return ''
+    const addressLen = session.iaddress.length;
+    return session.iaddress.slice(0, 5) + '...' + session.iaddress.slice(addressLen - 5, addressLen)
   }
 
   return (
@@ -95,17 +104,11 @@ const UserDropdown = ({ name, onLogout, admin, adminPage }: Props) => {
         >
           <Avatar
             ref={anchorRef}
-            alt='John Doe'
+            alt={session?.name}
             src='/images/avatars/1.png'
             className='cursor-pointer bs-[38px] is-[38px]'
           />
         </Badge>
-        <div className='flex items-start flex-col'>
-          <Typography className='font-medium' color='text.primary'>
-            {name}
-          </Typography>
-          {/* <Typography variant='caption'>{iaddress}</Typography> */}
-        </div>
       </div>
       <Popper
         open={open}
@@ -125,18 +128,33 @@ const UserDropdown = ({ name, onLogout, admin, adminPage }: Props) => {
             <Paper className={settings.skin === 'bordered' ? 'border shadow-none' : 'shadow-lg'}>
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
-                  {admin && <MenuItem className='gap-3' onClick={handleHomeClicked}>
-                    {adminPage ? (
-                      <>
-                        <i className='ri-home-line' />
-                        <Typography color='text.primary'>Home</Typography>
-                      </>
-                    ) : (
-                      <>
-                        <i className='ri-dashboard-line' />
-                        <Typography color='text.primary'>Dashboard</Typography>
-                      </>
-                    )}
+                  <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
+                    <Avatar alt={session?.name || ''} src='/images/avatars/1.png' />
+                    <div className='flex items-start flex-col'>
+                      <Typography className='font-medium' color='text.primary'>
+                        {session?.name || ''}
+                      </Typography>
+                      <Typography variant='caption'>{getAddress(session)}</Typography>
+                    </div>
+                  </div>
+                  <Divider className='mlb-1' />
+                  {dashboard && <MenuItem className='gap-3' onClick={handleHomeClicked}>
+                    <Link href="/">
+                      <i className='ri-home-line' />
+                      <Typography color='text.primary'>Home </Typography>
+                    </Link>
+                  </MenuItem>}
+                  {checkAdmin(session) && !dashboard && <MenuItem className='gap-3'>
+                    <Link className='flex' href="/admin">
+                      <i className='ri-home-line' />
+                      <Typography color='text.primary'>Admin Dashboard </Typography>
+                    </Link>
+                  </MenuItem>}
+                  {!dashboard && <MenuItem className='gap-3' onClick={handleHomeClicked}>
+                    <Link className='flex' href="/dashboard">
+                      <i className='ri-home-line' />
+                      <Typography color='text.primary'>Creator Dashboard </Typography>
+                    </Link>
                   </MenuItem>}
                   <Divider className='mlb-1' />
                   {/* {!admin && */}

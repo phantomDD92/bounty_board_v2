@@ -40,7 +40,7 @@ import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import tableStyles from '@core/styles/table.module.css'
 
 // Lib Imports
-import { deleteVideo, getVideoList } from '@/lib/api'
+import { deleteVideoForUser, getVideoList } from '@/lib/api'
 
 // Type Imports
 import type { VideoType } from '@/types/valueTypes'
@@ -138,7 +138,7 @@ const VideoListTable = () => {
     try {
       setSelected(undefined)
       setConfirmShow(false)
-      await deleteVideo(data._id)
+      await deleteVideoForUser(data._id)
       toast.success('Delete Video Success')
       const newData = await getVideoList()
 

@@ -15,7 +15,7 @@ import { Button, ButtonBase } from '@mui/material'
 import BountyCard from '@/components/BountyCard'
 
 // Lib Imports
-import { getApprovedBountyList } from '@/lib/api'
+import { getBountyList } from '@/lib/api'
 
 // Context Imports
 import { useSession } from '@/context/SessionContext'
@@ -43,11 +43,11 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
   const { session } = useSession()
 
   useEffect(() => {
-    getApprovedBountyList({ search, sort, tags: selectedTags, page, size: 10 })
+    getBountyList()
       .then(items => {
         setData(items)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [search, sort, selectedTags, page])
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
         )}
 
         <BountyDetail open={selected != null} setOpen={() => setSelected(undefined)} data={selected} />
-        <BountyCreateDialog open={createShow} tags={tags} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)}/>
+        <BountyCreateDialog open={createShow} tags={tags} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

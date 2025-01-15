@@ -10,6 +10,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Pagination from '@mui/material/Pagination'
 import Typography from '@mui/material/Typography'
+import { Button } from '@mui/material'
 
 // Component Imports
 import CodeCard from '@/components/CodeCard'
@@ -19,6 +20,8 @@ import { getCodeList } from '@/lib/api'
 
 // Type Imports
 import type { CodeType } from '@/types/valueTypes'
+import { useSession } from '@/context/SessionContext'
+import CodeCreateDialog from './CodeCreateDialog'
 
 const CodeList = () => {
   const [items, setItems] = useState<CodeType[]>([])
@@ -26,6 +29,8 @@ const CodeList = () => {
   // States
   const [data, setData] = useState<CodeType[]>([])
   const [page, setPage] = useState(0)
+  const [createShow, setCreateShow] = useState(false)
+  const { session } = useSession()
 
   useEffect(() => {
     getCodeList()
@@ -44,7 +49,19 @@ const CodeList = () => {
 
   return (
     <Card>
-      <CardHeader title='Code List' subheader={`Total ${data.length} codes founded`} />
+      <div className='flex justify-between items-center mr-4'>
+        <CardHeader title='Code List' subheader={`Total ${data.length} codes founded`} />
+        {session?.isAuth && (
+          <Button
+            variant='contained'
+            className='max-sm:is-full is-auto'
+            onClick={() => setCreateShow(true)}
+            startIcon={<i className='ri-add-line' />}
+          >
+            Create
+          </Button>
+        )}
+      </div>
       <CardContent className='flex flex-col gap-6'>
         {data.length > 0 ? (
           <Grid container spacing={6}>
@@ -68,6 +85,10 @@ const CodeList = () => {
             onChange={(e, page) => setPage(page - 1)}
           />
         </div>
+        <CodeCreateDialog
+          open={createShow}
+          onClose={() => setCreateShow(false)}
+          onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

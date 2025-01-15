@@ -8,15 +8,10 @@ import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, check
 
 import LoginDialog from '@/components/dialogs/LoginDialog'
 
-type Session = {
-  isAuth: boolean
-  name: string
-  role: string
-  iaddress: string
-}
+import { SessionType } from '@/types/valueTypes'
 
 type SessionContextType = {
-  session: Session | null
+  session?: SessionType
   testLogin: () => void
   logout: () => void
   login?: () => void
@@ -25,7 +20,7 @@ type SessionContextType = {
 const SessionContext = createContext<SessionContextType | null>(null)
 
 export const SessionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<SessionType>()
   const [open, setOpen] = useState(false)
   const [qrData, setQrData] = useState('')
   const [loading, setLoading] = useState(false)
@@ -40,7 +35,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         setSession(session)
       })
       .catch(() => {
-        setSession(null)
+        setSession(undefined)
       })
   }, [])
 
@@ -127,7 +122,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   const logout = async () => {
     logoutUser()
       .then(() => {
-        setSession(null)
+        setSession(undefined)
       })
       .catch(error => {
         console.error(error)

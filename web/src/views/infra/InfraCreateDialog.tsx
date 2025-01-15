@@ -1,10 +1,9 @@
 'use client'
 
+import dynamic from 'next/dynamic'
+
 // MUI Imports
 import {
-  Select,
-  MenuItem,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,32 +18,20 @@ import { toast } from 'react-toastify'
 import { useForm, Controller } from 'react-hook-form'
 
 // Lib Imports
-import { addInfra } from '@/lib/api'
-import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
+import { createInfra } from '@/lib/api'
 
 // Component Imports
 import TiptapEditor from '@/components/TiptapEditor'
 
 // Type Imports
 import type { InfraParamType } from '@/types/valueTypes'
-import { error } from 'console'
+
+const RichEditor = dynamic( () => import( '@/components/RichEditor' ), { ssr: false } )
 
 type Props = {
   open: boolean
   onClose?: () => void
   onUpdate?: () => void
-}
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
 }
 
 const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
@@ -64,7 +51,7 @@ const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
 
   // Handle Form Submit
   const handleFormSubmit = (data: InfraParamType) => {
-    addInfra(data).then(() => {
+    createInfra(data).then(() => {
       resetForm({ description: '', title: '', url: '' })
       onClose && onClose()
       toast.success('Infra submitted successfully')
@@ -120,14 +107,16 @@ const InfraCreateDialog = ({ open, onClose, onUpdate }: Props) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Controller
+              <RichEditor  />
+              {/* <Controller
                 name='description'
                 control={control}
                 rules={{ required: true }}
-                render={({ field }) => <TiptapEditor {...field} label='Description' />}
-              />
+                render={({ field }) => <RichEditor {...field} />}
+              /> */}
             </Grid>
           </Grid>
+
         </DialogContent>
         <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
           <Button variant='contained' type='submit'>

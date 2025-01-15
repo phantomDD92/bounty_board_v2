@@ -14,7 +14,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 // Lib Imports
-import { addVideo } from '@/lib/api'
+import { createVideo } from '@/lib/api'
 
 // Type Imports
 import type { VideoType } from '@/types/valueTypes'
@@ -56,7 +56,7 @@ const VideoEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
 
   // Handle Form Submit
   const handleFormSubmit = async (data: FormValues) => {
-    addVideo(data)
+    createVideo(data)
       .then(() => {
         resetForm({ title: '', url: '' })
         onUpdate && onUpdate()

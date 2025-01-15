@@ -12,7 +12,6 @@ import { useSession } from '@/context/SessionContext'
 
 // Component Imports
 import NavToggle from './NavToggle'
-import { Role } from '@/lib/models/User'
 
 
 const NavbarContent = () => {
@@ -25,7 +24,7 @@ const NavbarContent = () => {
         <NavToggle />
       </div>
       <div className='flex items-center'>
-        <UserDropdown name={session?.name} admin={session?.role == Role.USER} adminPage />
+        <UserDropdown session={session} dashboard />
       </div>
     </div>
   )

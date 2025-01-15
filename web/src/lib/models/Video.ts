@@ -2,11 +2,14 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
+import { PublishStatus } from '@/types/enumTypes';
+
 // Define the Video interface for TypeScript
 export interface IVideo extends Document {
   url: string;
   title: string;
   creator: mongoose.Schema.Types.ObjectId,
+  status: number,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +30,11 @@ const VideoSchema: Schema<IVideo> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    status: {
+      type: Number,
+      enum: Object.values(PublishStatus),
+      default: PublishStatus.PENDING,
     },
   },
   {

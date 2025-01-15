@@ -2,32 +2,20 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
-import type { IComment } from "@/lib/models/Comment";
-interface ITag {
-  _id: string;
-  name: string;
-}
-
-// Enum-like options for status, reward type, and token
-export const BountyStatus = {
-  PENDING: "pending",
-  APPROVED: "approved",
-  REJECTED: "rejected",
-};
-
+import { PublishStatus } from '@/types/enumTypes';
 
 // Bounty Interface for TypeScript
 export interface IBounty extends Document {
   title: string;
   description: string;
-  skills: ITag["_id"][]; // Array of tag IDs
+  skills: mongoose.Schema.Types.ObjectId[]; // Array of tag IDs
   creator: mongoose.Schema.Types.ObjectId,
   reward: string;
   deadline: Date;
   contact: string,
   feedback: string,
-  status: string;
-  comments: IComment["_id"][]
+  status: number;
+  comments: mongoose.Schema.Types.ObjectId[]
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,9 +43,9 @@ const BountySchema: Schema<IBounty> = new Schema(
       default: "",
     },
     status: {
-      type: String,
-      enum: Object.values(BountyStatus),
-      default: BountyStatus.PENDING,
+      type: Number,
+      enum: Object.values(PublishStatus),
+      default: PublishStatus.PENDING,
     },
     reward: {
       type: String,

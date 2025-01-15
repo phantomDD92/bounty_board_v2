@@ -1,19 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
 
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
-export const Role = {
-  SUPER: "super",
-  ADMIN: "admin",
-  USER: "user",
-};
+import { UserRole } from '@/types/enumTypes';
 
 // Define the User interface for TypeScript
 export interface IUser extends Document {
   _id: string,
   iaddress: string;
   name: string;
-  role: string;
+  role: number;
   submittedAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -22,20 +18,20 @@ export interface IUser extends Document {
 // Create the Mongoose schema for User
 const UserSchema: Schema<IUser> = new Schema(
   {
-    iaddress: {
-      type: String,
-      required: false,
-      default: ""
-    },
     name: {
       type: String,
       required: false,
       default: ""
     },
-    role: {
+    iaddress: {
       type: String,
-      enum: Object.values(Role),
-      default: Role.USER,
+      required: false,
+      default: ""
+    },
+    role: {
+      type: Number,
+      enum: Object.values(UserRole),
+      default: UserRole.NORMAL,
     },
     submittedAt: {
       type: Date,
