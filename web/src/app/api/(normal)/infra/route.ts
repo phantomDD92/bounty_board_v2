@@ -9,12 +9,13 @@ import { getSession } from '@/lib/session';
 import User from '@/lib/models/User';
 import systemConfig from '@/configs/systemConfig';
 import { checkAuthenticated, checkRateLimited } from '@/utils/session';
+import { PublishStatus } from '@/types/enumTypes';
 
 export async function GET() {
   await dbConnect();
 
   try {
-    const infraList = await Infra.find({});
+    const infraList = await Infra.find({ status: PublishStatus.APPROVED });
 
     return NextResponse.json({ success: true, infra: infraList });
   } catch (error) {

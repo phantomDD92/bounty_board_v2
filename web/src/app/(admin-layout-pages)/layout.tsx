@@ -18,7 +18,6 @@ import ScrollToTop from '@core/components/scroll-to-top'
 // Util Imports
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 import { getSession } from '@/lib/session'
-import { UserRole } from '@/types/enumTypes'
 import { checkAdmin, checkAuthenticated } from '@/utils/session'
 
 

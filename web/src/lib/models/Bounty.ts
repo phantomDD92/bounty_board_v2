@@ -12,7 +12,8 @@ export interface IBounty extends Document {
   creator: mongoose.Schema.Types.ObjectId,
   reward: string;
   deadline: Date;
-  contact: string,
+  phone: string,
+  email: string,
   feedback: string,
   status: number;
   comments: mongoose.Schema.Types.ObjectId[]
@@ -56,9 +57,12 @@ const BountySchema: Schema<IBounty> = new Schema(
       type: Date,
       required: true
     },
-    contact: {
+    email: {
       type: String,
-      required: true,
+      default: "",
+    },
+    phone: {
+      type: String,
       default: "",
     },
     skills: [

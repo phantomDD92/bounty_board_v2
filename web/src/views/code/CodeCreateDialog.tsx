@@ -72,29 +72,51 @@ const CodeCreateDialog = ({ open, onClose }: Props) => {
       <form onSubmit={handleSubmit(data => handleFormSubmit(data))} onReset={handleReset} className='flex flex-col gap-5'>
         <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
           <Grid container spacing={5}>
-            <Grid item xs={12}>
-              <Controller
-                name='title'
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    label='Title'
-                    placeholder='Enter a video title...'
-                    {...(errors.title && { error: true, helperText: 'This field is required.' })}
+            <Grid item xs={6}>
+              <Grid container spacing={5}>
+                <Grid item xs={12}>
+                  <Controller
+                    name='title'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label='Title'
+                        placeholder='Enter a code title...'
+                        {...(errors.title && { error: true, helperText: 'This field is required.' })}
+                      />
+                    )}
                   />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name='description'
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        multiline
+                        minRows={10}
+                        label='Description'
+                        placeholder='Enter a code description...'
+                        {...(errors.description && { error: true, helperText: 'This field is required.' })}
+                      />
+                    )}
+                  />
+                  {/* <Controller
                 name='description'
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => <TiptapEditor {...field} label='Description' />}
-              />
+              /> */}
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={6}>
             </Grid>
           </Grid>
         </DialogContent>

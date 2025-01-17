@@ -33,13 +33,16 @@ export type TagType = TagParamType & {
   updatedAt: Date,
 }
 
-export type BountyParamType = {
+export type ContactType = {
+  email?: string
+  phone?: string
+}
+export type BountyParamType = ContactType & {
   title: string,
   description: string,
   skills: TagParamType[],
   reward: string,
   deadline: Date,
-  contact: string,
 }
 
 export type BountyType = BountyParamType & {

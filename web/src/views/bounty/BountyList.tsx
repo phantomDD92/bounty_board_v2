@@ -25,7 +25,7 @@ import type { BountyType, TagType } from '@/types/valueTypes'
 
 // Other Imports
 import BountyDetail from './BountyDetailDialog'
-import BountyCreateDialog from './BountyCreateDialog'
+import { useRouter } from 'next/navigation'
 
 
 type Props = {
@@ -39,8 +39,8 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
   const [selected, setSelected] = useState<BountyType | undefined>()
   const [data, setData] = useState<BountyType[]>([])
   const [page, setPage] = useState(0)
-  const [createShow, setCreateShow] = useState(false)
   const { session } = useSession()
+  const router = useRouter();
 
   useEffect(() => {
     getBountyList()
@@ -69,7 +69,7 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
           <Button
             variant='contained'
             className='max-sm:is-full is-auto'
-            onClick={() => setCreateShow(true)}
+            onClick={() => router.push('/bounty/create')}
             startIcon={<i className='ri-add-line' />}
           >
             Create
@@ -102,7 +102,6 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
         )}
 
         <BountyDetail open={selected != null} setOpen={() => setSelected(undefined)} data={selected} />
-        <BountyCreateDialog open={createShow} tags={tags} onClose={() => setCreateShow(false)} onUpdate={() => setCreateShow(false)} />
       </CardContent>
     </Card>
   )

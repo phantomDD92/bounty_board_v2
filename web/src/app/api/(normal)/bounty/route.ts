@@ -22,13 +22,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Submission rate limited" }, { status: 403 })
     }
 
-    const { title, description, skills, reward, deadline, contact } = await request.json();
+    const { title, description, skills, reward, deadline, phone, email } = await request.json();
 
-    if (!description || !title || !skills || !reward || !deadline || !contact) {
+    if (!description || !title || !skills || !reward || !deadline) {
       return NextResponse.json({ success: false, message: "All parameters are required" }, { status: 400 });
     }
 
-    const newData = await Bounty.create({ title, description, skills, reward, deadline, contact, status: PublishStatus.PENDING, creator: session?.userId });
+    const newData = await Bounty.create({ title, description, skills, reward, deadline, phone, email, status: PublishStatus.PENDING, creator: session?.userId });
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true, data: newData }, { status: 201 });

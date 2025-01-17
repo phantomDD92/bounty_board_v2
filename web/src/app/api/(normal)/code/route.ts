@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "URL, Description is required" }, { status: 400 });
     }
 
-    await Code.create({ title, description, snippets, creator: session?.userId })
+    await Code.create({ title, description, snippets, creator: session.userId, status: PublishStatus.PENDING})
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true }, { status: 201 });
