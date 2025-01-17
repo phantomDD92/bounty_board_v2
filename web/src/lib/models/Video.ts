@@ -8,6 +8,7 @@ import { PublishStatus } from '@/types/enumTypes';
 export interface IVideo extends Document {
   url: string;
   title: string;
+  description: string;
   creator: mongoose.Schema.Types.ObjectId,
   status: number,
   createdAt: Date;
@@ -18,6 +19,10 @@ export interface IVideo extends Document {
 const VideoSchema: Schema<IVideo> = new Schema(
   {
     title: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },

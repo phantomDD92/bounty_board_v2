@@ -7,6 +7,7 @@ import User from "@/lib/models/User";
 import { getSession } from "@/lib/session";
 
 import { checkAuthenticated, checkRateLimited } from "@/utils/session";
+import { PublishStatus } from "@/types/enumTypes";
 
 export async function POST(request: Request) {
   try {
@@ -21,13 +22,13 @@ export async function POST(request: Request) {
     }
 
     await dbConnect();
-    const { title, url } = await request.json();
+    const { title, url, description } = await request.json();
 
     if (!url || !title) {
       return NextResponse.json({ success: false, message: "URL, Title is required" }, { status: 400 });
     }
 
-    await Video.create({ title, url, creator: session.userId })
+    await Video.create({ title, url, description, creator: session.userId })
     await User.findByIdAndUpdate(session.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true }, { status: 201 });
@@ -39,7 +40,10 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await dbConnect();
-    const videos = await Video.find().sort({ createdAt: -1 }); // Sort by newest first
+    const videos = await Video
+      .find({ status: PublishStatus.APPROVED })
+      .populate('creator', 'name')
+      .sort({ createdAt: -1 }); // Sort by newest first
 
     return NextResponse.json({ success: true, videos });
   } catch (error: any) {

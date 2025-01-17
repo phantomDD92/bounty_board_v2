@@ -58,6 +58,7 @@ export type BountyType = BountyParamType & {
 // video related
 export type VideoParamType = {
   title: string,
+  description: string,
   url: string,
 }
 

@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "URL, Description is required" }, { status: 400 });
     }
 
-    await Code.create({ title, description, snippets, creator: session.userId, status: PublishStatus.PENDING})
+    await Code.create({ title, description, snippets, creator: session.userId, status: PublishStatus.PENDING })
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true }, { status: 201 });
@@ -43,7 +43,10 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await dbConnect();
-    const codes = await Code.find({ status: PublishStatus.APPROVED }).sort({ createdAt: -1 }); // Sort by newest first
+    const codes = await Code
+      .find({ status: PublishStatus.APPROVED })
+      .populate('creator', 'name')
+      .sort({ createdAt: -1 }); // Sort by newest first
 
     return NextResponse.json({ success: true, codes });
   } catch (error: any) {
