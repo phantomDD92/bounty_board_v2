@@ -63,7 +63,7 @@ const InfraListView = () => {
                 href='/infra/create'
                 type='submit'
                 startIcon={<i className='ri-add-line' />} >
-                Create
+                Create Infra
               </Button>
             )}
           </div>

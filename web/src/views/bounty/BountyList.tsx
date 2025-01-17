@@ -72,7 +72,7 @@ const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
             onClick={() => router.push('/bounty/create')}
             startIcon={<i className='ri-add-line' />}
           >
-            Create
+            Create Bounty
           </Button>
         )}
       </div>

@@ -1,4 +1,5 @@
-import { Language } from "@/lib/models/Code"
+import { Language } from "@/types/enumTypes"
+
 
 // Type Imports
 type LanguageDataType ={

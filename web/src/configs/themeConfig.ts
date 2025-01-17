@@ -53,7 +53,7 @@ const themeConfig: Config = {
   templateName: 'BountyBoard',
   homePageUrl: '/bounty',
   settingsCookieName: 'materio-mui-next-demo',
-  mode: 'dark', // 'system', 'light', 'dark'
+  mode: 'light', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
   layout: 'horizontal', // 'vertical', 'collapsed', 'horizontal'
