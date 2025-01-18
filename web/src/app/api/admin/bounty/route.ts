@@ -20,7 +20,10 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const bounties = await Bounty.find().populate('creator').sort({ createdAt: -1 });
+    const bounties = await Bounty.find()
+      .populate('creator')
+      .populate('skills', 'name')
+      .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, bounties });
   } catch (error: any) {

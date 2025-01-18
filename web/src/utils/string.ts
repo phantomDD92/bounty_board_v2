@@ -1,4 +1,4 @@
-import { UserRole } from '@/types/enumTypes'
+import { PublishStatus, UserRole } from '@/types/enumTypes'
 import moment from 'moment'
 
 export const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`)
@@ -6,7 +6,7 @@ export const withoutSuffix = (str: string, suffix: string) =>
   str.endsWith(suffix) ? str.slice(0, -suffix.length) : str
 export const withoutPrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str.slice(prefix.length) : str)
 
-export const dateUserToString = (date: string, username: string) => {
+export const dateUserToString = (date: Date|undefined, username: string) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago by ${username}`
   } else if (moment().diff(moment(date), 'year', false) == 1) {
@@ -71,3 +71,18 @@ export function getRoleName(role: number): string {
   }
   return "Unknown";
 }
+
+export function getStatusName(status: number): string {
+  switch (status) {
+    case PublishStatus.PENDING:
+      return "Pending";
+    case PublishStatus.APPROVED:
+      return "Approved";
+    case PublishStatus.REJECTED:
+      return "Rejected";
+    default:
+      break
+  }
+  return "Unknown";
+}
+

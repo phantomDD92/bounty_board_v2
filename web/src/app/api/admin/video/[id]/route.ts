@@ -25,8 +25,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const { feedback, approved } = await request.json();
-    const video = await Video.findByIdAndUpdate(videoId, { $set: { status: approved ? PublishStatus.APPROVED : PublishStatus.REJECTED, feedback } });
+    const { feedback, approve } = await request.json();
+    const video = await Video.findByIdAndUpdate(videoId, { $set: { status: approve ? PublishStatus.APPROVED : PublishStatus.REJECTED, feedback } });
 
     if (!video) {
       return NextResponse.json({ success: false, message: "Video not found" }, { status: 404 });

@@ -19,7 +19,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import verticalMenuData from '@/data/navigation/verticalMenuData'
+import adminMenuData from '@/data/navigation/verticalMenuData'
 
 type RenderExpandIconProps = {
   open?: boolean
@@ -69,7 +69,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {verticalMenuData().map((menu, index) => (
+        {adminMenuData().map((menu, index) => (
           <MenuItem key={index} href={menu.href} icon={<i className={menu.icon} />}>
             {menu.label}
           </MenuItem>

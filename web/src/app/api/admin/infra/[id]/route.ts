@@ -25,8 +25,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const { feedback, approved } = await request.json();
-    const infra = await Infra.findByIdAndUpdate(bountyId, { $set: { status: approved ? PublishStatus.APPROVED : PublishStatus.REJECTED, feedback } });
+    const { feedback, approve } = await request.json();
+    const infra = await Infra.findByIdAndUpdate(bountyId, { $set: { status: approve ? PublishStatus.APPROVED : PublishStatus.REJECTED, feedback } });
 
     if (!infra) {
       return NextResponse.json({ success: false, message: "Infra not found" }, { status: 404 });

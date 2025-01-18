@@ -13,7 +13,7 @@ const TagsList = ({ tags }: Props) => {
     <div className='flex gap-3 flex-wrap'>
       {tags &&
         tags.map(tag => (
-          <Chip key={tag._id} label={tag.name} size='small' className='text-xs' />
+          <Chip key={tag._id} label={tag.name} size='small' color='primary' className='text-xs' />
         ))}
     </div>
   )

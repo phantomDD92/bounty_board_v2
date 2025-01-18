@@ -5,13 +5,12 @@ import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { CardHeader, Chip, FormControlLabel } from '@mui/material'
+import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -38,12 +37,13 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getBountyList } from '@/lib/api'
+import { getInfraListForAdmin, publishInfraForAdmin } from '@/lib/api'
 
-import type { BountyType } from '@/types/valueTypes'
+import type { InfraType, PublishType } from '@/types/valueTypes'
 
-import BountyApproveDrawer from './BountyApproveDrawer'
 import { PublishStatus } from '@/types/enumTypes'
+import { getStatusName } from '@/utils/string'
+import PublishDialog from '../common/PublishDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -54,7 +54,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type BountyWithActionsType = BountyType & {
+type InfraWithActionsType = InfraType & {
   actions?: string
 }
 
@@ -101,20 +101,20 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<BountyWithActionsType>()
+const columnHelper = createColumnHelper<InfraWithActionsType>()
 
-const BountyListTable = () => {
+const InfraAdminView = () => {
   // States
   const [selected, setSelected] = useState<any>(undefined)
-  const [approveShow, setApproveShow] = useState(false)
+  const [publishShow, setPublishShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState<BountyType[]>([])
-  const [filteredData, setFilteredData] = useState<BountyType[]>([])
+  const [data, setData] = useState<InfraType[]>([])
+  const [filteredData, setFilteredData] = useState<InfraType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
-  const [pendingOnly, setPendingOnly] = useState(false)
+  const [status, setStatus] = useState('0');
 
   useEffect(() => {
-    getBountyList()
+    getInfraListForAdmin()
       .then(newData => {
         setData(newData)
       })
@@ -122,55 +122,72 @@ const BountyListTable = () => {
   }, [])
 
   useEffect(() => {
-    const fData = data?.filter(item => {
-      if (pendingOnly) return item.status == PublishStatus.PENDING
-      else return true
-    })
-
-    setFilteredData(fData)
-  }, [pendingOnly, data])
-
-  const handleUpdateData = async () => {
-    try {
-      setApproveShow(false)
-      setSelected(undefined)
-      const newData = await getBountyList()
-
-      setData(newData)
-    } catch (error: any) {
-      toast.error(error.message)
+    if (status != `${PublishStatus.ALL}`) {
+      const fData = data?.filter(item => `${item.status}` == status)
+      setFilteredData(fData)
+    } else {
+      setFilteredData(data)
     }
+  }, [status, data])
+
+  const handlePublish = async (params: PublishType) => {
+    publishInfraForAdmin(selected._id, params)
+      .then(() => {
+        toast.success(`Bounty updated successfully`);
+        getInfraListForAdmin().then(newData => {
+          setData(newData)
+        })
+      })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
   }
 
-  const columns = useMemo<ColumnDef<BountyWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<InfraWithActionsType, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
+          <Button variant='text'>
             {row.original.title}
+          </Button>
+        )
+      }),
+      columnHelper.accessor('description', {
+        header: 'Description',
+        cell: ({ row }) => (
+          <Typography
+            variant='body1'
+            sx={{
+              width: 250, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {row.original.description}
           </Typography>
         )
       }),
@@ -182,39 +199,28 @@ const BountyListTable = () => {
           </Typography>
         )
       }),
-      columnHelper.accessor('reward', {
-        header: 'Reward',
-        cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
-            {row.original.reward}
-          </Typography>
-        )
-      }),
-      columnHelper.accessor('deadline', {
-        header: 'Deadline',
-        cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
-            {moment(row.original.deadline).format('YYYY-MM-DD')}
-          </Typography>
-        )
-      }),
       columnHelper.accessor('status', {
         header: 'Status',
-        cell: ({ row }) => <Chip label={row.original.status} color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
+        cell: ({ row }) =>
+          <Chip
+            label={getStatusName(row.original.status)}
+            color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <IconButton
-              size='small'
-              onClick={() => {
-                setSelected(row.original)
-                setApproveShow(true)
-              }}
-            >
-              <i className='ri-send-plane-line text-[22px] text-textSecondary' />
-            </IconButton>
+            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setPublishShow(true)
+                }}
+              >
+                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>}
           </div>
         ),
         enableSorting: false
@@ -225,7 +231,7 @@ const BountyListTable = () => {
   )
 
   const table = useReactTable({
-    data: filteredData as BountyType[],
+    data: filteredData as InfraType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -256,7 +262,7 @@ const BountyListTable = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Bounty List' className='pbe-4' />
+        <CardHeader title='Infra List' className='pbe-4' />
         <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -264,12 +270,36 @@ const BountyListTable = () => {
             placeholder='Search'
             className='max-sm:is-full'
           />
-          <FormControlLabel
-            label='Pending Only'
-            control={<Checkbox checked={pendingOnly} onChange={e => setPendingOnly(e.target.checked)} />}
-          />
+          <FormControl size='small' className='min-is-[175px]'>
+            <InputLabel id='status-select'>Status</InputLabel>
+            <Select
+              id='select-status'
+              value={status}
+              onChange={e => setStatus(e.target.value)}
+              label='Status'
+              labelId='status-select'
+            >
+              <MenuItem value={`${PublishStatus.ALL}`}>Any</MenuItem>
+              <MenuItem value={`${PublishStatus.PENDING}`}>Pending</MenuItem>
+              <MenuItem value={`${PublishStatus.APPROVED}`}>Approved</MenuItem>
+              <MenuItem value={`${PublishStatus.REJECTED}`}>Rejected</MenuItem>
+            </Select>
+          </FormControl>
         </div>
-        <div className='overflow-x-auto'>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 25]}
+          component='div'
+          className='border-bs'
+          count={table.getFilteredRowModel().rows.length}
+          rowsPerPage={table.getState().pagination.pageSize}
+          page={table.getState().pagination.pageIndex}
+          onPageChange={(_, page) => {
+            table.setPageIndex(page)
+          }}
+          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
+        />
+        <Divider className='mb-3' />
+        <div className='overflow-x-auto mr-4 ml-4'>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -324,27 +354,15 @@ const BountyListTable = () => {
             )}
           </table>
         </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 15, 25]}
-          component='div'
-          className='border-bs'
-          count={table.getFilteredRowModel().rows.length}
-          rowsPerPage={table.getState().pagination.pageSize}
-          page={table.getState().pagination.pageIndex}
-          onPageChange={(_, page) => {
-            table.setPageIndex(page)
-          }}
-          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
-        />
       </Card>
-      <BountyApproveDrawer
-        open={approveShow}
-        data={selected}
-        onClose={() => setApproveShow(false)}
-        onUpdate={handleUpdateData}
+      <PublishDialog
+        open={publishShow}
+        onCancel={() => setPublishShow(false)}
+        onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
+        onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
       />
     </>
   )
 }
 
-export default BountyListTable
+export default InfraAdminView

@@ -17,7 +17,7 @@ const nextConfig = {
       },
       {
         source: '/admin',
-        destination: '/admin/bounty',
+        destination: '/admin/user',
         permanent: true,
         locale: false
       }

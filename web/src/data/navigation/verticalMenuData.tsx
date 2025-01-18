@@ -1,7 +1,7 @@
 // Type Imports
 import type { HorizontalMenuDataType } from '@/types/menuTypes'
 
-const verticalMenuData = (): HorizontalMenuDataType[] => [
+const adminMenuData = (): HorizontalMenuDataType[] => [
   {
     label: 'Users',
     href: '/admin/user',
@@ -10,7 +10,7 @@ const verticalMenuData = (): HorizontalMenuDataType[] => [
   {
     label: 'Tags',
     href: '/admin/tag',
-    icon: 'ri-blogger-line'
+    icon: 'ri-price-tag-line'
   },
   {
     label: 'Bounties',
@@ -34,4 +34,4 @@ const verticalMenuData = (): HorizontalMenuDataType[] => [
   }
 ]
 
-export default verticalMenuData
+export default adminMenuData
