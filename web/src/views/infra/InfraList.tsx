@@ -27,7 +27,6 @@ const InfraListView = () => {
   // States
   const [data, setData] = useState<InfraType[]>([])
   const [page, setPage] = useState(0)
-  const [createShow, setCreateShow] = useState(false)
   const { session } = useSession()
 
   useEffect(() => {

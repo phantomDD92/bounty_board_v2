@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import { toast } from 'react-toastify'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -18,15 +20,12 @@ import {
   Select,
   Chip,
   MenuItem,
-  Fab,
-  Box
 } from "@mui/material"
 
 import type { BountyParamType, TagType } from "@/types/valueTypes"
 
 import { createBounty, getTagList } from "@/lib/api"
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
-import { useRouter } from 'next/navigation'
 
 const BountyCreateView = () => {
 
@@ -72,6 +71,7 @@ const BountyCreateView = () => {
 
   const getSkillName = (skill: string) => {
     const tag = tags.find(item => item._id == skill)
+
     return tag?.name
   }
 
@@ -146,7 +146,6 @@ const BountyCreateView = () => {
                           variant='outlined'
                           label='Skills'
                           fullWidth
-                          // MenuProps={MenuProps}
                           renderValue={(selected: any) => {
                             return (
                               <div className='flex flex-wrap gap-1'>

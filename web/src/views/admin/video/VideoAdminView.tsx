@@ -4,13 +4,23 @@
 import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import IconButton from '@mui/material/IconButton'
-import TablePagination from '@mui/material/TablePagination'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import {
+  Button,
+  Card,
+  CardHeader,
+  Chip,
+  Divider,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -123,6 +133,7 @@ const VideoAdminView = () => {
   useEffect(() => {
     if (status != `${PublishStatus.ALL}`) {
       const fData = data?.filter(item => `${item.status}` == status)
+
       setFilteredData(fData)
     } else {
       setFilteredData(data)

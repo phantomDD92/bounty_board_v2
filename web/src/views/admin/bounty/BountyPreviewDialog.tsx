@@ -3,17 +3,18 @@
 // MUI Imports
 import { Typography, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material'
 
+import moment from 'moment'
+
 // Component Imports
 import TagsList from '@/components/TagsList'
 
 // Util Imports
 import { dateUserToString } from '@/utils/string'
 
+import CustomAvatar from '@/@core/components/mui/Avatar'
 
 // Type Imports
-import type { BountyType, CommentType } from '@/types/valueTypes'
-import CustomAvatar from '@/@core/components/mui/Avatar'
-import moment from 'moment'
+import type { BountyType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
 
 type CustomItemProps = {
@@ -73,4 +74,5 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
     </Dialog>
   )
 }
+
 export default BountyPreviewDialog

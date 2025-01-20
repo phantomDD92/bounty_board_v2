@@ -1,5 +1,9 @@
 'use client'
 
+import { useState } from 'react'
+
+import { CopyBlock, railscast } from 'react-code-blocks';
+
 // MUI Imports
 import {
   Typography,
@@ -8,13 +12,6 @@ import {
   DialogTitle,
   DialogContent,
   Grid,
-  ButtonGroup,
-  Button,
-  Popper,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
   MenuItem,
   Select,
   FormControl,
@@ -24,36 +21,31 @@ import {
 // Util Imports
 import { dateUserToString } from '@/utils/string'
 
-
 // Type Imports
-import type { CodeSnippetType, CodeType } from '@/types/valueTypes'
-import CustomAvatar from '@/@core/components/mui/Avatar'
+import type { CodeType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
-import { SyntheticEvent, useRef, useState } from 'react'
-import { CopyBlock, railscast } from 'react-code-blocks';
 
-type CustomItemProps = {
-  label: string,
-  value: string,
-  icon: string,
-}
+// type CustomItemProps = {
+//   label: string,
+//   value: string,
+//   icon: string,
+// }
 
-const CustomItem = ({ label, value, icon }: CustomItemProps) => {
-  return (
-    <div className='flex items-center gap-4'>
-      <CustomAvatar variant='rounded' skin='light' color='primary'>
-        <i className={icon} />
-      </CustomAvatar>
-      <div className='flex flex-col gap-0.5'>
-        <Typography color='text.primary'>{value}</Typography>
-        <Typography variant='caption' color='text.secondary'>
-          {label}
-        </Typography>
-      </div>
-    </div>
-  )
-}
-
+// const CustomItem = ({ label, value, icon }: CustomItemProps) => {
+//   return (
+//     <div className='flex items-center gap-4'>
+//       <CustomAvatar variant='rounded' skin='light' color='primary'>
+//         <i className={icon} />
+//       </CustomAvatar>
+//       <div className='flex flex-col gap-0.5'>
+//         <Typography color='text.primary'>{value}</Typography>
+//         <Typography variant='caption' color='text.secondary'>
+//           {label}
+//         </Typography>
+//       </div>
+//     </div>
+//   )
+// }
 
 type Props = {
   open: boolean
@@ -65,12 +57,12 @@ const CodePreviewDialog = ({ open, onClose, data }: Props) => {
 
   const [selected, setSelected] = useState('')
 
-  const getCodeForLanguage = (language: string):string => {
+  const getCodeForLanguage = (language: string): string => {
     const results = (data?.snippets || []).filter(snippet => snippet.language == language)
+
     return results.length > 0 ? results[0].code : ""
   }
 
-  console.log("### : ", getCodeForLanguage(selected))
   return (
     <Dialog fullWidth open={open} onClose={onClose} maxWidth='md' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-16 mb-4'>
@@ -96,7 +88,7 @@ const CodePreviewDialog = ({ open, onClose, data }: Props) => {
                   labelId='status-select'
                 >
                   {data.snippets.map(snippet =>
-                    <MenuItem value={snippet.language}>{snippet.language}</MenuItem>
+                    <MenuItem key={snippet.language} value={snippet.language}>{snippet.language}</MenuItem>
                   )}
                 </Select>
               </FormControl>
@@ -123,4 +115,5 @@ const CodePreviewDialog = ({ open, onClose, data }: Props) => {
     </Dialog>
   )
 }
+
 export default CodePreviewDialog

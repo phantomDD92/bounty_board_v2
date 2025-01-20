@@ -2,9 +2,6 @@
 
 // MUI Imports
 import {
-  Select,
-  MenuItem,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,8 +20,6 @@ import { createCode } from '@/lib/api'
 
 // Type Imports
 import type { CodeParamType } from '@/types/valueTypes'
-
-import TiptapEditor from '@/components/TiptapEditor'
 
 type Props = {
   open: boolean

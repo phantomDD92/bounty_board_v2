@@ -40,6 +40,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await dbConnect();
+
     const videos = await Video
       .find({ status: PublishStatus.APPROVED })
       .populate('creator', 'name')

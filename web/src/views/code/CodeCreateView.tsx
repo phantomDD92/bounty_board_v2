@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
+import { useRouter } from 'next/navigation'
 
 import { toast } from 'react-toastify'
 import { useForm, Controller } from 'react-hook-form'
@@ -21,10 +23,11 @@ import {
 } from "@mui/material"
 
 import type { CodeParamType, CodeSnippetType } from "@/types/valueTypes"
+import { Language } from '@/types/enumTypes'
 
 import { createCode } from "@/lib/api"
-import { useRouter } from 'next/navigation'
-import { Language } from '@/types/enumTypes'
+
+
 import languageData from '@/data/LanguageData'
 
 const CodeCreateView = () => {
@@ -62,22 +65,29 @@ const CodeCreateView = () => {
   const handleCodeSnippetAdd = () => {
     if (code == '' || language == '') {
       toast.warn('Code snippet is required')
+
       return
     }
+
     if (snippets.filter(item => item.language == language).length > 0) {
       toast.warn(`Code snippet for ${language} already existed`)
+
       return
     }
-    let codeSnippets: CodeSnippetType[] = [];
+
+    const codeSnippets: CodeSnippetType[] = [];
+
     Object.assign(codeSnippets, snippets)
     codeSnippets.push({ language, code });
     setSnippets(codeSnippets)
   }
 
   const handleCodeSnippetDelete = (snippet: CodeSnippetType) => {
-    let codeSnippets: CodeSnippetType[] = [];
+    const codeSnippets: CodeSnippetType[] = [];
+
     Object.assign(codeSnippets, snippets)
     const index = codeSnippets.findIndex(item => item.language == snippet.language)
+
     codeSnippets.splice(index, 1)
     setSnippets(codeSnippets)
   }

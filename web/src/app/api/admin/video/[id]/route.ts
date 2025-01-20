@@ -13,6 +13,7 @@ import { PublishStatus } from '@/types/enumTypes';
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: videoId } = params;
+
   try {
     const session = await getSession();
 

@@ -5,13 +5,12 @@ import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
+import { Button, CardHeader, Chip, Divider, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -42,7 +41,6 @@ import { getBountyListForAdmin, publishBountyForAdmin } from '@/lib/api'
 
 import type { BountyType, PublishType } from '@/types/valueTypes'
 
-import BountyApproveDrawer from './BountyApproveDrawer'
 import { PublishStatus } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
@@ -116,7 +114,6 @@ const BountyAdminView = () => {
   const [filteredData, setFilteredData] = useState<BountyType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [status, setStatus] = useState('0');
-  const [pendingOnly, setPendingOnly] = useState(false)
 
   useEffect(() => {
     getBountyListForAdmin()
@@ -129,6 +126,7 @@ const BountyAdminView = () => {
   useEffect(() => {
     if (status != `${PublishStatus.ALL}`) {
       const fData = data?.filter(item => `${item.status}` == status)
+
       setFilteredData(fData)
     } else {
       setFilteredData(data)

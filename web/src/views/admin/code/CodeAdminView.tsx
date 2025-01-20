@@ -10,7 +10,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
+import { Button, CardHeader, Chip, Divider, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -125,6 +125,7 @@ const CodeAdminView = () => {
   useEffect(() => {
     if (status != `${PublishStatus.ALL}`) {
       const fData = data?.filter(item => `${item.status}` == status)
+
       setFilteredData(fData)
     } else {
       setFilteredData(data)

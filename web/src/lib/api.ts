@@ -2,10 +2,7 @@ import axios from 'axios'
 
 import type {
   BountyParamType,
-  BountySearchType,
   CodeParamType,
-  CodeSnippetType,
-  CodeType,
   InfraParamType,
   PublishType as PublishParamType,
   TagParamType,

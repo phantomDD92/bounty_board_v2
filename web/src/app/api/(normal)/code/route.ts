@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 
-import moment from "moment";
-
 import dbConnect from '@/lib/mongoose';
 import Code from '@/lib/models/Code';
 import { getSession } from "@/lib/session";
@@ -43,6 +41,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     await dbConnect();
+
     const codes = await Code
       .find({ status: PublishStatus.APPROVED })
       .populate('creator', 'name')

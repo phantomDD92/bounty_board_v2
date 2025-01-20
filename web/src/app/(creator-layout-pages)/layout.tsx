@@ -18,9 +18,7 @@ import ScrollToTop from '@core/components/scroll-to-top'
 // Util Imports
 import { getMode, getSystemMode } from '@core/utils/serverHelpers'
 import { getSession } from '@/lib/session'
-import { checkAdmin, checkAuthenticated } from '@/utils/session'
-
-
+import { checkAuthenticated } from '@/utils/session'
 
 const Layout = async ({ children }: ChildrenType) => {
 

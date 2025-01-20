@@ -3,6 +3,8 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 // MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -25,7 +27,6 @@ import type { BountyType, TagType } from '@/types/valueTypes'
 
 // Other Imports
 import BountyDetail from './BountyDetailDialog'
-import { useRouter } from 'next/navigation'
 
 
 type Props = {
@@ -35,7 +36,7 @@ type Props = {
   selectedTags: string[]
 }
 
-const BountyList = ({ search, sort, tags, selectedTags }: Props) => {
+const BountyList = ({ search, sort, selectedTags }: Props) => {
   const [selected, setSelected] = useState<BountyType | undefined>()
   const [data, setData] = useState<BountyType[]>([])
   const [page, setPage] = useState(0)

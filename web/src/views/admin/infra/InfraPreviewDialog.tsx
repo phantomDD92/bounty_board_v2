@@ -1,10 +1,13 @@
 'use client'
 
 // MUI Imports
-import { Typography, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material'
-
-// Component Imports
-import TagsList from '@/components/TagsList'
+import {
+  Typography,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent
+} from '@mui/material'
 
 // Util Imports
 import { dateUserToString } from '@/utils/string'
@@ -12,31 +15,29 @@ import { dateUserToString } from '@/utils/string'
 
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
-import CustomAvatar from '@/@core/components/mui/Avatar'
-import moment from 'moment'
 import { PublishStatus } from '@/types/enumTypes'
 
-type CustomItemProps = {
-  label: string,
-  value: string,
-  icon: string,
-}
+// type CustomItemProps = {
+//   label: string,
+//   value: string,
+//   icon: string,
+// }
 
-const CustomItem = ({ label, value, icon }: CustomItemProps) => {
-  return (
-    <div className='flex items-center gap-4'>
-      <CustomAvatar variant='rounded' skin='light' color='primary'>
-        <i className={icon} />
-      </CustomAvatar>
-      <div className='flex flex-col gap-0.5'>
-        <Typography color='text.primary'>{value}</Typography>
-        <Typography variant='caption' color='text.secondary'>
-          {label}
-        </Typography>
-      </div>
-    </div>
-  )
-}
+// const CustomItem = ({ label, value, icon }: CustomItemProps) => {
+//   return (
+//     <div className='flex items-center gap-4'>
+//       <CustomAvatar variant='rounded' skin='light' color='primary'>
+//         <i className={icon} />
+//       </CustomAvatar>
+//       <div className='flex flex-col gap-0.5'>
+//         <Typography color='text.primary'>{value}</Typography>
+//         <Typography variant='caption' color='text.secondary'>
+//           {label}
+//         </Typography>
+//       </div>
+//     </div>
+//   )
+// }
 
 type Props = {
   open: boolean
@@ -66,4 +67,5 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
     </Dialog>
   )
 }
+
 export default BountyPreviewDialog

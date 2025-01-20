@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { cancelLoginRequest, createLoginRequest, getLoginRequest } from '@/lib/verus';
-import UserService, { getUserByAddress, isFirstUser, createUser } from '@/lib/service/UserService';
+import { getUserByAddress, isFirstUser, createUser } from '@/lib/service/UserService';
 import { createSession } from '@/lib/session';
 import { UserRole } from '@/types/enumTypes';
 

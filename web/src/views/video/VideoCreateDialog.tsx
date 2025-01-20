@@ -2,17 +2,14 @@
 
 // MUI Imports
 import {
-  Select,
-  MenuItem,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
-  TextField
+  TextField,
+  Button
 } from '@mui/material'
-import Button from '@mui/material/Button'
 
 // Third-party Imports
 import { toast } from 'react-toastify'
@@ -30,7 +27,7 @@ type Props = {
   onUpdate?: () => void
 }
 
-const VideoCreateDialog = ({ open, onClose, onUpdate }: Props) => {
+const VideoCreateDialog = ({ open, onClose }: Props) => {
   // States
   const {
     control,

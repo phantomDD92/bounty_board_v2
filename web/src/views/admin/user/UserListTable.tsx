@@ -4,15 +4,17 @@
 import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
-import TablePagination from '@mui/material/TablePagination'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import {
+  Card,
+  CardHeader,
+  Checkbox,
+  IconButton,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { CardHeader, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -122,6 +124,7 @@ const UserListTable = () => {
     setUserRole(user._id, true)
       .then(() => {
         toast.success("User role updated successfully!")
+
         return getUserList()
       })
       .then(newData => {
@@ -134,6 +137,7 @@ const UserListTable = () => {
     setUserRole(user._id, false)
       .then(() => {
         toast.success("User role updated successfully!")
+
         return getUserList()
       })
       .then(newData => {

@@ -8,7 +8,7 @@ import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, check
 
 import LoginDialog from '@/components/dialogs/LoginDialog'
 
-import { SessionType } from '@/types/valueTypes'
+import type { SessionType } from '@/types/valueTypes'
 
 type SessionContextType = {
   session?: SessionType

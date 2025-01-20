@@ -1,14 +1,13 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import moment from 'moment';
-
 import dbConnect from '@/lib/mongoose';
 import Infra from '@/lib/models/Infra';
 import { getSession } from '@/lib/session';
 import User from '@/lib/models/User';
-import systemConfig from '@/configs/systemConfig';
+
 import { checkAuthenticated, checkRateLimited } from '@/utils/session';
+
 import { PublishStatus } from '@/types/enumTypes';
 
 export async function GET() {
@@ -45,6 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newInfra = new Infra({ title, description, url, creator: session.userId });
+
     await User.findByIdAndUpdate(session.userId, { $set: { submittedAt: new Date() } })
 
     await newInfra.save();

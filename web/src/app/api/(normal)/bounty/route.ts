@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import dbConnect from '@/lib/mongoose';
@@ -29,6 +28,7 @@ export async function POST(request: Request) {
     }
 
     const newData = await Bounty.create({ title, description, skills, reward, deadline, phone, email, status: PublishStatus.PENDING, creator: session?.userId });
+
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true, data: newData }, { status: 201 });
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 }
 
 // get bounty list
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // const searchParams = request.nextUrl.searchParams;
 
@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
     const bounties = await Bounty.find({ status: PublishStatus.APPROVED })
       .populate("creator", "name")
       .populate("skills")
+
     // .sort(sort)
     // .skip((parseInt(page) - 1) * parseInt(size))
     // .limit(parseInt(size)); // Sort by newest first

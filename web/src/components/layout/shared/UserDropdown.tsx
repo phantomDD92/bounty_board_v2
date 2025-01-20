@@ -23,9 +23,10 @@ import { MenuItem } from '@mui/material'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+
 import { checkAdmin } from '@/utils/session'
-import { SessionType } from '@/types/valueTypes'
-import Link from 'next/link'
+
+import type { SessionType } from '@/types/valueTypes'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -76,18 +77,11 @@ const UserDropdown = ({ onLogout, session, dashboard }: Props) => {
     onLogout && onLogout()
   }
 
-  const handleHomeClicked = (e: any) => {
-    handleDropdownClose(e)
-    if (checkAdmin(session))
-      router.replace('/');
-    else
-      router.replace('/admin');
-  }
-
   const getAddress = (session: SessionType | undefined) => {
     if (!session || !session?.iaddress)
       return ''
     const addressLen = session.iaddress.length;
+
     return session.iaddress.slice(0, 5) + '...' + session.iaddress.slice(addressLen - 5, addressLen)
   }
 
