@@ -47,7 +47,7 @@ const CodeSearchView = () => {
   }, [items, page])
 
   return (
-    <Grid container spacing={16}>
+    <Grid container spacing={6}>
       <Grid item xs={12}>
         <div className='flex flex-wrap sm:items-center justify-between max-sm:flex-col gap-6'>
           <div>

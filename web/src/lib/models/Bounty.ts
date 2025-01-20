@@ -4,6 +4,8 @@ import type { Document, Model } from 'mongoose';
 
 import { PublishStatus } from '@/types/enumTypes';
 
+import { ITag } from './Tag';
+
 // Bounty Interface for TypeScript
 export interface IBounty extends Document {
   title: string;

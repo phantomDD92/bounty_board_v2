@@ -1,12 +1,12 @@
 import { Grid } from '@mui/material'
 
-import CodeAdminView from '@/views/admin/code/CodeAdminView'
+import CodeCreatorView from '@/views/creator/code/CodeCreatorView'
 
 export default async function Page() {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CodeAdminView />
+        <CodeCreatorView />
       </Grid>
     </Grid>
   )

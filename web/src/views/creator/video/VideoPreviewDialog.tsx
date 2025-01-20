@@ -40,7 +40,7 @@ const VideoPreviewDialog = ({ open, onClose, data }: Props) => {
           component="pre" >
           {data?.description}
         </Typography>
-        <iframe src={data.url} frameBorder="0" width="100%" height="500px" loading="lazy" allowFullScreen></iframe>
+        <iframe src={data.url} width="100%" height="500px" loading="lazy" allowFullScreen></iframe>
         {data.status == PublishStatus.REJECTED && data.feedback && (
           <Alert severity='warning'>{data.feedback}</Alert>
         )}

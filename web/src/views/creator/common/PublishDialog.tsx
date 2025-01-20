@@ -7,7 +7,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import { DialogTitle, Divider, Drawer, IconButton, TextField, Typography } from '@mui/material'
+import { DialogTitle, TextField } from '@mui/material'
 
 type Props = {
   open: boolean,
@@ -25,44 +25,7 @@ const PublishDialog = ({ open, onCancel, onApprove, onReject }: Props) => {
 
   // States
   return (
-    <Drawer
-      open={open}
-      anchor='right'
-      variant='temporary'
-      onClose={onCancel}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
-    >
-      <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>{'Approve/Reject'}</Typography>
-        <IconButton size='small' onClick={onCancel}>
-          <i className='ri-close-line text-2xl' />
-        </IconButton>
-      </div>
-      <Divider />
-      <div className='p-5'>
-        <TextField
-          value={feedback}
-          onChange={e => setFeedback(e.target.value)}
-          fullWidth
-          multiline
-          minRows={10}
-          label='Feedback'
-          placeholder='Enter a feedback...'
-        />
-        <div className='flex items-center gap-4 mt-8'>
-          <Button variant='contained' onClick={() => onApprove && onApprove(feedback)}>
-            Approve
-          </Button>
-          <Button variant='outlined' color='error' onClick={() => onReject && onReject(feedback)}>
-            Reject
-          </Button>
-        </div>
-
-      </div>
-    </Drawer>
-  )
-    {/* <Dialog fullWidth maxWidth='sm' open={open} onClose={() => onCancel && onCancel()}>
+    <Dialog fullWidth maxWidth='sm' open={open} onClose={() => onCancel && onCancel()}>
       <DialogTitle variant='h4' className='flex gap-2 flex-col items-center sm:pbs-8 sm:pbe-3 sm:pli-8'>
         <div className='max-sm:is-[80%] max-sm:text-center'>Approve/Reject</div>
       </DialogTitle>
@@ -85,8 +48,8 @@ const PublishDialog = ({ open, onCancel, onApprove, onReject }: Props) => {
           Reject
         </Button>
       </DialogActions>
-    </Dialog> */}
-  // )
+    </Dialog>
+  )
 }
 
 export default PublishDialog

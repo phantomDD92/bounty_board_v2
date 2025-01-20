@@ -10,9 +10,9 @@ import type { ChildrenType } from '@core/types'
 import VerticalLayout from '@layouts/VerticalLayout'
 
 // Component Imports
-import Navigation from '@components/layout/vertical/Navigation'
-import Navbar from '@components/layout/vertical/Navbar'
-import VerticalFooter from '@components/layout/vertical/Footer'
+import Navigation from '@components/layout/creator/Navigation'
+import Navbar from '@components/layout/creator/Navbar'
+import VerticalFooter from '@components/layout/creator/Footer'
 import ScrollToTop from '@core/components/scroll-to-top'
 
 // Util Imports

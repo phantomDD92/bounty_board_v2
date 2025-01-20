@@ -11,6 +11,7 @@ export interface IVideo extends Document {
   description: string;
   creator: mongoose.Schema.Types.ObjectId,
   status: number,
+  feedback: string,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +36,10 @@ const VideoSchema: Schema<IVideo> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    feedback: {
+      type: String,
+      default: "",
     },
     status: {
       type: Number,

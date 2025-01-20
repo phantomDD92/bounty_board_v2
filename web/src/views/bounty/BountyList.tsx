@@ -28,7 +28,6 @@ import type { BountyType, TagType } from '@/types/valueTypes'
 // Other Imports
 import BountyDetail from './BountyDetailDialog'
 
-
 type Props = {
   search: string
   sort: string,
@@ -64,19 +63,7 @@ const BountyList = ({ search, sort, selectedTags }: Props) => {
 
   return (
     <Card>
-      <div className='flex justify-between items-center mr-4'>
-        <CardHeader title='Open Bounties' subheader={`Total ${data ? data.length : 0} bounties founded`} />
-        {session?.isAuth && (
-          <Button
-            variant='contained'
-            className='max-sm:is-full is-auto'
-            onClick={() => router.push('/bounty/create')}
-            startIcon={<i className='ri-add-line' />}
-          >
-            Create Bounty
-          </Button>
-        )}
-      </div>
+      <CardHeader title='Bounty List' subheader={`Total ${data ? data.length : 0} bounties founded`} />
       <CardContent className='flex flex-col gap-6'>
         <Grid item xs={12} md={12} className='flex flex-col gap-6'>
           {data &&

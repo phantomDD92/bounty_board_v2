@@ -1,7 +1,7 @@
 'use client'
 
 // MUI Imports
-import { Typography, Alert, Dialog, DialogTitle, DialogContent } from '@mui/material'
+import { Typography, Alert, Dialog, DialogTitle, DialogContent, Box } from '@mui/material'
 
 import moment from 'moment'
 
@@ -46,7 +46,6 @@ type Props = {
 }
 
 const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
-
   return (
     <Dialog fullWidth open={open} onClose={onClose} maxWidth='lg' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-16 mb-4'>
@@ -63,7 +62,7 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
           {data?.description}
         </Typography>
         <div className='flex flex-wrap justify-start gap-6'>
-          <CustomItem icon='ri-user-line' label='Reward' value={data?.creator.name || ''} />
+          <CustomItem icon='ri-user-line' label='Reward' value={data?.reward || ''} />
           <CustomItem icon='ri-calendar-line' label='Deadline' value={moment(data?.deadline).format("MM/DD/YYYY")} />
           {data?.email != "" && <CustomItem icon='ri-calendar-line' label='Email' value={data?.email || ""} />}
           {data?.phone != "" && <CustomItem icon='ri-calendar-line' label='Phone' value={data?.phone || ""} />}

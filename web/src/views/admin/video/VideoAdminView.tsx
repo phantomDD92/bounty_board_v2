@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import {
-  Button,
   Card,
   CardHeader,
   Chip,
@@ -53,6 +52,7 @@ import type { VideoType, PublishType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
+import VideoPreviewDialog from './VideoPreviewDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -116,6 +116,7 @@ const VideoAdminView = () => {
   // States
   const [selected, setSelected] = useState<any>(undefined)
   const [publishShow, setPublishShow] = useState(false)
+  const [previewShow, setPreviewShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<VideoType[]>([])
   const [filteredData, setFilteredData] = useState<VideoType[]>([])
@@ -180,9 +181,17 @@ const VideoAdminView = () => {
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Button variant='text'>
+          <Typography
+            variant='h6'
+            sx={{
+              maxWidth: 300, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {row.original.title}
-          </Button>
+          </Typography>
         )
       }),
       columnHelper.accessor('description', {
@@ -220,6 +229,17 @@ const VideoAdminView = () => {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
+            <Tooltip title="Preview">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setPreviewShow(true)
+                }}
+              >
+                <i className='ri-eye-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
             {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
               <IconButton
                 size='small'
@@ -365,12 +385,22 @@ const VideoAdminView = () => {
           </table>
         </div>
       </Card>
-      <PublishDialog
-        open={publishShow}
-        onCancel={() => setPublishShow(false)}
-        onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
-        onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
-      />
+      {selected && (
+        <PublishDialog
+          open={publishShow}
+          onCancel={() => setPublishShow(false)}
+          onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
+          onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
+        />
+      )}
+      {selected && (
+        <VideoPreviewDialog
+          open={previewShow}
+          onClose={() => setPreviewShow(false)}
+          data={selected}
+        />
+      )}
+
     </>
   )
 }

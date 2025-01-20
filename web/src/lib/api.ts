@@ -255,6 +255,17 @@ export async function createBounty(params: BountyParamType) {
   }
 }
 
+export async function createComment(bountyId: string, comment: string) {
+  try {
+    await axios.post(`/api/bounty/${bountyId}/comment`, { comment });
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+
 export async function getBountyList() {
   try {
     const resp = await axios.get('/api/bounty');
@@ -265,7 +276,7 @@ export async function getBountyList() {
   }
 }
 
-export async function getBountyDetail(id:string) {
+export async function getBountyDetail(id: string) {
   try {
     const resp = await axios.get(`/api/bounty/${id}`);
 

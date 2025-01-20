@@ -4,16 +4,26 @@
 import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import IconButton from '@mui/material/IconButton'
-import TablePagination from '@mui/material/TablePagination'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import {
+  Card,
+  CardHeader,
+  Chip,
+  Divider,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { Button, CardHeader, Chip, Divider, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
+import moment from 'moment'
 import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
@@ -36,14 +46,16 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getInfraListForAdmin, publishInfraForAdmin } from '@/lib/api'
+import { getCodeListForUser, deleteCodeForUser } from '@/lib/api'
 
-import type { InfraType, PublishType } from '@/types/valueTypes'
-
+import type { CodeType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
+
 import { getStatusName } from '@/utils/string'
-import PublishDialog from '../common/PublishDialog'
-import InfraPreviewDialog from './InfraPreviewDialog'
+
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+
+import CodePreviewDialog from './CodePreviewDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -54,7 +66,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type InfraWithActionsType = InfraType & {
+type CodeWithActionsType = CodeType & {
   actions?: string
 }
 
@@ -101,21 +113,21 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<InfraWithActionsType>()
+const columnHelper = createColumnHelper<CodeWithActionsType>()
 
-const InfraAdminView = () => {
+const CodeCreatorView = () => {
   // States
   const [selected, setSelected] = useState<any>(undefined)
-  const [publishShow, setPublishShow] = useState(false)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState<InfraType[]>([])
-  const [filteredData, setFilteredData] = useState<InfraType[]>([])
+  const [data, setData] = useState<CodeType[]>([])
+  const [filteredData, setFilteredData] = useState<CodeType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [status, setStatus] = useState('0');
 
   useEffect(() => {
-    getInfraListForAdmin()
+    getCodeListForUser()
       .then(newData => {
         setData(newData)
       })
@@ -132,12 +144,13 @@ const InfraAdminView = () => {
     }
   }, [status, data])
 
-  const handlePublish = async (params: PublishType) => {
-    publishInfraForAdmin(selected._id, params)
+  const handleDelete = () => {
+    setConfirmShow(false);
+    deleteCodeForUser(selected._id)
       .then(() => {
-        toast.success(`Infra updated successfully`);
-        getInfraListForAdmin().then(newData => {
-          setData(newData)
+        toast.success(`Code deleted successfully`);
+        getCodeListForUser().then(newData => {
+          setData(newData);
         })
       })
       .catch((error: any) => {
@@ -145,7 +158,7 @@ const InfraAdminView = () => {
       })
   }
 
-  const columns = useMemo<ColumnDef<InfraWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<CodeWithActionsType, any>[]>(
     () => [
       // {
       //   id: 'select',
@@ -231,17 +244,18 @@ const InfraAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
+            <Tooltip title="Delete">
               <IconButton
                 size='small'
+                color='error'
                 onClick={() => {
                   setSelected(row.original)
-                  setPublishShow(true)
+                  setConfirmShow(true)
                 }}
               >
-                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -252,7 +266,7 @@ const InfraAdminView = () => {
   )
 
   const table = useReactTable({
-    data: filteredData as InfraType[],
+    data: filteredData as CodeType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -283,7 +297,7 @@ const InfraAdminView = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Infra List' className='pbe-4' />
+        <CardHeader title='Code Submissions' className='pbe-4' />
         <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -320,7 +334,7 @@ const InfraAdminView = () => {
           onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
         />
         <Divider className='mb-3' />
-        <div className='overflow-x-auto mr-4 ml-4'>
+        <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -376,23 +390,24 @@ const InfraAdminView = () => {
           </table>
         </div>
       </Card>
-      {selected && (
-        <PublishDialog
-          open={publishShow}
-          onCancel={() => setPublishShow(false)}
-          onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
-          onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
-        />
-      )}
-      {selected && (
-        <InfraPreviewDialog
+      {selected &&
+        <CodePreviewDialog
+          data={selected}
           open={previewShow}
           onClose={() => setPreviewShow(false)}
-          data={selected}
         />
-      )}
+      }
+      {selected &&
+        <ConfirmDialog
+          question='Are you sure to delete the code?'
+          data={selected}
+          open={confirmShow}
+          onCancel={() => setConfirmShow(false)}
+          onConfirm={handleDelete}
+        />
+      }
     </>
   )
 }
 
-export default InfraAdminView
+export default CodeCreatorView

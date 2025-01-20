@@ -173,9 +173,17 @@ const BountyAdminView = () => {
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Button variant='text'>
+          <Typography
+            variant='h6'
+            sx={{
+              maxWidth: 300, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {row.original.title}
-          </Button>
+          </Typography>
         )
       }),
       columnHelper.accessor('creator', {
@@ -189,7 +197,7 @@ const BountyAdminView = () => {
       columnHelper.accessor('reward', {
         header: 'Reward',
         cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
+          <Typography color='text.primary'>
             {row.original.reward}
           </Typography>
         )
@@ -197,7 +205,7 @@ const BountyAdminView = () => {
       columnHelper.accessor('deadline', {
         header: 'Deadline',
         cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
+          <Typography color='text.primary'>
             {moment(row.original.deadline).format('YYYY-MM-DD')}
           </Typography>
         )

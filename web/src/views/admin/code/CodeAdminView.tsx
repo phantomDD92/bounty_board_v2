@@ -168,13 +168,20 @@ const CodeAdminView = () => {
       //       }}
       //     />
       //   )
-      // },
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Button variant='text'>
+          <Typography
+            variant='h6'
+            sx={{
+              maxWidth: 300, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {row.original.title}
-          </Button>
+          </Typography>
         )
       }),
       columnHelper.accessor('description', {

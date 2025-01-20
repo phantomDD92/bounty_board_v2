@@ -11,6 +11,7 @@ export interface IInfra extends Document {
   url: string;
   creator: mongoose.Schema.Types.ObjectId,
   status: number,
+  feedback:string,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +38,10 @@ const InfraSchema: Schema<IInfra> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    feedback: {
+      type: String,
+      default: "",
     },
     status: {
       type: Number,

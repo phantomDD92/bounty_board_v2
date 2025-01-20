@@ -36,13 +36,14 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getInfraListForAdmin, publishInfraForAdmin } from '@/lib/api'
+import { getInfraListForUser, deleteInfraForUser } from '@/lib/api'
 
 import type { InfraType, PublishType } from '@/types/valueTypes'
 
 import { PublishStatus } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import InfraPreviewDialog from './InfraPreviewDialog'
 
 declare module '@tanstack/table-core' {
@@ -103,10 +104,10 @@ const DebouncedInput = ({
 // Column Definitions
 const columnHelper = createColumnHelper<InfraWithActionsType>()
 
-const InfraAdminView = () => {
+const InfraCreatorView = () => {
   // States
   const [selected, setSelected] = useState<any>(undefined)
-  const [publishShow, setPublishShow] = useState(false)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<InfraType[]>([])
@@ -115,7 +116,7 @@ const InfraAdminView = () => {
   const [status, setStatus] = useState('0');
 
   useEffect(() => {
-    getInfraListForAdmin()
+    getInfraListForUser()
       .then(newData => {
         setData(newData)
       })
@@ -132,13 +133,15 @@ const InfraAdminView = () => {
     }
   }, [status, data])
 
-  const handlePublish = async (params: PublishType) => {
-    publishInfraForAdmin(selected._id, params)
+  const handleDelete = () => {
+    setConfirmShow(false)
+    deleteInfraForUser(selected._id)
       .then(() => {
-        toast.success(`Infra updated successfully`);
-        getInfraListForAdmin().then(newData => {
-          setData(newData)
-        })
+        toast.success(`Infra deleted successfully`);
+        getInfraListForUser()
+          .then(newData => {
+            setData(newData)
+          })
       })
       .catch((error: any) => {
         toast.error(error.message)
@@ -231,17 +234,18 @@ const InfraAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
+            <Tooltip title="Delete">
               <IconButton
                 size='small'
+                color='error'
                 onClick={() => {
                   setSelected(row.original)
-                  setPublishShow(true)
+                  setConfirmShow(true)
                 }}
               >
-                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -283,7 +287,7 @@ const InfraAdminView = () => {
   return (
     <>
       <Card>
-        <CardHeader title='Infra List' className='pbe-4' />
+        <CardHeader title='Infra Submissions' className='pbe-4' />
         <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
@@ -376,23 +380,24 @@ const InfraAdminView = () => {
           </table>
         </div>
       </Card>
-      {selected && (
-        <PublishDialog
-          open={publishShow}
-          onCancel={() => setPublishShow(false)}
-          onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
-          onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
-        />
-      )}
-      {selected && (
+      {selected &&
         <InfraPreviewDialog
           open={previewShow}
           onClose={() => setPreviewShow(false)}
           data={selected}
         />
-      )}
+      }
+      {selected &&
+        <ConfirmDialog
+          question='Are you sure to delete the infra?'
+          data={selected}
+          open={confirmShow}
+          onCancel={() => setConfirmShow(false)}
+          onConfirm={handleDelete}
+        />
+      }
     </>
   )
 }
 
-export default InfraAdminView
+export default InfraCreatorView
