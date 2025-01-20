@@ -19,7 +19,8 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import { HorizontalMenuDataType } from '@/types/menuTypes'
+
+import type { HorizontalMenuDataType } from '@/types/menuTypes'
 
 type RenderExpandIconProps = {
   open?: boolean
