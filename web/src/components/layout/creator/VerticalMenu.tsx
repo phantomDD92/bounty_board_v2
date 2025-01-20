@@ -19,7 +19,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
-import creatorMenuData from '@/data/navigation/creatorMenuData'
+import { HorizontalMenuDataType } from '@/types/menuTypes'
 
 type RenderExpandIconProps = {
   open?: boolean
@@ -35,6 +35,29 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
     <i className='ri-arrow-right-s-line' />
   </StyledVerticalNavExpandIcon>
 )
+
+const creatorMenuData = (): HorizontalMenuDataType[] => [
+  {
+    label: 'Bounties',
+    href: '/creator/bounty',
+    icon: 'ri-blogger-line'
+  },
+  {
+    label: 'Infra',
+    href: '/creator/infra',
+    icon: 'ri-steering-line'
+  },
+  {
+    label: 'Videos',
+    href: '/creator/video',
+    icon: 'ri-video-line'
+  },
+  {
+    label: 'Codes',
+    href: '/creator/code',
+    icon: 'ri-codepen-line'
+  }
+]
 
 const VerticalMenu = ({ scrollMenu }: Props) => {
   // Hooks
