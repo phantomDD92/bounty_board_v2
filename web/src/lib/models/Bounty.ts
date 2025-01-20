@@ -8,7 +8,7 @@ import { PublishStatus } from '@/types/enumTypes';
 export interface IBounty extends Document {
   title: string;
   description: string;
-  skills: mongoose.Schema.Types.ObjectId[]; // Array of tag IDs
+  skills: string[]; // Array of tag IDs
   creator: mongoose.Schema.Types.ObjectId,
   reward: string;
   deadline: Date;

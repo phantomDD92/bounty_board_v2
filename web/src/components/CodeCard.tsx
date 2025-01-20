@@ -99,13 +99,6 @@ const CodeCard = (props: CodeCardProps) => {
     setSelected(id)
   }
 
-  // const handleCodeCopy = async () => {
-  //   if (snippets && snippets.length && navigator.clipboard) {
-  //     await navigator.clipboard.writeText(snippets[selected].code);
-  //     toast.success("Copy Code Success");
-  //   }
-  // }
-
   return (
     <div className='border rounded bs-full min-w-64'>
       <div className='flex flex-col gap-4 p-5'>

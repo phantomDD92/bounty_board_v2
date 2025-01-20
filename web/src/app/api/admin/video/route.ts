@@ -20,9 +20,9 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const video = await Video.find().populate('creator').sort({ createdAt: -1 });
+    const videos = await Video.find().populate('creator').sort({ createdAt: -1 });
 
-    return NextResponse.json({ success: true, video });
+    return NextResponse.json({ success: true, videos });
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }

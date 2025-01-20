@@ -10,6 +10,7 @@ export interface ICode extends Document {
   description: string;
   creator: mongoose.Schema.Types.ObjectId,
   status: number,
+  feedback: string,
   snippets: [{
     language: string;
     code: string;
@@ -41,6 +42,10 @@ const CodeSchema: Schema<ICode> = new Schema(
       type: Number,
       enum: Object.values(PublishStatus),
       default: PublishStatus.PENDING,
+    },
+    feedback: {
+      type: String,
+      default: "",
     },
     snippets: [{
       language: {

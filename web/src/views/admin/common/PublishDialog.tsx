@@ -41,21 +41,12 @@ const PublishDialog = ({ open, onCancel, onApprove, onReject }: Props) => {
           placeholder='Enter a feedback...'
         />
       </DialogContent>
-      <DialogActions className='justify-center pbs-0 sm:pbe-8 sm:pli-8'>
+      <DialogActions className='justify-around pbs-0 sm:pbe-8 sm:pli-8'>
         <Button variant='contained' color='primary' onClick={() => onApprove && onApprove(feedback)}>
           Approve
         </Button>
         <Button variant='contained' color='error' onClick={() => onReject && onReject(feedback)}>
           Reject
-        </Button>
-        <Button
-          variant='outlined'
-          color='secondary'
-          onClick={() => {
-            onCancel && onCancel()
-          }}
-        >
-          Cancel
         </Button>
       </DialogActions>
     </Dialog>

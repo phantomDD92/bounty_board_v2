@@ -20,6 +20,12 @@ const nextConfig = {
         destination: '/admin/user',
         permanent: true,
         locale: false
+      },
+      {
+        source: '/creator',
+        destination: '/creator/bounty',
+        permanent: true,
+        locale: false
       }
     ]
   }

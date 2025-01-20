@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/mongoose';
-import Video from '@/lib/models/Infra';
+import Video from '@/lib/models/Video';
 import { getSession } from '@/lib/session';
 
 import { checkAdmin, checkAuthenticated } from '@/utils/session';
@@ -13,7 +13,6 @@ import { PublishStatus } from '@/types/enumTypes';
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: videoId } = params;
-
   try {
     const session = await getSession();
 

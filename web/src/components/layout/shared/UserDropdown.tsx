@@ -138,24 +138,30 @@ const UserDropdown = ({ onLogout, session, dashboard }: Props) => {
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  {dashboard && <MenuItem className='gap-3' onClick={handleHomeClicked}>
-                    <Link href="/">
+                  {dashboard &&
+                    <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/')}>
                       <i className='ri-home-line' />
-                      <Typography color='text.primary'>Home </Typography>
-                    </Link>
-                  </MenuItem>}
-                  {checkAdmin(session) && !dashboard && <MenuItem className='gap-3'>
-                    <Link className='flex' href="/admin">
-                      <i className='ri-home-line' />
-                      <Typography color='text.primary'>Admin Dashboard </Typography>
-                    </Link>
-                  </MenuItem>}
-                  {!dashboard && <MenuItem className='gap-3' onClick={handleHomeClicked}>
-                    <Link className='flex' href="/dashboard">
-                      <i className='ri-home-line' />
-                      <Typography color='text.primary'>Creator Dashboard </Typography>
-                    </Link>
-                  </MenuItem>}
+                      <Typography color='text.primary'>Home Page</Typography>
+                    </MenuItem>
+                  }
+                  {checkAdmin(session) && !dashboard &&
+                    <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/admin')}>
+                      <i className='ri-dashboard-line' />
+                      <Typography color='text.primary'>Admin Dashboard</Typography>
+                    </MenuItem>
+                  }
+                  {/* // <MenuItem className='gap-3'>
+                  //   <Link className='flex' href="/admin">
+                  //     <i className='ri-home-line' />
+                  //     <Typography color='text.primary'>Admin Dashboard </Typography>
+                  //   </Link>
+                  // </MenuItem>} */}
+                  {!dashboard &&
+                    <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/creator')}>
+                      <i className='ri-dashboard-2-line' />
+                      <Typography color='text.primary'>Creator Dashboard</Typography>
+                    </MenuItem>
+                  }
                   <Divider className='mlb-1' />
                   {/* {!admin && */}
                   <div className='flex items-center plb-2 pli-4'>

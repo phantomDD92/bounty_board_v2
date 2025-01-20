@@ -5,19 +5,16 @@ import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { CardHeader, Tooltip } from '@mui/material'
+import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
 import { toast } from 'react-toastify'
-import { htmlToText } from 'html-to-text'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -34,18 +31,19 @@ import {
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
+// Component Imports
+
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { deleteCode, getCodeList } from '@/lib/api'
+import { getCodeListForAdmin, publishCodeForAdmin } from '@/lib/api'
 
-// Component Imports
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import type { CodeType, PublishType } from '@/types/valueTypes'
 
-import type { CodeType } from '@/types/valueTypes'
-
-import AddCodeDrawer from './AddCodeDrawer'
-import AddCodeSnippetDrawer from './AddCodeSnippetDrawer'
+import { PublishStatus } from '@/types/enumTypes'
+import { getStatusName } from '@/utils/string'
+import PublishDialog from '../common/PublishDialog'
+import CodePreviewDialog from './CodePreviewDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -56,7 +54,7 @@ declare module '@tanstack/table-core' {
   }
 }
 
-type CodeWithActionsType = CodeType & {
+type VideoWithActionsType = CodeType & {
   actions?: string
 }
 
@@ -103,80 +101,79 @@ const DebouncedInput = ({
 }
 
 // Column Definitions
-const columnHelper = createColumnHelper<CodeWithActionsType>()
+const columnHelper = createColumnHelper<VideoWithActionsType>()
 
-const CodeListTable = () => {
+const CodeAdminView = () => {
   // States
-  const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<any>(undefined)
-  const [confirmShow, setConfirmShow] = useState(false)
-  const [snippetShow, setSnippetShow] = useState(false)
+  const [publishShow, setPublishShow] = useState(false)
+  const [previewShow, setPreviewShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState([])
+  const [data, setData] = useState<CodeType[]>([])
+  const [filteredData, setFilteredData] = useState<CodeType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [status, setStatus] = useState('0');
 
   useEffect(() => {
-    getCodeList()
+    getCodeListForAdmin()
       .then(newData => {
         setData(newData)
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
-  const handleUpdateData = async () => {
-    try {
-      setSnippetShow(false);
-      setOpen(false)
-      const newData = await getCodeList()
-
-      setData(newData)
-    } catch (error: any) {}
-  }
-
-  const handleDeleteData = async (data: any) => {
-    try {
-      setSelected(undefined)
-      setConfirmShow(false)
-      await deleteCode(data._id)
-      toast.success('Delete Code Success')
-      const newData = await getCodeList()
-
-      setData(newData)
-    } catch (error: any) {
-      toast.error(error.message)
+  useEffect(() => {
+    if (status != `${PublishStatus.ALL}`) {
+      const fData = data?.filter(item => `${item.status}` == status)
+      setFilteredData(fData)
+    } else {
+      setFilteredData(data)
     }
+  }, [status, data])
+
+  const handlePublish = async (params: PublishType) => {
+    publishCodeForAdmin(selected._id, params)
+      .then(() => {
+        toast.success(`Code updated successfully`);
+        getCodeListForAdmin().then(newData => {
+          setData(newData)
+        })
+      })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
   }
 
-  const columns = useMemo<ColumnDef<CodeWithActionsType, any>[]>(
+  const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
+          <Button variant='text'>
             {row.original.title}
-          </Typography>
+          </Button>
         )
       }),
       columnHelper.accessor('description', {
@@ -191,63 +188,70 @@ const CodeListTable = () => {
               textOverflow: 'ellipsis'
             }}
           >
-            {htmlToText(row.original.description)}
+            {row.original.description}
           </Typography>
         )
       }),
       columnHelper.accessor('snippets', {
         header: 'Code Snippets',
         cell: ({ row }) => (
-          <Typography
-            variant='body1'
-            sx={{
-              width: 250, // Set a fixed width
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis'
-            }}
-          >
-            {(row.original.snippets || []).map(item => item.language).join(', ')}
+          <Typography color='text.primary'>
+            {row.original.snippets?.map(item => item.language).join(", ")}
           </Typography>
         )
+      }),
+      columnHelper.accessor('creator', {
+        header: 'Creator',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.creator?.name}
+          </Typography>
+        )
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) =>
+          <Chip
+            label={getStatusName(row.original.status)}
+            color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <Tooltip title='Add Snippet'>
+            <Tooltip title="Preview">
               <IconButton
                 size='small'
                 onClick={() => {
                   setSelected(row.original)
-                  setSnippetShow(true)
+                  setPreviewShow(true)
                 }}
               >
-                <i className='ri-file-add-line text-[22px] text-textSecondary' />
+                <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            <Tooltip title='Delete'>
+            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
               <IconButton
                 size='small'
                 onClick={() => {
                   setSelected(row.original)
-                  setConfirmShow(true)
+                  setPublishShow(true)
                 }}
               >
-                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+                <i className='ri-presentation-line text-[22px] text-textSecondary' />
               </IconButton>
-            </Tooltip>
+            </Tooltip>}
           </div>
         ),
         enableSorting: false
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data]
+    [data, filteredData]
   )
 
   const table = useReactTable({
-    data: data as CodeType[],
+    data: filteredData as CodeType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -279,25 +283,43 @@ const CodeListTable = () => {
     <>
       <Card>
         <CardHeader title='Code List' className='pbe-4' />
-        <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
+        <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={value => setGlobalFilter(String(value))}
             placeholder='Search'
             className='max-sm:is-full'
           />
-          <div className='flex items-center max-sm:flex-col gap-4 max-sm:is-full is-auto'>
-            <Button
-              variant='contained'
-              className='max-sm:is-full is-auto'
-              onClick={() => setOpen(!open)}
-              startIcon={<i className='ri-add-line' />}
+          <FormControl size='small' className='min-is-[175px]'>
+            <InputLabel id='status-select'>Status</InputLabel>
+            <Select
+              id='select-status'
+              value={status}
+              onChange={e => setStatus(e.target.value)}
+              label='Status'
+              labelId='status-select'
             >
-              Add Code
-            </Button>
-          </div>
+              <MenuItem value={`${PublishStatus.ALL}`}>Any</MenuItem>
+              <MenuItem value={`${PublishStatus.PENDING}`}>Pending</MenuItem>
+              <MenuItem value={`${PublishStatus.APPROVED}`}>Approved</MenuItem>
+              <MenuItem value={`${PublishStatus.REJECTED}`}>Rejected</MenuItem>
+            </Select>
+          </FormControl>
         </div>
-        <div className='overflow-x-auto'>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 25]}
+          component='div'
+          className='border-bs'
+          count={table.getFilteredRowModel().rows.length}
+          rowsPerPage={table.getState().pagination.pageSize}
+          page={table.getState().pagination.pageIndex}
+          onPageChange={(_, page) => {
+            table.setPageIndex(page)
+          }}
+          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
+        />
+        <Divider className='mb-3' />
+        <div className='overflow-x-auto mr-4 ml-4'>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -352,38 +374,20 @@ const CodeListTable = () => {
             )}
           </table>
         </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 15, 25]}
-          component='div'
-          className='border-bs'
-          count={table.getFilteredRowModel().rows.length}
-          rowsPerPage={table.getState().pagination.pageSize}
-          page={table.getState().pagination.pageIndex}
-          onPageChange={(_, page) => {
-            table.setPageIndex(page)
-          }}
-          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
-        />
       </Card>
-      <AddCodeDrawer open={open} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
-      <AddCodeSnippetDrawer
-        open={snippetShow}
-        data={selected}
-        onClose={() => setSnippetShow(false)}
-        onUpdate={handleUpdateData}
+      <PublishDialog
+        open={publishShow}
+        onCancel={() => setPublishShow(false)}
+        onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
+        onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
       />
-      <ConfirmDialog
+      {selected && <CodePreviewDialog
+        open={previewShow}
+        onClose={() => setPreviewShow(false)}
         data={selected}
-        open={confirmShow}
-        question='Are you sure to delete?'
-        onCancel={() => {
-          setSelected(undefined)
-          setConfirmShow(false)
-        }}
-        onConfirm={handleDeleteData}
-      />
+      />}
     </>
   )
 }
 
-export default CodeListTable
+export default CodeAdminView

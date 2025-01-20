@@ -5,17 +5,16 @@ import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
 import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import TablePagination from '@mui/material/TablePagination'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { CardHeader, Tooltip } from '@mui/material'
+import { Button, CardHeader, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
+import { toast } from 'react-toastify'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -31,22 +30,19 @@ import {
 } from '@tanstack/react-table'
 import type { ColumnDef, FilterFn } from '@tanstack/react-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import { toast } from 'react-toastify'
 
 // Component Imports
-import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-// Lib Imports
-import { getVideoListForAdmin } from '@/lib/api'
+import { getVideoListForAdmin, publishVideoForAdmin } from '@/lib/api'
 
-// Type Imports
-import type { VideoType } from '@/types/valueTypes'
+import type { VideoType, PublishType } from '@/types/valueTypes'
 
-// Other Imports
-import VideoEditDrawer from './VideoEditDrawer'
+import { PublishStatus } from '@/types/enumTypes'
+import { getStatusName } from '@/utils/string'
+import PublishDialog from '../common/PublishDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -106,14 +102,15 @@ const DebouncedInput = ({
 // Column Definitions
 const columnHelper = createColumnHelper<VideoWithActionsType>()
 
-const VideoListTable = () => {
+const VideoAdminView = () => {
   // States
-  const [open, setOpen] = useState(false)
-  const [confirmShow, setConfirmShow] = useState(false)
   const [selected, setSelected] = useState<any>(undefined)
+  const [publishShow, setPublishShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState([])
+  const [data, setData] = useState<VideoType[]>([])
+  const [filteredData, setFilteredData] = useState<VideoType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
+  const [status, setStatus] = useState('0');
 
   useEffect(() => {
     getVideoListForAdmin()
@@ -123,90 +120,117 @@ const VideoListTable = () => {
       .catch(() => { })
   }, [])
 
-  const handleUpdateData = async () => {
-    setOpen(false)
-    getVideoListForAdmin()
-      .then(newData => {
-        setData(newData)
+  useEffect(() => {
+    if (status != `${PublishStatus.ALL}`) {
+      const fData = data?.filter(item => `${item.status}` == status)
+      setFilteredData(fData)
+    } else {
+      setFilteredData(data)
+    }
+  }, [status, data])
+
+  const handlePublish = async (params: PublishType) => {
+    publishVideoForAdmin(selected._id, params)
+      .then(() => {
+        toast.success(`Video updated successfully`);
+        getVideoListForAdmin().then(newData => {
+          setData(newData)
+        })
       })
-      .catch(error => {
+      .catch((error: any) => {
         toast.error(error.message)
       })
   }
 
   const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-          <Typography className='font-medium' color='text.primary'>
+          <Button variant='text'>
             {row.original.title}
+          </Button>
+        )
+      }),
+      columnHelper.accessor('description', {
+        header: 'Description',
+        cell: ({ row }) => (
+          <Typography
+            variant='body1'
+            sx={{
+              width: 250, // Set a fixed width
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {row.original.description}
           </Typography>
         )
       }),
-      columnHelper.accessor('url', {
-        header: 'Video URL',
-        cell: ({ row }) => <Typography>{row.original.url}</Typography>
+      columnHelper.accessor('creator', {
+        header: 'Creator',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.creator?.name}
+          </Typography>
+        )
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) =>
+          <Chip
+            label={getStatusName(row.original.status)}
+            color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
           <div className='flex items-center'>
-            <Tooltip title="Edit">
+            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
               <IconButton
                 size='small'
                 onClick={() => {
                   setSelected(row.original)
-                  setOpen(true)
+                  setPublishShow(true)
                 }}
               >
-                <i className='ri-edit-line text-[22px] text-textSecondary' />
+                <i className='ri-presentation-line text-[22px] text-textSecondary' />
               </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton
-                size='small'
-                onClick={() => {
-                  setSelected(row.original)
-                  setConfirmShow(true)
-                }}
-              >
-                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
-              </IconButton>
-            </Tooltip>
+            </Tooltip>}
           </div>
         ),
         enableSorting: false
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data]
+    [data, filteredData]
   )
 
   const table = useReactTable({
-    data: data as VideoType[],
+    data: filteredData as VideoType[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -238,25 +262,43 @@ const VideoListTable = () => {
     <>
       <Card>
         <CardHeader title='Video List' className='pbe-4' />
-        <div className='flex items-start justify-between max-sm:flex-col sm:items-center gap-y-4 p-5'>
+        <div className='flex items-start justify-start max-sm:flex-col sm:items-center gap-4 p-5'>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={value => setGlobalFilter(String(value))}
             placeholder='Search'
             className='max-sm:is-full'
           />
-          <div className='flex items-center max-sm:flex-col gap-4 max-sm:is-full is-auto'>
-            <Button
-              variant='contained'
-              className='max-sm:is-full is-auto'
-              onClick={() => setOpen(!open)}
-              startIcon={<i className='ri-add-line' />}
+          <FormControl size='small' className='min-is-[175px]'>
+            <InputLabel id='status-select'>Status</InputLabel>
+            <Select
+              id='select-status'
+              value={status}
+              onChange={e => setStatus(e.target.value)}
+              label='Status'
+              labelId='status-select'
             >
-              Add Video
-            </Button>
-          </div>
+              <MenuItem value={`${PublishStatus.ALL}`}>Any</MenuItem>
+              <MenuItem value={`${PublishStatus.PENDING}`}>Pending</MenuItem>
+              <MenuItem value={`${PublishStatus.APPROVED}`}>Approved</MenuItem>
+              <MenuItem value={`${PublishStatus.REJECTED}`}>Rejected</MenuItem>
+            </Select>
+          </FormControl>
         </div>
-        <div className='overflow-x-auto'>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 25]}
+          component='div'
+          className='border-bs'
+          count={table.getFilteredRowModel().rows.length}
+          rowsPerPage={table.getState().pagination.pageSize}
+          page={table.getState().pagination.pageIndex}
+          onPageChange={(_, page) => {
+            table.setPageIndex(page)
+          }}
+          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
+        />
+        <Divider className='mb-3' />
+        <div className='overflow-x-auto mr-4 ml-4'>
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -311,22 +353,15 @@ const VideoListTable = () => {
             )}
           </table>
         </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 15, 25]}
-          component='div'
-          className='border-bs'
-          count={table.getFilteredRowModel().rows.length}
-          rowsPerPage={table.getState().pagination.pageSize}
-          page={table.getState().pagination.pageIndex}
-          onPageChange={(_, page) => {
-            table.setPageIndex(page)
-          }}
-          onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
-        />
       </Card>
-      <VideoEditDrawer open={open} data={selected} onUpdate={handleUpdateData} onClose={() => setOpen(!open)} />
+      <PublishDialog
+        open={publishShow}
+        onCancel={() => setPublishShow(false)}
+        onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
+        onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
+      />
     </>
   )
 }
 
-export default VideoListTable
+export default VideoAdminView

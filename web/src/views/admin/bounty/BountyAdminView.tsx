@@ -371,17 +371,22 @@ const BountyAdminView = () => {
           </table>
         </div>
       </Card>
-      <PublishDialog
-        open={publishShow}
-        onCancel={() => setPublishShow(false)}
-        onApprove={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: true }) }}
-        onReject={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: false }) }}
-      />
-      <BountyPreviewDialog
-        open={previewShow}
-        onClose={() => setPreviewShow(false)}
-        data={selected}
-      />
+      {selected &&
+        <PublishDialog
+          open={publishShow}
+          onCancel={() => setPublishShow(false)}
+          onApprove={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: true }) }}
+          onReject={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: false }) }}
+        />
+      }
+      {selected &&
+        <BountyPreviewDialog
+          open={previewShow}
+          onClose={() => setPreviewShow(false)}
+          data={selected}
+        />
+      }
+
     </>
   )
 }
