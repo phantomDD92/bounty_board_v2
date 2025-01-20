@@ -23,13 +23,12 @@ const NavbarContent = () => {
   // Hooks
   const { isBreakpointReached } = useHorizontalNav()
 
-  // const { login, logout, session } = useSession()
-  const { testLogin, logout, session } = useSession()
+  // const { testLogin, logout, session } = useSession()
+  const { login, logout, session } = useSession()
 
   const handleLoginClick = async () => {
-    if (testLogin) await testLogin()
-
-      // if (login) await login();
+    // if (testLogin) await testLogin()
+    if (login) await login();
   }
 
   const handleLogout = async () => {
