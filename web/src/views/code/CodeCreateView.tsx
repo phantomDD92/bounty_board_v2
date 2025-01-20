@@ -54,7 +54,7 @@ const CodeCreateView = () => {
   const handleFormSubmit = (data: CodeParamType) => {
     createCode({...data, snippets}).then(() => {
       resetForm({ description: '', title: '', snippets: [] })
-      toast.success('Bounty created successfully');
+      toast.success('Code created successfully');
       router.back()
     })
       .catch((error: any) => {

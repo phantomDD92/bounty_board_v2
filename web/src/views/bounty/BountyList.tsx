@@ -3,24 +3,21 @@
 // React Imports
 import { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
-
 // MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import Pagination from '@mui/material/Pagination'
-import { Button, ButtonBase } from '@mui/material'
+import {
+  ButtonBase,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Pagination
+} from '@mui/material'
 
 // Component Imports
 import BountyCard from '@/components/BountyCard'
 
 // Lib Imports
 import { getBountyList } from '@/lib/api'
-
-// Context Imports
-import { useSession } from '@/context/SessionContext'
 
 // Type Imports
 import type { BountyType, TagType } from '@/types/valueTypes'
@@ -39,11 +36,9 @@ const BountyList = ({ search, sort, selectedTags }: Props) => {
   const [selected, setSelected] = useState<BountyType | undefined>()
   const [data, setData] = useState<BountyType[]>([])
   const [page, setPage] = useState(0)
-  const { session } = useSession()
-  const router = useRouter();
 
   useEffect(() => {
-    getBountyList()
+    getBountyList({search, sort, tags:selectedTags})
       .then(items => {
         setData(items)
       })

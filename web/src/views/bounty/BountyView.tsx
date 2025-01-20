@@ -4,7 +4,11 @@
 import { useEffect, useState } from 'react'
 
 // MUI Imports
-import Grid from '@mui/material/Grid'
+import {
+  Button,
+  Grid,
+  Typography
+} from '@mui/material'
 
 // Lib Imports
 import { getTagList } from '@/lib/api'
@@ -15,14 +19,14 @@ import BountyList from '@/views/bounty/BountyList'
 
 // Type Imports
 import type { TagType } from '@/types/valueTypes'
-import { Button, Typography } from '@mui/material'
+
 import { checkAuthenticated } from '@/utils/session'
 import { useSession } from '@/context/SessionContext'
 
 const BountyView = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [search, setSearch] = useState<string>('')
-  const [sort, setSort] = useState('-date_created')
+  const [sort, setSort] = useState('-createdAt')
   const [tags, setTags] = useState<TagType[]>([])
   const { session } = useSession()
 

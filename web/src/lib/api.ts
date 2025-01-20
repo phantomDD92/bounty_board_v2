@@ -257,7 +257,19 @@ export async function createBounty(params: BountyParamType) {
 
 export async function createComment(bountyId: string, comment: string) {
   try {
-    await axios.post(`/api/bounty/${bountyId}/comment`, { comment });
+    await axios.post(`/api/bounty/${bountyId}/comment`, { text: comment });
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getCommentList(bountyId: string) {
+  try {
+    const resp = await axios.get(`/api/bounty/${bountyId}/comment`);
+
+    return resp.data?.comments;
   } catch (error: any) {
     if (error?.response?.data?.message)
       throw new Error(error?.response?.data?.message)
@@ -266,9 +278,9 @@ export async function createComment(bountyId: string, comment: string) {
 }
 
 
-export async function getBountyList() {
+export async function getBountyList({ search, sort, tags }: { search: string, sort: string, tags: string[] }) {
   try {
-    const resp = await axios.get('/api/bounty');
+    const resp = await axios.get('/api/bounty', { params: { search, sort, tags: tags.join(",") } });
 
     return resp.data?.bounties || [];
   } catch (error: any) {

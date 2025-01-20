@@ -4,7 +4,7 @@ import type { Document, Model } from 'mongoose';
 
 import { PublishStatus } from '@/types/enumTypes';
 
-import { ITag } from './Tag';
+require('./Comment');
 
 // Bounty Interface for TypeScript
 export interface IBounty extends Document {

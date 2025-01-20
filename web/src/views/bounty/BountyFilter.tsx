@@ -21,9 +21,9 @@ type Props = {
   search: string
   sort: string
   tags: TagType[]
-  onSearchChange?: (value:string) => void,
-  onSortChange?: (value:string) => void
-  onTagsChange?: (value:any) => void
+  onSearchChange?: (value: string) => void,
+  onSortChange?: (value: string) => void
+  onTagsChange?: (value: any) => void
 }
 
 const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTagsChange }: Props) => {
@@ -54,8 +54,8 @@ const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTags
                     onSortChange && onSortChange(e.target.value)
                   }}
                 >
-                  <MenuItem value='-date_created'>Creation Date (newest first)</MenuItem>
-                  <MenuItem value='-reward_amount'>Bounty Size (highest)</MenuItem>
+                  <MenuItem value='-createdAt'>Creation Date (newest first)</MenuItem>
+                  <MenuItem value='-deadline'>Deadline Date (closest first)</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

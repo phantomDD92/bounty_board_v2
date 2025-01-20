@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 import dbConnect from '@/lib/mongoose';
 import { getSession } from "@/lib/session";
@@ -7,7 +8,7 @@ import User from "@/lib/models/User";
 import { checkAuthenticated, checkRateLimited } from "@/utils/session";
 import { PublishStatus } from "@/types/enumTypes";
 
-// create bounty
+// create bountynpm
 export async function POST(request: Request) {
   try {
     await dbConnect();
@@ -39,17 +40,48 @@ export async function POST(request: Request) {
 }
 
 // get bounty list
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // const searchParams = request.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams;
 
     await dbConnect();
 
-    const bounties = await Bounty.find({ status: PublishStatus.APPROVED })
-      .populate("creator", "name")
-      .populate("skills")
+    let tags: string[] = [];
+    let bounties = [];
 
-    // .sort(sort)
+    if (searchParams.get('tags') != "") {
+      tags = searchParams.get('tags')?.split(",") || []
+    }
+
+    const search = searchParams.get("search")
+
+    if (tags.length > 0) {
+      bounties = await Bounty
+        .find({
+          status: PublishStatus.APPROVED,
+          skills: { $in: tags },
+          $or: [
+            { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+            { description: { $regex: search, $options: 'i' } }
+          ]
+        })
+        .populate("creator", "name")
+        .populate("skills")
+        .sort(searchParams.get('sort') || '-createdAt')
+    } else {
+      bounties = await Bounty
+        .find({
+          status: PublishStatus.APPROVED,
+          $or: [
+            { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+            { description: { $regex: search, $options: 'i' } }
+          ]
+        })
+        .populate("creator", "name")
+        .populate("skills")
+        .sort(searchParams.get('sort') || '-createdAt')
+    }
+
     // .skip((parseInt(page) - 1) * parseInt(size))
     // .limit(parseInt(size)); // Sort by newest first
 

@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react'
 
 import moment from 'moment'
+import { toast } from 'react-toastify'
 
 // MUI Imports
 import Timeline from '@mui/lab/Timeline'
@@ -33,10 +34,10 @@ import { useSession } from '@/context/SessionContext'
 // Lib Imports
 import { createComment, getBountyDetail } from '@/lib/api'
 
+import CustomAvatar from '@/@core/components/mui/Avatar'
+
 // Type Imports
 import type { BountyType, CommentType } from '@/types/valueTypes'
-import CustomAvatar from '@/@core/components/mui/Avatar'
-import { toast } from 'react-toastify'
 
 type CommentItemProps = {
   key: string
@@ -90,7 +91,7 @@ const CommentEditor = ({ onSend }: CommentEditorProps) => {
       </Grid>
       <Grid item xs={12} className='flex justify-end'>
         <Button variant='contained' className='mb-8' onClick={handleSendClick}>
-          <i className='ri-send-plane-line text-textPrimary mr-2' />
+          <i className='ri-send-plane-line mr-2' />
           Send
         </Button>
       </Grid>
@@ -142,6 +143,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
           toast.success("Comment created successfully")
           getBountyDetail(data._id)
             .then(newData => {
+              console.log(newData)
               setBountyData(newData)
             })
             .catch(() => { })
@@ -167,12 +169,12 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
     <Dialog fullWidth open={open} onClose={handleClose} maxWidth='lg' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-8 mb-4'>
         <div className='flex justify-between items-center mb-1'>
-          <div>{data?.title}</div>
+          <div>{bountyData?.title}</div>
         </div>
         <Typography component='span' className='flex flex-col mb-2'>
-          {dateUserToString(data?.createdAt, data?.creator.name || '')}
+          {dateUserToString(bountyData?.createdAt, bountyData?.creator.name || '')}
         </Typography>
-        <TagsList tags={data?.skills || []} />
+        <TagsList tags={bountyData?.skills || []} />
       </DialogTitle>
       <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
         {/* <Alert severity='info' className='bg-primaryLight mb-8'>
@@ -186,19 +188,21 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
         <Typography
           className='min-h-[250px] text-wrap break-words'
           component="pre" >
-          {data?.description}
+          {bountyData?.description}
         </Typography>
         <div className='flex flex-wrap justify-start gap-6 mt-8 mb-8'>
-          <CustomItem icon='ri-user-line' label='Reward' value={data?.creator.name || ''} />
-          <CustomItem icon='ri-calendar-line' label='Deadline' value={moment(data?.deadline).format("MM/DD/YYYY")} />
-          {data?.email != "" && <CustomItem icon='ri-calendar-line' label='Email' value={data?.email || ""} />}
-          {data?.phone != "" && <CustomItem icon='ri-calendar-line' label='Phone' value={data?.phone || ""} />}
+          <CustomItem icon='ri-user-line' label='Reward' value={bountyData?.reward || ''} />
+          <CustomItem icon='ri-calendar-line' label='Deadline' value={moment(bountyData?.deadline).format("MM/DD/YYYY")} />
+          {bountyData?.email != "" && <CustomItem icon='ri-calendar-line' label='Email' value={bountyData?.email || ""} />}
+          {bountyData?.phone != "" && <CustomItem icon='ri-calendar-line' label='Phone' value={bountyData?.phone || ""} />}
         </div>
         {/* <Button variant='contained' className='mb-8'>
           <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
           I&apos;m interested
         </Button> */}
-        {session?.isAuth && <CommentEditor onSend={handleCommentSend} />}
+        {session?.isAuth &&
+          <CommentEditor onSend={handleCommentSend} />
+        }
         <Timeline className='p-4'>
           {(bountyData?.comments || []).map((comment, index) => (
             <CommentItem key={`${index}`} comment={comment} />
