@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 import { toast } from 'react-toastify'
@@ -18,8 +20,9 @@ import {
 import type { VideoParamType } from "@/types/valueTypes"
 
 import { createVideo } from "@/lib/api"
+
 import YouTubePreview from '@/components/YouTubePreview'
-import { useState } from 'react'
+
 import { getYouTubeVideoId } from '@/utils/string'
 
 const VideoCreateView = () => {

@@ -25,7 +25,7 @@ import type { CodeSnippetType } from '@/types/valueTypes'
 
 type Props = {
   snippets: CodeSnippetType[]
-  onChange?: (value:number) => void
+  onChange?: (value: number) => void
 }
 
 const LanguageSelector = ({ snippets, onChange }: Props) => {
@@ -107,16 +107,16 @@ const CodeCard = (props: CodeCardProps) => {
             <Typography variant='h5' className='hover:text-primary'>
               {title}
             </Typography>
-            <Typography dangerouslySetInnerHTML={{ __html: description }} className='mt-4 text-wrap break-words' />
+            <Typography
+              className='min-h-[250px] text-wrap break-words'
+              component="pre" >
+              {description}
+            </Typography>
           </Grid>
           <Grid item xs={12} md={6} lg={6} className='flex flex-col gap-2'>
             {snippets && snippets.length > 0 && (
               <div className='flex gap-1 justify-between'>
                 <LanguageSelector snippets={snippets} onChange={handleLanguageChange} />
-                {/* <Button startIcon="" onClick={handleCodeCopy}>
-                  <i className='ri-file-copy-line text-base mr-2'></i>
-                  <span>Copy</span>
-                </Button> */}
               </div>
             )}
             {
@@ -129,16 +129,6 @@ const CodeCard = (props: CodeCardProps) => {
                 theme={railscast}
               />
             }
-            {/* <SyntaxHighlighter
-              language={snippets && snippets.length > 0 ? snippets[selected].language : ''}
-              style={materialDark}
-              showLineNumbers={true}
-              wrapLines={true}
-              lineProps={{ style: { whiteSpace: 'pre-wrap' } }}
-              wrapLongLines={true}
-            >
-              {snippets && snippets.length > 0 && snippets[selected].code}
-            </SyntaxHighlighter> */}
           </Grid>
         </Grid>
       </div>

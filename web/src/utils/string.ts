@@ -103,5 +103,6 @@ export function getYouTubeVideoId(input: string) {
   }
 
   const match = input.match(urlRegex);
+
   return match ? match[1] : ""; // Return video ID if found, otherwise null
 }

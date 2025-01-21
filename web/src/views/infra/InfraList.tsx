@@ -83,8 +83,11 @@ const InfraListView = () => {
                             <Typography variant='h5' className='hover:text-primary mb-2'>
                               {item.title}
                             </Typography>
-                            <Typography dangerouslySetInnerHTML={{ __html: item.description }} className='text-wrap break-words' />
-
+                            <Typography
+                              className='min-h-[250px] text-wrap break-words'
+                              component="pre" >
+                              {item.description}
+                            </Typography>
                           </div>
                         </div>
                       </div>
