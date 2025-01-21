@@ -10,11 +10,12 @@ import {
 } from '@mui/material'
 
 // Util Imports
-import { dateUserToString } from '@/utils/string'
+import { dateUserToString, getYouTubeVideoId } from '@/utils/string'
 
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
+import YouTubePreview from '@/components/YouTubePreview'
 
 type Props = {
   open: boolean
@@ -40,7 +41,7 @@ const VideoPreviewDialog = ({ open, onClose, data }: Props) => {
           component="pre" >
           {data?.description}
         </Typography>
-        <iframe src={data.url} frameBorder="0" width="100%" height="500px" loading="lazy" allowFullScreen></iframe>
+        <YouTubePreview youtubeId={getYouTubeVideoId(data.url)} />
         {data.status == PublishStatus.REJECTED && data.feedback && (
           <Alert severity='warning'>{data.feedback}</Alert>
         )}

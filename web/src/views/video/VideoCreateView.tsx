@@ -18,9 +18,12 @@ import {
 import type { VideoParamType } from "@/types/valueTypes"
 
 import { createVideo } from "@/lib/api"
+import YouTubePreview from '@/components/YouTubePreview'
+import { useState } from 'react'
+import { getYouTubeVideoId } from '@/utils/string'
 
 const VideoCreateView = () => {
-
+  const [url, setUrl] = useState('');
   const router = useRouter()
 
   const {
@@ -63,62 +66,75 @@ const VideoCreateView = () => {
             </div>
           </div>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card>
+                <CardHeader title='Video Information' />
+                <CardContent>
+                  <Grid container spacing={5} className='mbe-5'>
+                    <Grid item xs={12}>
+                      <Controller
+                        name='title'
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            fullWidth
+                            label='Title'
+                            placeholder='Enter a video title...'
+                            {...(errors.title && { error: true, helperText: 'This field is required.' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name='url'
+                        control={control}
+                        render={({ field: { value, onChange } }) => (
+                          <TextField
+                            value={value}
+                            onChange={e => { setUrl(e.target.value); onChange(e) }}
+                            fullWidth
+                            type='url'
+                            label='URL'
+                            placeholder='Enter a youtube id or url...'
+                            {...(errors.url && { error: true })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name='description'
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            fullWidth
+                            multiline
+                            minRows={10}
+                            label='Description'
+                            placeholder='Enter a video description...'
+                            {...(errors.description && { error: true, helperText: 'This field is required.' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={4}>
           <Card>
-            <CardHeader title='Video Information' />
+            <CardHeader title='Video Preview' />
             <CardContent>
-              <Grid container spacing={5} className='mbe-5'>
-                <Grid item xs={12}>
-                  <Controller
-                    name='title'
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Title'
-                        placeholder='Enter a video title...'
-                        {...(errors.title && { error: true, helperText: 'This field is required.' })}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    name='url'
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        type='url'
-                        label='URL'
-                        placeholder='Enter a video url...'
-                        {...(errors.url && { error: true })}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Controller
-                    name='description'
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        multiline
-                        minRows={10}
-                        label='Description'
-                        placeholder='Enter a video description...'
-                        {...(errors.description && { error: true, helperText: 'This field is required.' })}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
+              <YouTubePreview youtubeId={getYouTubeVideoId(url)} />
             </CardContent>
           </Card>
         </Grid>

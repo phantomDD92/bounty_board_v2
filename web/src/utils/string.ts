@@ -7,7 +7,7 @@ export const withoutSuffix = (str: string, suffix: string) =>
   str.endsWith(suffix) ? str.slice(0, -suffix.length) : str
 export const withoutPrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str.slice(prefix.length) : str)
 
-export const dateUserToString = (date: Date|undefined, username: string) => {
+export const dateUserToString = (date: Date | undefined, username: string) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago by ${username}`
   } else if (moment().diff(moment(date), 'year', false) == 1) {
@@ -89,3 +89,19 @@ export function getStatusName(status: number): string {
   return "Unknown";
 }
 
+
+export function getYouTubeVideoId(input: string) {
+  // Regular expression to match YouTube URLs
+  const urlRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|embed|shorts|watch)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
+  // Regular expression to validate if the input is already a video ID
+  const idRegex = /^[a-zA-Z0-9_-]{11}$/;
+
+  if (idRegex.test(input)) {
+    // Input is already a valid YouTube video ID
+    return input;
+  }
+
+  const match = input.match(urlRegex);
+  return match ? match[1] : ""; // Return video ID if found, otherwise null
+}
