@@ -5,9 +5,9 @@ const { randomBytes } = require('crypto');
 
 
 const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, APP_URL } = process.env;
-const VerusId = new VerusIdInterface(CHAIN, API);
 
-const R_ADDRESS_VERSION = 60;
+const VerusId = new VerusIdInterface(CHAIN || "VRSC", API || "https://api.verus.services");
+
 const I_ADDRESS_VERSION = 102;
 
 function generateChallengeID(len = 20) {
@@ -57,7 +57,6 @@ module.exports = app.post("/login", async (req, res) => {
         CHAIN_IADDRESS
       )
       console.log("Login Request Signed Correctly: ", _reso, challenge);
-
       reply.data = { deepLink: retval.toWalletDeeplinkUri(), challenge };
       reply.success = true;
       res.status(200).send(reply);
