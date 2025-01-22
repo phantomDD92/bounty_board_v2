@@ -54,7 +54,6 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
             console.log(status);
 
             if (status == "success") {
-              console.log("##### 1")
               getSession()
                 .then(session => {
                   setSession(session)
@@ -67,14 +66,12 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
                   setOpen(false);
                 })
             } else if (status == "cancel" || status == "error") {
-              console.log("##### 2")
               toast.error('Login Request Canceled.')
               clearInterval(checkInterval)
               setOpen(false)
             }
           })
           .catch(() => {
-            console.log("##### 3")
             toast.error('Login Request Failed.')
             clearInterval(checkInterval)
             setOpen(false);
@@ -115,6 +112,7 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
         setChallengeID(data.challengeID)
       })
       .catch(() => {
+        setLoading(false)
         toast.error('Login Request Failed')
       })
   }

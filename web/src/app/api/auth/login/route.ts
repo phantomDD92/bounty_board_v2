@@ -10,7 +10,6 @@ export async function POST() {
   try {
     const data = await createLoginRequest();
 
-
     return NextResponse.json({ success: true, ...data });
   } catch (error) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

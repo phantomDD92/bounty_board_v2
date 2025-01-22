@@ -1,21 +1,13 @@
-import { randomBytes } from 'crypto';
+import axios from 'axios';
 
-import { VerusIdInterface, primitives } from 'verusid-ts-client';
-
-import { checkChallenge, clearChallengeData, getChallengeData, registerChallenge, removeChallenge, setChallengeData } from "@/lib/cache";
-
-const { PRIVATE_KEY, SIGNING_IADDRESS, CHAIN, API, CHAIN_IADDRESS, NEXT_PUBLIC_APP_URL } = process.env;
-const I_ADDRESS_VERSION = 102;
-
-const VerusId = new VerusIdInterface(CHAIN || "VRSC", API || "https://api.verus.services");
-
-function generateChallengeID(len = 20) {
-  const buf = randomBytes(len)
-  const randBuf = Buffer.from(buf)
-  const iaddress = primitives.toBase58Check(randBuf, I_ADDRESS_VERSION)
-
-  return iaddress
-}
+import {
+  checkChallenge,
+  clearChallengeData,
+  getChallengeData,
+  registerChallenge,
+  removeChallenge,
+  setChallengeData
+} from "@/lib/cache";
 
 export async function init() {
   console.log("init");
@@ -23,66 +15,63 @@ export async function init() {
 
 export async function createLoginRequest() {
   try {
-    const challengeID = generateChallengeID();
+    const resp = await axios.post("http://127.0.0.1:9000/login");
 
-    const retval = await VerusId.createLoginConsentRequest(
-      SIGNING_IADDRESS || "",
-      new primitives.LoginConsentChallenge({
-        challenge_id: challengeID,
-        requested_access: [
-          new primitives.RequestedPermission(primitives.IDENTITY_VIEW.vdxfid)
-        ],
-        redirect_uris: [
-          new primitives.RedirectUri(
-            `${NEXT_PUBLIC_APP_URL}/api/auth/verus`,
-            primitives.LOGIN_CONSENT_WEBHOOK_VDXF_KEY.vdxfid
-          ),
-        ],
-        subject: [],
-        provisioning_info: [],
-        created_at: Number((Date.now() / 1000).toFixed(0)),
-      }),
-      PRIVATE_KEY,
-      undefined,
-      undefined,
-      CHAIN_IADDRESS
-    );
+    if (resp.status != 200) {
+      console.error(resp.statusText);
 
-    const _reso = await VerusId.verifyLoginConsentRequest(
-      primitives.LoginConsentRequest.fromWalletDeeplinkUri(retval.toWalletDeeplinkUri()),
-      undefined,
-      CHAIN_IADDRESS
-    );
+      return
+    }
 
-    registerChallenge(challengeID);
+    const { success, message, data } = resp.data;
 
-    console.log("Login Request Signed Correctly: ", _reso, challengeID);
+    if (!success) {
+      console.error(message);
 
-    return { deepLink: retval.toWalletDeeplinkUri(), challengeID: challengeID };
-  } catch (e) {
-    console.log("Whoops something went wrong: ", e);
+      return
+    }
+
+    const { challenge, deepLink } = data;
+
+    registerChallenge(challenge);
+
+    return { deepLink, challengeID: challenge };
+  } catch (e: any) {
+    console.error(e)
     throw e;
   }
 }
 
-export async function verifyLoginRequest(data: any) {
-  const loginRequest = new primitives.LoginConsentResponse(data)
-  const verifiedLogin = await VerusId.verifyLoginConsentResponse(loginRequest)
-  const challengeID = loginRequest.decision.request.challenge.challenge_id;
+export async function verifyLoginRequest(payload: any) {
+  try {
+    const resp = await axios.post('http://localhost:9000/verify', { data: payload });
 
-  // check in cache
-  console.log("Is login signature Verified? : ", verifiedLogin, challengeID);
+    if (resp.status != 200) {
+      console.error(resp.statusText)
 
-  if (!verifiedLogin || !checkChallenge(challengeID)) {
+      return false
+    }
+
+    const { success, message, data } = resp.data;
+
+    if (!success) {
+      console.error(message);
+
+      return false
+    }
+
+    const { challenge, name, iaddress } = data;
+
+    if (!checkChallenge(challenge))
+      return false
+    setChallengeData(challenge, { name, iaddress });
+
+    return true;
+  } catch (error) {
+    console.error(error)
+
     return false;
   }
-
-  // Check user is allowed to login here if only certain iaddress are allowed to login...
-  const { result }: {result:any} = await VerusId.interface.getIdentity(loginRequest.signing_id)
-
-  setChallengeData(challengeID, { name: result.friendlyname || "", iaddress: loginRequest.signing_id });
-
-  return true;
 }
 
 export type ChallengeDataType = {
