@@ -4,13 +4,22 @@
 import { useEffect, useMemo, useState } from 'react'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import IconButton from '@mui/material/IconButton'
-import TablePagination from '@mui/material/TablePagination'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import {
+  Card,
+  CardHeader,
+  Chip,
+  Divider,
+  IconButton,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
-import { CardHeader, Chip, Divider, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -36,7 +45,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getInfraListForAdmin, publishInfraForAdmin } from '@/lib/api'
+import { deleteInfraForAdmin, getInfraListForAdmin, publishInfraForAdmin } from '@/lib/api'
 
 import type { InfraType, PublishType } from '@/types/valueTypes'
 
@@ -44,6 +53,7 @@ import { PublishStatus } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
 import InfraPreviewDialog from './InfraPreviewDialog'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -108,6 +118,7 @@ const InfraAdminView = () => {
   const [selected, setSelected] = useState<any>(undefined)
   const [publishShow, setPublishShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<InfraType[]>([])
   const [filteredData, setFilteredData] = useState<InfraType[]>([])
@@ -138,10 +149,23 @@ const InfraAdminView = () => {
         toast.success(`Infra updated successfully`);
         getInfraListForAdmin().then(newData => {
           setData(newData)
-        })
+        }).catch(() => { })
       })
       .catch((error: any) => {
         toast.error(error.message)
+      })
+  }
+
+  const handleDelete = async () => {
+    setConfirmShow(false);
+    deleteInfraForAdmin(selected._id)
+      .then(() => {
+        toast.success(`Infra deleted successfully`);
+        getInfraListForAdmin().then(newData => {
+          setData(newData)
+        }).catch(() => { })
+      }).catch((error: any) => {
+        toast.error(error.message);
       })
   }
 
@@ -231,17 +255,31 @@ const InfraAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
+            {row.original.status == PublishStatus.PENDING &&
+              <Tooltip title="Approve/Reject">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setPublishShow(true)
+                  }}
+                >
+                  <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
+            <Tooltip title="Delete">
               <IconButton
                 size='small'
+                color='error'
                 onClick={() => {
                   setSelected(row.original)
-                  setPublishShow(true)
+                  setConfirmShow(true)
                 }}
               >
-                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-line text-[22px] text-textError' />
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -389,6 +427,15 @@ const InfraAdminView = () => {
           open={previewShow}
           onClose={() => setPreviewShow(false)}
           data={selected}
+        />
+      )}
+      {selected && (
+        <ConfirmDialog
+          question='Are you sure to delete the infra?'
+          data={selected}
+          open={confirmShow}
+          onCancel={() => setConfirmShow(false)}
+          onConfirm={handleDelete}
         />
       )}
     </>

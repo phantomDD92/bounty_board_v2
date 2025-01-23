@@ -88,6 +88,14 @@ export async function publishInfraForAdmin(id: string, params: PublishParamType)
   }
 }
 
+export async function deleteInfraForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/infra/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
 // infra-related api for current user
 export async function getInfraListForUser() {
   try {
@@ -147,6 +155,15 @@ export async function publishVideoForAdmin(id: string, params: PublishParamType)
   }
 }
 
+export async function deleteVideoForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/video/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+
 // video-related api for current user
 export async function getVideoListForUser() {
   try {
@@ -205,6 +222,15 @@ export async function publishCodeForAdmin(id: string, params: PublishParamType) 
     throw new Error(error.response?.data?.message || error.message)
   }
 }
+
+export async function deleteCodeForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/code/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
 
 // code-related api for current user
 export async function getCodeListForUser() {
@@ -312,6 +338,14 @@ export async function getBountyListForAdmin() {
 export async function publishBountyForAdmin(id: string, params: PublishParamType) {
   try {
     await axios.put(`/api/admin/bounty/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteBountyForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/bounty/${id}`);
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }

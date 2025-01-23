@@ -37,3 +37,32 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ success: false, message: 'Internal server error', error }, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  await dbConnect();
+  const { id: bountyId } = params;
+
+  try {
+    const session = await getSession();
+
+    if (!checkAuthenticated(session)) {
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
+    }
+
+    if (!checkAdmin(session)) {
+      return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
+    }
+
+    const code = await Code.findById(bountyId);
+
+    if (!code) {
+      return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
+    }
+
+    await Code.findByIdAndDelete(code._id);
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: 'Internal server error', error }, { status: 500 });
+  }
+}

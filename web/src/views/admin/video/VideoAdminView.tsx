@@ -45,7 +45,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getVideoListForAdmin, publishVideoForAdmin } from '@/lib/api'
+import { deleteVideoForAdmin, getVideoListForAdmin, publishVideoForAdmin } from '@/lib/api'
 
 import type { VideoType, PublishType } from '@/types/valueTypes'
 
@@ -53,6 +53,7 @@ import { PublishStatus } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
 import VideoPreviewDialog from './VideoPreviewDialog'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -117,6 +118,7 @@ const VideoAdminView = () => {
   const [selected, setSelected] = useState<any>(undefined)
   const [publishShow, setPublishShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
+  const [confirmShow, setConfirmShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<VideoType[]>([])
   const [filteredData, setFilteredData] = useState<VideoType[]>([])
@@ -151,6 +153,19 @@ const VideoAdminView = () => {
       })
       .catch((error: any) => {
         toast.error(error.message)
+      })
+  }
+
+  const handleDelete = async () => {
+    setConfirmShow(false);
+    deleteVideoForAdmin(selected._id)
+      .then(() => {
+        toast.success(`Video deleted successfully`);
+        getVideoListForAdmin().then(newData => {
+          setData(newData)
+        }).catch(() => { })
+      }).catch((error: any) => {
+        toast.error(error.message);
       })
   }
 
@@ -240,17 +255,31 @@ const VideoAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING && <Tooltip title="Approve/Reject">
+            {row.original.status == PublishStatus.PENDING &&
+              <Tooltip title="Approve/Reject">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setPublishShow(true)
+                  }}
+                >
+                  <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
+            <Tooltip title="Delete">
               <IconButton
                 size='small'
+                color='error'
                 onClick={() => {
                   setSelected(row.original)
-                  setPublishShow(true)
+                  setConfirmShow(true)
                 }}
               >
-                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-line text-[22px] text-textError' />
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
           </div>
         ),
         enableSorting: false
@@ -400,7 +429,15 @@ const VideoAdminView = () => {
           data={selected}
         />
       )}
-
+      {selected && (
+        <ConfirmDialog
+          question='Are you sure to delete the video?'
+          data={selected}
+          open={confirmShow}
+          onCancel={() => setConfirmShow(false)}
+          onConfirm={handleDelete}
+        />
+      )}
     </>
   )
 }
