@@ -10,6 +10,7 @@ export interface IVideo extends Document {
   title: string;
   description: string;
   creator: mongoose.Schema.Types.ObjectId,
+  weight: number,
   status: number,
   feedback: string,
   createdAt: Date;
@@ -40,6 +41,10 @@ const VideoSchema: Schema<IVideo> = new Schema(
     feedback: {
       type: String,
       default: "",
+    },
+    weight: {
+      type: Number,
+      default: 1,
     },
     status: {
       type: Number,

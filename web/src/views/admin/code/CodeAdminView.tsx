@@ -17,7 +17,8 @@ import {
   TablePagination,
   TextField,
   Tooltip,
-  Typography
+  Typography,
+  Rating
 } from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
 
@@ -45,7 +46,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { deleteCodeForAdmin, getCodeListForAdmin, publishCodeForAdmin } from '@/lib/api'
+import { deleteCodeForAdmin, getCodeListForAdmin, publishCodeForAdmin, weighCodeForAdmin } from '@/lib/api'
 
 import type { CodeType, PublishType } from '@/types/valueTypes'
 
@@ -54,6 +55,7 @@ import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
 import CodePreviewDialog from './CodePreviewDialog'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import CodeEditDrawer from './CodeEditDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -119,6 +121,8 @@ const CodeAdminView = () => {
   const [publishShow, setPublishShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [confirmShow, setConfirmShow] = useState(false)
+  const [undoShow, setUndoShow] = useState(false);
+  const [editShow, setEditShow] = useState(false);
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<CodeType[]>([])
   const [filteredData, setFilteredData] = useState<CodeType[]>([])
@@ -144,6 +148,7 @@ const CodeAdminView = () => {
   }, [status, data])
 
   const handlePublish = async (params: PublishType) => {
+    setPublishShow(false)
     publishCodeForAdmin(selected._id, params)
       .then(() => {
         toast.success(`Code updated successfully`);
@@ -168,6 +173,42 @@ const CodeAdminView = () => {
         toast.error(error.message);
       })
   }
+
+  const handleUndo = () => {
+    setUndoShow(false);
+    publishCodeForAdmin(selected._id, { status: PublishStatus.PENDING, feedback: "" })
+      .then(() => {
+        toast.success(`Code updated successfully`);
+        getCodeListForAdmin().then(newData => {
+          setData(newData)
+        }).catch(() => { })
+      })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
+  }
+
+  const handleChangeWeight = (code: CodeType, value: number | null) => {
+    weighCodeForAdmin(code._id, value ? value * 2 : 1)
+      .then(() => {
+        const newData: CodeType[] = [];
+
+        Object.assign(newData, data)
+        const current = newData.findIndex(el => el._id == code._id)
+
+        newData[current].weight = value ? value * 2 : 1
+        setData(newData)
+      })
+      .catch(() => { })
+  }
+
+  const handleChange = () => {
+    setEditShow(false)
+    getCodeListForAdmin().then(newData => {
+      setData(newData)
+    }).catch(() => { })
+  }
+
 
   const columns = useMemo<ColumnDef<VideoWithActionsType, any>[]>(
     () => [
@@ -240,6 +281,17 @@ const CodeAdminView = () => {
           </Typography>
         )
       }),
+      columnHelper.accessor('weight', {
+        header: 'Weight',
+        cell: ({ row }) =>
+          <Rating
+            defaultValue={0.5}
+            precision={0.5}
+            max={5}
+            size='small'
+            value={row.original.weight ? row.original.weight / 2 : 0.5}
+            onChange={(_, value) => handleChangeWeight(row.original, value)} />
+      }),
       columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) =>
@@ -262,7 +314,7 @@ const CodeAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING &&
+            {row.original.status == PublishStatus.PENDING ?
               <Tooltip title="Approve/Reject">
                 <IconButton
                   size='small'
@@ -273,8 +325,30 @@ const CodeAdminView = () => {
                 >
                   <i className='ri-presentation-line text-[22px] text-textSecondary' />
                 </IconButton>
+              </Tooltip> :
+              <Tooltip title="Undo">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setUndoShow(true)
+                  }}
+                >
+                  <i className='ri-arrow-go-back-line text-[22px] text-textSecondary' />
+                </IconButton>
               </Tooltip>
             }
+            <Tooltip title="Edit">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setEditShow(true)
+                }}
+              >
+                <i className='ri-edit-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Delete">
               <IconButton
                 size='small'
@@ -422,30 +496,40 @@ const CodeAdminView = () => {
         </div>
       </Card>
       {selected &&
-        <PublishDialog
-          open={publishShow}
-          onCancel={() => setPublishShow(false)}
-          onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: true }) }}
-          onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, approve: false }) }}
-        />
+        <>
+          <PublishDialog
+            open={publishShow}
+            onCancel={() => setPublishShow(false)}
+            onApprove={(feedback) => handlePublish({ feedback, status: PublishStatus.APPROVED })}
+            onReject={(feedback) => handlePublish({ feedback, status: PublishStatus.REJECTED })}
+          />
+          <CodePreviewDialog
+            open={previewShow}
+            onClose={() => setPreviewShow(false)}
+            data={selected}
+          />
+          <ConfirmDialog
+            question='Are you sure to delete the code?'
+            data={selected}
+            open={confirmShow}
+            onCancel={() => setConfirmShow(false)}
+            onConfirm={handleDelete}
+          />
+          <ConfirmDialog
+            question='Are you sure to unpublish the code?'
+            data={selected}
+            open={undoShow}
+            onCancel={() => setUndoShow(false)}
+            onConfirm={handleUndo}
+          />
+          <CodeEditDrawer
+            open={editShow}
+            data={selected}
+            onClose={() => setEditShow(false)}
+            onUpdate={handleChange}
+          />
+        </>
       }
-      {selected &&
-        <CodePreviewDialog
-          open={previewShow}
-          onClose={() => setPreviewShow(false)}
-          data={selected}
-        />
-      }
-      {selected &&
-        <ConfirmDialog
-          question='Are you sure to delete the code?'
-          data={selected}
-          open={confirmShow}
-          onCancel={() => setConfirmShow(false)}
-          onConfirm={handleDelete}
-        />
-      }
-
     </>
   )
 }

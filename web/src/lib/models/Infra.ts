@@ -10,6 +10,7 @@ export interface IInfra extends Document {
   description: string;
   url: string;
   creator: mongoose.Schema.Types.ObjectId,
+  weight: number,
   status: number,
   feedback:string,
   createdAt: Date;
@@ -42,6 +43,10 @@ const InfraSchema: Schema<IInfra> = new Schema(
     feedback: {
       type: String,
       default: "",
+    },
+    weight: {
+      type: Number,
+      default: 1,
     },
     status: {
       type: Number,

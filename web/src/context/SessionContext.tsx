@@ -51,8 +51,6 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
       checkInterval = setInterval(async () => {
         checkLogin(challenge)
           .then(status => {
-            console.log(status);
-
             if (status == "success") {
               getSession()
                 .then(session => {

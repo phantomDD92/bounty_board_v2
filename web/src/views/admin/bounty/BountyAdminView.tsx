@@ -17,7 +17,8 @@ import {
   TablePagination,
   TextField,
   Tooltip,
-  Typography
+  Typography,
+  Rating
 } from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
 
@@ -46,7 +47,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { deleteBountyForAdmin, getBountyListForAdmin, publishBountyForAdmin } from '@/lib/api'
+import { deleteBountyForAdmin, getBountyListForAdmin, publishBountyForAdmin, weighBountyForAdmin } from '@/lib/api'
 
 import type { BountyType, PublishType } from '@/types/valueTypes'
 
@@ -55,6 +56,7 @@ import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
 import BountyPreviewDialog from './BountyPreviewDialog'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import BountyEditDrawer from './BountyEditDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -120,6 +122,8 @@ const BountyAdminView = () => {
   const [publishShow, setPublishShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [confirmShow, setConfirmShow] = useState(false);
+  const [undoShow, setUndoShow] = useState(false);
+  const [editShow, setEditShow] = useState(false);
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<BountyType[]>([])
   const [filteredData, setFilteredData] = useState<BountyType[]>([])
@@ -144,7 +148,8 @@ const BountyAdminView = () => {
     }
   }, [status, data])
 
-  const publishBounty = async (params: PublishType) => {
+  const handlePublish = (params: PublishType) => {
+    setPublishShow(false)
     publishBountyForAdmin(selected._id, params)
       .then(() => {
         toast.success(`Bounty updated successfully`);
@@ -157,7 +162,7 @@ const BountyAdminView = () => {
       })
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setConfirmShow(false);
     deleteBountyForAdmin(selected._id)
       .then(() => {
@@ -168,6 +173,41 @@ const BountyAdminView = () => {
       }).catch((error: any) => {
         toast.error(error.message);
       })
+  }
+
+  const handleUndo = () => {
+    setUndoShow(false);
+    publishBountyForAdmin(selected._id, { status: PublishStatus.PENDING, feedback: "" })
+      .then(() => {
+        toast.success(`Bounty updated successfully`);
+        getBountyListForAdmin().then(newData => {
+          setData(newData)
+        }).catch(() => { })
+      })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
+  }
+
+  const handleChangeWeight = (bounty: BountyType, value: number | null) => {
+    weighBountyForAdmin(bounty._id, value ? value * 2 : 1)
+      .then(() => {
+        const newData:BountyType[] = [];
+
+        Object.assign(newData, data)
+        const current = newData.findIndex(el => el._id == bounty._id)
+
+        newData[current].weight = value ? value * 2 : 1
+        setData(newData)
+      })
+      .catch(() => { })
+  }
+
+  const handleChange = () => {
+    setEditShow(false)
+    getBountyListForAdmin().then(newData => {
+      setData(newData)
+    }).catch(() => { })
   }
 
   const columns = useMemo<ColumnDef<BountyWithActionsType, any>[]>(
@@ -234,6 +274,17 @@ const BountyAdminView = () => {
           </Typography>
         )
       }),
+      columnHelper.accessor('weight', {
+        header: 'Weight',
+        cell: ({ row }) =>
+          <Rating
+            defaultValue={0.5}
+            precision={0.5}
+            max={5}
+            size='small'
+            value={row.original.weight ? row.original.weight / 2 : 0.5 }
+            onChange={(_, value) => handleChangeWeight(row.original, value)} />
+      }),
       columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) =>
@@ -256,7 +307,7 @@ const BountyAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING &&
+            {row.original.status == PublishStatus.PENDING ?
               <Tooltip title="Approve/Reject">
                 <IconButton
                   size='small'
@@ -267,8 +318,30 @@ const BountyAdminView = () => {
                 >
                   <i className='ri-presentation-line text-[22px] text-textSecondary' />
                 </IconButton>
+              </Tooltip> :
+              <Tooltip title="Undo">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setUndoShow(true)
+                  }}
+                >
+                  <i className='ri-arrow-go-back-line text-[22px] text-textSecondary' />
+                </IconButton>
               </Tooltip>
             }
+            <Tooltip title="Edit">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setEditShow(true)
+                }}
+              >
+                <i className='ri-edit-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Delete">
               <IconButton
                 size='small'
@@ -416,28 +489,39 @@ const BountyAdminView = () => {
         </div>
       </Card>
       {selected &&
-        <PublishDialog
-          open={publishShow}
-          onCancel={() => setPublishShow(false)}
-          onApprove={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: true }) }}
-          onReject={(feedback) => { setPublishShow(false); publishBounty({ feedback, approve: false }) }}
-        />
-      }
-      {selected &&
-        <BountyPreviewDialog
-          open={previewShow}
-          onClose={() => setPreviewShow(false)}
-          data={selected}
-        />
-      }
-      {selected &&
-        <ConfirmDialog
-          question='Are you sure to delete the bounty?'
-          data={selected}
-          open={confirmShow}
-          onCancel={() => setConfirmShow(false)}
-          onConfirm={handleDelete}
-        />
+        <>
+          <PublishDialog
+            open={publishShow}
+            onCancel={() => setPublishShow(false)}
+            onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, status: PublishStatus.APPROVED }) }}
+            onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, status: PublishStatus.REJECTED }) }}
+          />
+          <BountyPreviewDialog
+            open={previewShow}
+            onClose={() => setPreviewShow(false)}
+            data={selected}
+          />
+          <ConfirmDialog
+            question='Are you sure to delete the bounty?'
+            data={selected}
+            open={confirmShow}
+            onCancel={() => setConfirmShow(false)}
+            onConfirm={handleDelete}
+          />
+          <ConfirmDialog
+            question='Are you sure to unpublish the bounty?'
+            data={selected}
+            open={undoShow}
+            onCancel={() => setUndoShow(false)}
+            onConfirm={handleUndo}
+          />
+          <BountyEditDrawer
+            open={editShow}
+            data={selected}
+            onClose={() => setEditShow(false)}
+            onUpdate={handleChange}
+          />
+        </>
       }
     </>
   )

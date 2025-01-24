@@ -10,7 +10,6 @@ import {
 } from "@/lib/cache";
 
 export async function init() {
-  console.log("init");
 }
 
 export async function createLoginRequest() {

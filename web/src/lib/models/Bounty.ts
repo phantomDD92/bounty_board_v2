@@ -5,6 +5,7 @@ import type { Document, Model } from 'mongoose';
 import { PublishStatus } from '@/types/enumTypes';
 
 require('./Comment');
+require('./Tag');
 
 // Bounty Interface for TypeScript
 export interface IBounty extends Document {
@@ -18,6 +19,7 @@ export interface IBounty extends Document {
   email: string,
   feedback: string,
   status: number;
+  weight: number,
   comments: mongoose.Schema.Types.ObjectId[]
   createdAt: Date;
   updatedAt: Date;
@@ -44,6 +46,10 @@ const BountySchema: Schema<IBounty> = new Schema(
     feedback: {
       type: String,
       default: "",
+    },
+    weight: {
+      type: Number,
+      default: 1,
     },
     status: {
       type: Number,

@@ -82,7 +82,23 @@ export async function getInfraListForAdmin() {
 
 export async function publishInfraForAdmin(id: string, params: PublishParamType) {
   try {
+    await axios.post(`/api/admin/infra/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeInfraForAdmin(id: string, params: CodeParamType) {
+  try {
     await axios.put(`/api/admin/infra/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function weighInfraForAdmin(id: string, weight: number) {
+  try {
+    await axios.patch(`/api/admin/infra/${id}`, { weight });
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
@@ -149,7 +165,23 @@ export async function getVideoListForAdmin() {
 
 export async function publishVideoForAdmin(id: string, params: PublishParamType) {
   try {
+    await axios.post(`/api/admin/video/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeVideoForAdmin(id: string, params: CodeParamType) {
+  try {
     await axios.put(`/api/admin/video/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function weighVideoForAdmin(id: string, weight: number) {
+  try {
+    await axios.patch(`/api/admin/video/${id}`, { weight });
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
@@ -217,7 +249,23 @@ export async function getCodeListForAdmin() {
 
 export async function publishCodeForAdmin(id: string, params: PublishParamType) {
   try {
+    await axios.post(`/api/admin/code/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeCodeForAdmin(id: string, params: CodeParamType) {
+  try {
     await axios.put(`/api/admin/code/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function weighCodeForAdmin(id: string, weight: number) {
+  try {
+    await axios.patch(`/api/admin/code/${id}`, { weight });
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
@@ -230,7 +278,6 @@ export async function deleteCodeForAdmin(id: string) {
     throw new Error(error.response?.data?.message || error.message)
   }
 }
-
 
 // code-related api for current user
 export async function getCodeListForUser() {
@@ -337,11 +384,28 @@ export async function getBountyListForAdmin() {
 
 export async function publishBountyForAdmin(id: string, params: PublishParamType) {
   try {
+    await axios.post(`/api/admin/bounty/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeBountyForAdmin(id: string, params: BountyParamType) {
+  try {
     await axios.put(`/api/admin/bounty/${id}`, params);
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
 }
+
+export async function weighBountyForAdmin(id: string, weight: number) {
+  try {
+    await axios.patch(`/api/admin/bounty/${id}`, { weight });
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
 
 export async function deleteBountyForAdmin(id: string) {
   try {

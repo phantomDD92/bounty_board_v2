@@ -143,7 +143,6 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
           toast.success("Comment created successfully")
           getBountyDetail(data._id)
             .then(newData => {
-              console.log(newData)
               setBountyData(newData)
             })
             .catch(() => { })

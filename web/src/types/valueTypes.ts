@@ -40,17 +40,26 @@ export type ContactType = {
 export type BountyParamType = ContactType & {
   title: string,
   description: string,
-  skills: TagParamType[],
+  skills: string[],
   reward: string,
   deadline: Date,
+  weight?: number,
 }
 
-export type BountyType = BountyParamType & {
+export type BountyType = {
   _id: string,
+  title: string,
+  description: string,
+  skills: TagType[],
+  reward: string,
+  deadline: Date,
+  weight?: number,
   status: number,
   feedback: string,
   creator: UserType,
   comments?: CommentType[],
+  email?: string
+  phone?: string
   createdAt: Date,
   updatedAt: Date,
 };
@@ -60,6 +69,7 @@ export type VideoParamType = {
   title: string,
   description: string,
   url: string,
+  weight?: number,
 }
 
 export type VideoType = VideoParamType & {
@@ -84,6 +94,7 @@ export type InfraParamType = {
   title: string,
   description: string,
   url: string,
+  weight?: number,
 }
 
 export type FeedbackParamType = {
@@ -92,7 +103,7 @@ export type FeedbackParamType = {
 
 export type PublishType = {
   feedback: string,
-  approve: boolean,
+  status: number,
 }
 
 export type InfraType = InfraParamType & {
@@ -113,6 +124,7 @@ export type CodeParamType = {
   title: string,
   description: string,
   snippets?: CodeSnippetType[],
+  weight?: number,
 }
 
 export type CodeType = CodeParamType & {
