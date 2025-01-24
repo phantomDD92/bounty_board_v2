@@ -21,7 +21,7 @@ import type { VideoParamType } from "@/types/valueTypes"
 
 import { createVideo } from "@/lib/api"
 
-import VideoPreview from '@/components/YouTubePreview'
+import VideoPreview from '@/components/VideoPreview'
 
 const VideoCreateView = () => {
   const [url, setUrl] = useState('');

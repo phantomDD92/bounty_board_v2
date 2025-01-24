@@ -28,7 +28,7 @@ import { useSession } from '@/context/SessionContext'
 
 import { checkAuthenticated } from '@/utils/session'
 import { dateToString } from '@/utils/string'
-import VideoPreview from '@/components/YouTubePreview'
+import VideoPreview from '@/components/VideoPreview'
 
 type Props = {
   item: VideoType

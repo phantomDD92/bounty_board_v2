@@ -15,7 +15,7 @@ import { dateUserToString } from '@/utils/string'
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
 import { PublishStatus } from '@/types/enumTypes'
-import VideoPreview from '@/components/YouTubePreview'
+import VideoPreview from '@/components/VideoPreview'
 
 type Props = {
   open: boolean

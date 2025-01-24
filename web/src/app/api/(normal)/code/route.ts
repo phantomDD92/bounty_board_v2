@@ -45,7 +45,7 @@ export async function GET() {
     const codes = await Code
       .find({ status: PublishStatus.APPROVED })
       .populate('creator', 'name')
-      .sort({ createdAt: -1 }); // Sort by newest first
+      .sort({ weight: -1, createdAt: -1 }); // Sort by newest first
 
     return NextResponse.json({ success: true, codes });
   } catch (error: any) {

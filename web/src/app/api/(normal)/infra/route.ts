@@ -14,7 +14,10 @@ export async function GET() {
   await dbConnect();
 
   try {
-    const infraList = await Infra.find({ status: PublishStatus.APPROVED }).populate('creator', 'name').sort({ createdAt: -1 });
+    const infraList = await Infra
+      .find({ status: PublishStatus.APPROVED })
+      .populate('creator', 'name')
+      .sort({ weight: -1, createdAt: -1 });
 
     return NextResponse.json({ success: true, infra: infraList });
   } catch (error) {

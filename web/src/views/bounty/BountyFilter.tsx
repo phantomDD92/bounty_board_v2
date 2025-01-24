@@ -54,6 +54,7 @@ const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTags
                     onSortChange && onSortChange(e.target.value)
                   }}
                 >
+                  <MenuItem value='-weight -createdAt'>Default (rating first)</MenuItem>
                   <MenuItem value='-createdAt'>Creation Date (newest first)</MenuItem>
                   <MenuItem value='-deadline'>Deadline Date (closest first)</MenuItem>
                 </Select>
