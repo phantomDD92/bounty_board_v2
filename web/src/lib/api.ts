@@ -434,13 +434,13 @@ export async function deleteBountyForUser(id: string) {
   }
 }
 
-export async function checkVerus() {
-  try {
-    await axios.post('/api/auth/verus')
-  } catch (e) {
+// export async function checkVerus() {
+//   try {
+//     await axios.post('/api/auth/verus')
+//   } catch (e) {
 
-  }
-}
+//   }
+// }
 
 // User related apis
 export async function getUserList() {

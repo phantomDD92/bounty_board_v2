@@ -27,8 +27,8 @@ import type { VideoType } from '@/types/valueTypes'
 import { useSession } from '@/context/SessionContext'
 
 import { checkAuthenticated } from '@/utils/session'
-import { dateToString, getYouTubeVideoId } from '@/utils/string'
-import YouTubePreview from '@/components/YouTubePreview'
+import { dateToString } from '@/utils/string'
+import VideoPreview from '@/components/YouTubePreview'
 
 type Props = {
   item: VideoType
@@ -39,7 +39,7 @@ const VideoCard = ({ item }: Props) => {
     <Link href={item.url} target='_blank' >
       <div className='border rounded bs-full'>
         <div className='mli-2 mbs-2 overflow-hidden rounded'>
-          <YouTubePreview youtubeId={getYouTubeVideoId(item.url)} />
+          <VideoPreview url={item.url} />
         </div>
         <div className='flex flex-col gap-2 p-5'>
           <div className='flex items-center justify-between'>

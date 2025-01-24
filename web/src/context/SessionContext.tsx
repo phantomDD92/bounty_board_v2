@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 
 import { toast } from 'react-toastify'
 
-import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin, checkVerus } from '@/lib/api'
+import { getSession, loginSimulate, logoutUser, requestLogin, cancelLogin, checkLogin } from '@/lib/api'
 
 import LoginDialog from '@/components/dialogs/LoginDialog'
 
@@ -29,7 +29,6 @@ export const SessionProvider = ({ children }: { children: React.ReactNode }) => 
   let checkInterval: string | number | NodeJS.Timeout | undefined;
 
   useEffect(() => {
-    checkVerus().then(() => { }).catch(() => { });
     getSession()
       .then(session => {
         setSession(session)

@@ -239,7 +239,7 @@ const CodeAdminView = () => {
           <Typography
             variant='h6'
             sx={{
-              maxWidth: 300, // Set a fixed width
+              maxWidth: 250, // Set a fixed width
               overflow: 'hidden',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis'
@@ -255,7 +255,7 @@ const CodeAdminView = () => {
           <Typography
             variant='body1'
             sx={{
-              width: 250, // Set a fixed width
+              width: 200, // Set a fixed width
               overflow: 'hidden',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis'

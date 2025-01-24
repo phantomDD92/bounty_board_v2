@@ -21,9 +21,7 @@ import type { VideoParamType } from "@/types/valueTypes"
 
 import { createVideo } from "@/lib/api"
 
-import YouTubePreview from '@/components/YouTubePreview'
-
-import { getYouTubeVideoId } from '@/utils/string'
+import VideoPreview from '@/components/YouTubePreview'
 
 const VideoCreateView = () => {
   const [url, setUrl] = useState('');
@@ -137,7 +135,7 @@ const VideoCreateView = () => {
           <Card>
             <CardHeader title='Video Preview' />
             <CardContent>
-              <YouTubePreview youtubeId={getYouTubeVideoId(url)} />
+              <VideoPreview url={url} />
             </CardContent>
           </Card>
         </Grid>

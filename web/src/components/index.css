@@ -1,0 +1,8 @@
+.twitter-tweet {
+  max-height: 225px;
+}
+
+#twitter-widget-0 {
+  max-height: 225px;
+  overflow-y: scroll;
+}
