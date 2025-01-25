@@ -65,6 +65,7 @@ const TagEditDrawer = ({ open, data, onClose, onUpdate }: Props) => {
     } else {
       createTagForAdmin(params)
         .then(() => {
+          toast.success('Tag created successfully')
           resetForm({ _id: '', name: '' })
           onUpdate && onUpdate()
         })

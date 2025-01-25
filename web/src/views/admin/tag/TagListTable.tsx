@@ -129,23 +129,23 @@ const TagListTable = () => {
       .then(newData => {
         setData(newData)
       })
-      .catch(error => {
-        toast.error(error.message)
-      })
+      .catch(() => { })
   }
 
-  const handleDeleteData = async (data: any) => {
-    try {
-      setConfirmShow(false)
-      setSelected(undefined)
-      await deleteTagForAdmin(data._id)
-      toast.success('Delete Tag Success')
-      const newData = await getTagList()
-
-      setData(newData)
-    } catch (error: any) {
-      toast.error(error.message)
-    }
+  const handleDeleteData = (data: any) => {
+    setConfirmShow(false)
+    setSelected(undefined)
+    deleteTagForAdmin(data._id).then(() => {
+      toast.success('Tag deleted successfully')
+      getTagList()
+        .then(newData => {
+          setData(newData)
+        })
+        .catch(() => { })
+    })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
   }
 
   const columns = useMemo<ColumnDef<TagWithActionsType, any>[]>(
