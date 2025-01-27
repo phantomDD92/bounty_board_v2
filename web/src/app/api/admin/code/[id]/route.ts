@@ -89,9 +89,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const { title, description } = await request.json();
+    const { title, description, snippets } = await request.json();
 
-    const bounty = await Code.findByIdAndUpdate(codeId, { $set: { title, description } });
+    const bounty = await Code.findByIdAndUpdate(codeId, { $set: { title, description, snippets } });
 
     if (!bounty) {
       return NextResponse.json({ success: false, message: "Code not found" }, { status: 404 });

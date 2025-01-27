@@ -4,16 +4,18 @@
 import { useState, useEffect } from 'react'
 
 // MUI Imports
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import Pagination from '@mui/material/Pagination'
-import Typography from '@mui/material/Typography'
-import { Button } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Pagination,
+  Typography,
+} from '@mui/material'
 
 // Component Imports
-import CodeCard from '@/components/CodeCard'
+import CodeCard from '@/components/code/CodeCard'
 
 // Lib Imports
 import { getCodeList } from '@/lib/api'
