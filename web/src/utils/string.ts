@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-import { PublishStatus, UserRole } from '@/types/enumTypes'
+import { Status, UserRole } from '@/types/enumTypes'
 
 export const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`)
 export const withoutSuffix = (str: string, suffix: string) =>
@@ -76,11 +76,11 @@ export function getRoleName(role: number): string {
 
 export function getStatusName(status: number): string {
   switch (status) {
-    case PublishStatus.PENDING:
+    case Status.PENDING:
       return "Pending";
-    case PublishStatus.APPROVED:
+    case Status.OPEN:
       return "Approved";
-    case PublishStatus.REJECTED:
+    case Status.REJECTED:
       return "Rejected";
     default:
       break

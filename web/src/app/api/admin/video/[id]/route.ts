@@ -7,7 +7,7 @@ import { getSession } from '@/lib/session';
 
 import { checkAdmin, checkAuthenticated } from '@/utils/session';
 
-import { PublishStatus } from '@/types/enumTypes';
+import { Status } from '@/types/enumTypes';
 
 // update video status
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const { feedback, status } = await request.json();
 
-    if (status < PublishStatus.PENDING || status > PublishStatus.REJECTED) {
+    if (status < Status.PENDING || status > Status.REJECTED) {
       return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
     }
 
@@ -122,7 +122,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const video = await Video.findById(videoId);
 
     if (!video) {
-      return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Video not found" }, { status: 404 });
     }
 
 

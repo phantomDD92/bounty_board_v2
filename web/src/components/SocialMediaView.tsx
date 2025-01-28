@@ -13,7 +13,7 @@ type Props = {
   url?: string,
 }
 
-const VideoPreview = ({ url }: Props) => {
+const SocialMediaView = ({ url }: Props) => {
 
   const getVideoType = (url?: string) => {
     if (!url)
@@ -81,4 +81,4 @@ const VideoPreview = ({ url }: Props) => {
 
 }
 
-export default VideoPreview
+export default SocialMediaView

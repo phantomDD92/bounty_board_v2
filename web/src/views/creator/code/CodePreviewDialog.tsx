@@ -23,7 +23,7 @@ import { dateUserToString } from '@/utils/string'
 
 // Type Imports
 import type { CodeType } from '@/types/valueTypes'
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 
 // type CustomItemProps = {
 //   label: string,
@@ -106,10 +106,10 @@ const CodePreviewDialog = ({ open, onClose, data }: Props) => {
             />
           </Grid>
           <Grid item xs={12}>
-            {data.status == PublishStatus.REJECTED && data.feedback && (
+            {data.status == Status.REJECTED && data.feedback && (
               <Alert severity='warning'>{data.feedback}</Alert>
             )}
-            {data.status == PublishStatus.APPROVED && data.feedback && (
+            {data.status == Status.OPEN && data.feedback && (
               <Alert severity='info'>{data.feedback}</Alert>
             )}
           </Grid>

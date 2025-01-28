@@ -6,7 +6,7 @@ import { getSession } from "@/lib/session";
 import Bounty from "@/lib/models/Bounty";
 import User from "@/lib/models/User";
 import { checkAuthenticated, checkRateLimited } from "@/utils/session";
-import { PublishStatus } from "@/types/enumTypes";
+import { Status } from "@/types/enumTypes";
 
 // create bountynpm
 export async function POST(request: Request) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "All parameters are required" }, { status: 400 });
     }
 
-    const newData = await Bounty.create({ title, description, skills, reward, deadline, phone, email, status: PublishStatus.PENDING, creator: session?.userId });
+    const newData = await Bounty.create({ title, description, skills, reward, deadline, phone, email, status: Status.PENDING, creator: session?.userId });
 
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     if (tags.length > 0) {
       bounties = await Bounty
         .find({
-          status: PublishStatus.APPROVED,
+          status: Status.OPEN,
           skills: { $in: tags },
           $or: [
             { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     } else {
       bounties = await Bounty
         .find({
-          status: PublishStatus.APPROVED,
+          status: Status.OPEN,
           $or: [
             { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
             { description: { $regex: search, $options: 'i' } }

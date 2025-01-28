@@ -50,7 +50,7 @@ import { deleteCodeForAdmin, getCodeListForAdmin, publishCodeForAdmin, weighCode
 
 import type { CodeType, PublishType } from '@/types/valueTypes'
 
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import PublishDialog from '../common/PublishDialog'
 import CodePreviewDialog from './CodePreviewDialog'
@@ -138,7 +138,7 @@ const CodeAdminView = () => {
   }, [])
 
   useEffect(() => {
-    if (status != `${PublishStatus.ALL}`) {
+    if (status != `${Status.ALL}`) {
       const fData = data?.filter(item => `${item.status}` == status)
 
       setFilteredData(fData)
@@ -176,7 +176,7 @@ const CodeAdminView = () => {
 
   const handleUndo = () => {
     setUndoShow(false);
-    publishCodeForAdmin(selected._id, { status: PublishStatus.PENDING, feedback: "" })
+    publishCodeForAdmin(selected._id, { status: Status.PENDING, feedback: "" })
       .then(() => {
         toast.success(`Code updated successfully`);
         getCodeListForAdmin().then(newData => {
@@ -297,7 +297,7 @@ const CodeAdminView = () => {
         cell: ({ row }) =>
           <Chip
             label={getStatusName(row.original.status)}
-            color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
+            color={row.original.status == Status.OPEN ? 'primary' : row.original.status == Status.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -314,7 +314,7 @@ const CodeAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == PublishStatus.PENDING ?
+            {row.original.status == Status.PENDING ?
               <Tooltip title="Approve/Reject">
                 <IconButton
                   size='small'
@@ -419,10 +419,10 @@ const CodeAdminView = () => {
               label='Status'
               labelId='status-select'
             >
-              <MenuItem value={`${PublishStatus.ALL}`}>Any</MenuItem>
-              <MenuItem value={`${PublishStatus.PENDING}`}>Pending</MenuItem>
-              <MenuItem value={`${PublishStatus.APPROVED}`}>Approved</MenuItem>
-              <MenuItem value={`${PublishStatus.REJECTED}`}>Rejected</MenuItem>
+              <MenuItem value={`${Status.ALL}`}>Any</MenuItem>
+              <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
+              <MenuItem value={`${Status.OPEN}`}>Approved</MenuItem>
+              <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -500,8 +500,8 @@ const CodeAdminView = () => {
           <PublishDialog
             open={publishShow}
             onCancel={() => setPublishShow(false)}
-            onApprove={(feedback) => handlePublish({ feedback, status: PublishStatus.APPROVED })}
-            onReject={(feedback) => handlePublish({ feedback, status: PublishStatus.REJECTED })}
+            onApprove={(feedback) => handlePublish({ feedback, status: Status.OPEN })}
+            onReject={(feedback) => handlePublish({ feedback, status: Status.REJECTED })}
           />
           <CodePreviewDialog
             open={previewShow}

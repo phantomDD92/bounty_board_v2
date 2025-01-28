@@ -15,7 +15,7 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 
 // Type Imports
 import type { BountyType } from '@/types/valueTypes'
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 
 type CustomItemProps = {
   label: string,
@@ -68,10 +68,10 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
           {data?.email != "" && <CustomItem icon='ri-calendar-line' label='Email' value={data?.email || ""} />}
           {data?.phone != "" && <CustomItem icon='ri-calendar-line' label='Phone' value={data?.phone || ""} />}
         </div>
-        {data.status == PublishStatus.REJECTED && data.feedback && (
+        {data.status == Status.REJECTED && data.feedback && (
           <Alert severity='warning'>{data.feedback}</Alert>
         )}
-        {data.status == PublishStatus.APPROVED && data.feedback && (
+        {data.status == Status.OPEN && data.feedback && (
           <Alert severity='info'>{data.feedback}</Alert>
         )}
       </DialogContent>

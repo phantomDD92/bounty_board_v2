@@ -14,7 +14,7 @@ import { dateUserToString } from '@/utils/string'
 
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 import VideoPreview from '@/components/VideoPreview';
 
 type Props = {
@@ -42,10 +42,10 @@ const VideoPreviewDialog = ({ open, onClose, data }: Props) => {
           {data?.description}
         </Typography>
         <VideoPreview url={data.url} />
-        {data.status == PublishStatus.REJECTED && data.feedback && (
+        {data.status == Status.REJECTED && data.feedback && (
           <Alert severity='warning'>{data.feedback}</Alert>
         )}
-        {data.status == PublishStatus.APPROVED && data.feedback && (
+        {data.status == Status.OPEN && data.feedback && (
           <Alert severity='info'>{data.feedback}</Alert>
         )}
       </DialogContent>

@@ -22,6 +22,7 @@ import type { VideoParamType } from "@/types/valueTypes"
 import { createVideo } from "@/lib/api"
 
 import VideoPreview from '@/components/VideoPreview'
+import SocialMediaView from '@/components/SocialMediaView'
 
 const VideoCreateView = () => {
   const [url, setUrl] = useState('');
@@ -135,7 +136,7 @@ const VideoCreateView = () => {
           <Card>
             <CardHeader title='Video Preview' />
             <CardContent>
-              <VideoPreview url={url} />
+              <SocialMediaView url={url} />
             </CardContent>
           </Card>
         </Grid>

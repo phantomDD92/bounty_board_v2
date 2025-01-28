@@ -1,3 +1,4 @@
+import { Status } from '@/types/enumTypes';
 import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
@@ -7,6 +8,7 @@ export interface IComment extends Document {
   text: string;
   creator: mongoose.Schema.Types.ObjectId; // Reference to the User model
   bounty: mongoose.Schema.Types.ObjectId; // Reference to the Bounty model
+  status: number,
   createdAt: Date;
 }
 
@@ -21,6 +23,11 @@ const CommentSchema: Schema<IComment> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    status: {
+      type: Number,
+      enum: Object.values(Status),
+      default: Status.PENDING,
     },
     bounty: {
       type: mongoose.Schema.Types.ObjectId,

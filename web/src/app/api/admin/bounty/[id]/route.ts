@@ -5,7 +5,7 @@ import dbConnect from '@/lib/mongoose';
 import Bounty from '@/lib/models/Bounty';
 import { getSession } from '@/lib/session';
 import { checkAdmin, checkAuthenticated } from '@/utils/session';
-import { PublishStatus } from '@/types/enumTypes';
+import { Status } from '@/types/enumTypes';
 
 // update bounty status
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const { feedback, status } = await request.json();
 
-    if (status < PublishStatus.PENDING || status > PublishStatus.REJECTED) {
+    if (status < Status.PENDING || status > Status.REJECTED) {
       return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
     }
 

@@ -28,6 +28,11 @@ const adminMenuData = (): HorizontalMenuDataType[] => [
     icon: 'ri-video-line'
   },
   {
+    label: 'Socials',
+    href: '/admin/social',
+    icon: 'ri-community-line'
+  },
+  {
     label: 'Codes',
     href: '/admin/code',
     icon: 'ri-codepen-line'

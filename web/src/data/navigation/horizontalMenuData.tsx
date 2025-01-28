@@ -18,6 +18,11 @@ const horizontalMenuData = (): HorizontalMenuDataType[] => [
     icon: 'ri-video-line'
   },
   {
+    label: 'Social',
+    href: '/social',
+    icon: 'ri-community-line'
+  },
+  {
     label: 'Code',
     href: '/code',
     icon: 'ri-codepen-line'

@@ -5,6 +5,7 @@ import type {
   CodeParamType,
   InfraParamType,
   PublishType as PublishParamType,
+  SocialParamType,
   TagParamType,
   VideoParamType
 } from '@/types/valueTypes';
@@ -451,4 +452,89 @@ export async function getUserList() {
 
 export async function setUserRole(userId: string, isAdmin: boolean) {
   await axios.put(`/api/admin/user/${userId}`, { isAdmin });
+}
+
+
+// video-related api
+export async function createSocial(params: SocialParamType) {
+  try {
+    await axios.post('/api/social', params);
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function getSocialList() {
+  try {
+    const resp = await axios.get('/api/social');
+
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+// video-related api for admin
+export async function getSocialListForAdmin() {
+  try {
+    const resp = await axios.get('/api/admin/social');
+
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function publishSocialForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.post(`/api/admin/social/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeSocialForAdmin(id: string, params: CodeParamType) {
+  try {
+    await axios.put(`/api/admin/social/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function weighSocialForAdmin(id: string, weight: number) {
+  try {
+    await axios.patch(`/api/admin/social/${id}`, { weight });
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteSocialForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/social/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+
+// video-related api for current user
+export async function getSocialListForUser() {
+  try {
+    const resp = await axios.get('/api/me/social');
+
+    return resp.data?.videos;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteSocialForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/social/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
 }

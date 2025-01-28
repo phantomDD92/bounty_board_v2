@@ -14,7 +14,7 @@ import { dateUserToString } from '@/utils/string'
 
 // Type Imports
 import type { InfraType } from '@/types/valueTypes'
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 
 type Props = {
   open: boolean
@@ -41,10 +41,10 @@ const InfraPreviewDialog = ({ open, onClose, data }: Props) => {
           {data?.description}
         </Typography>
         <iframe src={data.url} frameBorder="0" width="100%" height="500px" loading="lazy" allowFullScreen></iframe>
-        {data.status == PublishStatus.REJECTED && data.feedback && (
+        {data.status == Status.REJECTED && data.feedback && (
           <Alert severity='warning'>{data.feedback}</Alert>
         )}
-        {data.status == PublishStatus.APPROVED && data.feedback && (
+        {data.status == Status.OPEN && data.feedback && (
           <Alert severity='info'>{data.feedback}</Alert>
         )}
       </DialogContent>

@@ -1,8 +1,10 @@
-export const PublishStatus = {
+export const Status = {
   ALL: 0,
   PENDING: 1,
-  APPROVED: 2,
-  REJECTED: 3,
+  REJECTED: 2,
+  COMPLETED: 3,
+  OPEN: 4,
+  ASSIGNED: 5,
 };
 
 export const UserRole = {

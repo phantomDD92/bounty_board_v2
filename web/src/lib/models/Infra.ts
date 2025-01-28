@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
-import { PublishStatus } from '@/types/enumTypes';
+import { Status } from '@/types/enumTypes';
 
 // Define the Infra interface for TypeScript
 export interface IInfra extends Document {
@@ -50,8 +50,8 @@ const InfraSchema: Schema<IInfra> = new Schema(
     },
     status: {
       type: Number,
-      enum: Object.values(PublishStatus),
-      default: PublishStatus.PENDING,
+      enum: Object.values(Status),
+      default: Status.PENDING,
     },
   },
   {

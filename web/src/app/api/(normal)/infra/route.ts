@@ -8,14 +8,14 @@ import User from '@/lib/models/User';
 
 import { checkAuthenticated, checkRateLimited } from '@/utils/session';
 
-import { PublishStatus } from '@/types/enumTypes';
+import { Status } from '@/types/enumTypes';
 
 export async function GET() {
   await dbConnect();
 
   try {
     const infraList = await Infra
-      .find({ status: PublishStatus.APPROVED })
+      .find({ status: Status.OPEN })
       .populate('creator', 'name')
       .sort({ weight: -1, createdAt: -1 });
 

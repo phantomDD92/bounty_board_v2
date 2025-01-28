@@ -22,7 +22,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const video = await Video.findById(videoId);
 
     if (!video) {
-      return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Video not found" }, { status: 404 });
     }
 
     if (!checkOwner(session, video.creator.toString())) {

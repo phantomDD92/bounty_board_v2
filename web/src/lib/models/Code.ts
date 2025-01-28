@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
-import { Language, PublishStatus } from '@/types/enumTypes';
+import { Language, Status } from '@/types/enumTypes';
 
 // Define the Code interface for TypeScript
 export interface ICode extends Document {
@@ -41,8 +41,8 @@ const CodeSchema: Schema<ICode> = new Schema(
     },
     status: {
       type: Number,
-      enum: Object.values(PublishStatus),
-      default: PublishStatus.PENDING,
+      enum: Object.values(Status),
+      default: Status.PENDING,
     },
     weight: {
       type: Number,

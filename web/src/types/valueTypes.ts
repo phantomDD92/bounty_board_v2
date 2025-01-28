@@ -81,6 +81,23 @@ export type VideoType = VideoParamType & {
   updatedAt: Date,
 };
 
+// video related
+export type SocialParamType = {
+  title: string,
+  description: string,
+  url: string,
+  weight?: number,
+}
+
+export type SocialType = SocialParamType & {
+  _id: string,
+  status: number,
+  feedback: string,
+  creator: UserType,
+  createdAt: Date,
+  updatedAt: Date,
+};
+
 export type SessionType = {
   isAuth: boolean,
   userId: string,

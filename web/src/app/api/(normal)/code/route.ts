@@ -6,7 +6,7 @@ import { getSession } from "@/lib/session";
 import User from "@/lib/models/User";
 
 import { checkAuthenticated, checkRateLimited } from "@/utils/session";
-import { PublishStatus } from "@/types/enumTypes";
+import { Status } from "@/types/enumTypes";
 
 // create code
 export async function POST(request: Request) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "URL, Description is required" }, { status: 400 });
     }
 
-    await Code.create({ title, description, snippets, creator: session.userId, status: PublishStatus.PENDING })
+    await Code.create({ title, description, snippets, creator: session.userId, status: Status.PENDING })
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
     return NextResponse.json({ success: true }, { status: 201 });
@@ -43,7 +43,7 @@ export async function GET() {
     await dbConnect();
 
     const codes = await Code
-      .find({ status: PublishStatus.APPROVED })
+      .find({ status: Status.OPEN })
       .populate('creator', 'name')
       .sort({ weight: -1, createdAt: -1 }); // Sort by newest first
 

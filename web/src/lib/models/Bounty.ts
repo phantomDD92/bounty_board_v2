@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
 
-import { PublishStatus } from '@/types/enumTypes';
+import { Status } from '@/types/enumTypes';
 
 require('./Comment');
 require('./Tag');
@@ -53,8 +53,8 @@ const BountySchema: Schema<IBounty> = new Schema(
     },
     status: {
       type: Number,
-      enum: Object.values(PublishStatus),
-      default: PublishStatus.PENDING,
+      enum: Object.values(Status),
+      default: Status.PENDING,
     },
     reward: {
       type: String,

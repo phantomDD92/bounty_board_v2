@@ -54,6 +54,11 @@ const creatorMenuData = (): HorizontalMenuDataType[] => [
     icon: 'ri-video-line'
   },
   {
+    label: 'Socials',
+    href: '/creator/social',
+    icon: 'ri-community-line'
+  },
+  {
     label: 'Codes',
     href: '/creator/code',
     icon: 'ri-codepen-line'

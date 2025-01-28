@@ -40,7 +40,7 @@ import { getInfraListForUser, deleteInfraForUser } from '@/lib/api'
 
 import type { InfraType } from '@/types/valueTypes'
 
-import { PublishStatus } from '@/types/enumTypes'
+import { Status } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 import InfraPreviewDialog from './InfraPreviewDialog'
@@ -123,7 +123,7 @@ const InfraCreatorView = () => {
   }, [])
 
   useEffect(() => {
-    if (status != `${PublishStatus.ALL}`) {
+    if (status != `${Status.ALL}`) {
       const fData = data?.filter(item => `${item.status}` == status)
 
       setFilteredData(fData)
@@ -216,7 +216,7 @@ const InfraCreatorView = () => {
         cell: ({ row }) =>
           <Chip
             label={getStatusName(row.original.status)}
-            color={row.original.status == PublishStatus.APPROVED ? 'primary' : row.original.status == PublishStatus.REJECTED ? "error" : "warning"} />
+            color={row.original.status == Status.OPEN ? 'primary' : row.original.status == Status.REJECTED ? "error" : "warning"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -303,10 +303,10 @@ const InfraCreatorView = () => {
               label='Status'
               labelId='status-select'
             >
-              <MenuItem value={`${PublishStatus.ALL}`}>Any</MenuItem>
-              <MenuItem value={`${PublishStatus.PENDING}`}>Pending</MenuItem>
-              <MenuItem value={`${PublishStatus.APPROVED}`}>Approved</MenuItem>
-              <MenuItem value={`${PublishStatus.REJECTED}`}>Rejected</MenuItem>
+              <MenuItem value={`${Status.ALL}`}>Any</MenuItem>
+              <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
+              <MenuItem value={`${Status.OPEN}`}>Approved</MenuItem>
+              <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>
         </div>
