@@ -1,3 +1,4 @@
+import { VideoType } from '@/types/enumTypes';
 import {
   FacebookEmbed,
   InstagramEmbed,
@@ -14,86 +15,67 @@ type Props = {
 
 const VideoPreview = ({ url }: Props) => {
 
-  const isYouTubeURL = (url: string | undefined) => {
+  const getVideoType = (url?: string) => {
     if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/.+)?$/;
-
-    return regex.test(url);
+      return VideoType.NONE;
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/.+)?$/;
+    if (youtubeRegex.test(url))
+      return VideoType.YOUTUBE;
+    const tweetRegex = /^(https?:\/\/)?(www\.)?(x\.com|twitter\.com)(\/.+)?$/;
+    if (tweetRegex.test(url))
+      return VideoType.TWEET;
+    const tiktokRegex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
+    if (tiktokRegex.test(url))
+      return VideoType.TIKTOK;
+    const facebookRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]+$/;
+    if (facebookRegex.test(url))
+      return VideoType.FACEBOOK
+    const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/;
+    if (instagramRegex.test(url))
+      return VideoType.INSTAGRAM
+    const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
+    if (linkedinRegex.test(url))
+      return VideoType.LINKEDIN
+    const pinterestRegex = /^(https?:\/\/)?(www\.)?pinterest\.com\/[a-zA-Z0-9_-]+\/?$/
+    if (pinterestRegex.test(url))
+      return VideoType.PINTEREST
+    return VideoType.UNKNOWN;
   }
 
-  const isTweetURL = (url: string | undefined) => {
+  const getVideoEmbedComponent = (url?: string) => {
     if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(x\.com|twitter\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  const isTikTokURL = (url: string | undefined) => {
-    if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  const isFacebookURL = (url: string | undefined) => {
-    if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  const isInstagramURL = (url: string | undefined) => {
-    if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  const isLinkedInURL = (url: string | undefined) => {
-    if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  const isPinterestURL = (url: string | undefined) => {
-    if (!url)
-      return false;
-    const regex = /^(https?:\/\/)?(www\.)?(pinterest\.com)(\/.+)?$/;
-
-    return regex.test(url);
-  }
-
-  return (
-    <div className='min-h-[250px]'>
-      {!url
-        ? <div className='w-[400px] h-[225px] flex justify-center items-center'>
+      return (
+        <div className='w-[400px] h-[225px] flex justify-center items-center'>
           <span>No Video</span>
         </div>
-        : isYouTubeURL(url)
-          ? <YouTubeEmbed url={url} />
-          : isTweetURL(url)
-            ? <XEmbed url={url} />
-            : isTikTokURL(url)
-              ? <TikTokEmbed url={url} />
-              : isFacebookURL(url)
-                ? <FacebookEmbed url={url} />
-                : isInstagramURL(url)
-                  ? <InstagramEmbed url={url} />
-                  : isLinkedInURL(url)
-                    ? <LinkedInEmbed url={url} />
-                    : isPinterestURL(url)
-                      ? <PinterestEmbed url={url} />
-                      : <div className='w-[400px] h-[225px] flex justify-center items-center'>
-                        <span>No Video</span>
-                      </div>
-      }
+      );
+    switch (getVideoType(url)) {
+      case VideoType.FACEBOOK:
+        return <FacebookEmbed url={url} />
+      case VideoType.YOUTUBE:
+        return <YouTubeEmbed url={url} />;
+      case VideoType.TWEET:
+        return <XEmbed url={url} />;
+      case VideoType.TIKTOK:
+        return <TikTokEmbed url={url} />
+      case VideoType.INSTAGRAM:
+        return <InstagramEmbed url={url} />;
+      case VideoType.LINKEDIN:
+        return <LinkedInEmbed url={url} />
+      case VideoType.PINTEREST:
+        <PinterestEmbed url={url} />
+      default:
+        break;
+    }
+    return (
+      <div className='w-[400px] h-[225px] flex justify-center items-center'>
+        <span>Unknown Video</span>
+      </div>
+    );
+  }
+  return (
+    <div className='min-h-[250px]'>
+      {getVideoEmbedComponent(url)}
     </div>
   )
 

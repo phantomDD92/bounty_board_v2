@@ -39,3 +39,15 @@ export const Language = {
   TYPESCRIPT: 'typescript',
   YAML: 'yaml',
 };
+
+export const VideoType = {
+  YOUTUBE: 'youtube',
+  TWEET: 'tweet',
+  TIKTOK: 'tiktok',
+  LINKEDIN: 'linkedin',
+  FACEBOOK: 'facebook',
+  INSTAGRAM: 'instagram',
+  PINTEREST: 'pinterest',
+  NONE: 'none',
+  UNKNOWN: 'unknown',
+}
