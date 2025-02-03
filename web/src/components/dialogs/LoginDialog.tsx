@@ -30,11 +30,11 @@ const LoginDialog = ({ open, qrCode, onClose, loading }: LoginDialogProps) => {
   }, [qrCode, open])
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth='md' scroll='body'>
+    <Dialog open={open} onClose={onClose} maxWidth='xs' fullWidth scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col items-center sm:pbs-8 sm:pbe-8 sm:pli-8'>
         <div className='max-sm:is-[80%] max-sm:text-center'>Verus ID Login</div>
       </DialogTitle>
-      <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
+      <DialogContent className='overflow-visible pbs-0 sm:pli-16 min-h-[400px]'>
         <div
           style={{
             display: 'flex',
@@ -45,7 +45,9 @@ const LoginDialog = ({ open, qrCode, onClose, loading }: LoginDialogProps) => {
         >
           <div className='p-4 bg-white'>
             <div className='relative'>
-              <QRCode value={QRData} />
+              {loading ? <div className='h-[256px] w-[256px]'></div>
+                : <QRCode value={QRData} />
+              }
               {loading && (
                 <div className='bg-white absolute top-0 left-0 bottom-0 right-0 flex justify-center items-center opacity-50'>
                   <CircularProgress size={80} />

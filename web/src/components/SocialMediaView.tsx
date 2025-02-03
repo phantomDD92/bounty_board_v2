@@ -31,19 +31,19 @@ const SocialMediaView = ({ url }: Props) => {
 
     if (tiktokRegex.test(url))
       return VideoType.TIKTOK;
-    const facebookRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]+$/;
+    const facebookRegex = /^(https?:\/\/)?(www\.)?facebook\.com(\/.+)?$/;
 
     if (facebookRegex.test(url))
       return VideoType.FACEBOOK
-    const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/;
+    const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com(\/.+)?$/;
 
     if (instagramRegex.test(url))
       return VideoType.INSTAGRAM
-    const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
+    const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com(\/.+)?$/;
 
     if (linkedinRegex.test(url))
       return VideoType.LINKEDIN
-    const pinterestRegex = /^(https?:\/\/)?(www\.)?pinterest\.com\/[a-zA-Z0-9_-]+\/?$/
+    const pinterestRegex = /^(https?:\/\/)?(www\.)?pinterest\.com(\/.+)?$/
 
     if (pinterestRegex.test(url))
       return VideoType.PINTEREST
