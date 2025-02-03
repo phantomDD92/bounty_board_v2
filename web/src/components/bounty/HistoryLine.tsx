@@ -53,4 +53,5 @@ const BountyHistoryLine = ({ data }: Props) => {
     </Timeline>
   )
 }
+
 export default BountyHistoryLine

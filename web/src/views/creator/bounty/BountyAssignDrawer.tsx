@@ -32,6 +32,7 @@ const BountyAssignDrawer = ({ data, open, onClose, onUpdate }: Props) => {
 
   const [users, setUsers] = useState<UserType[]>([]);
   const [assignee, setAssignee] = useState<string>();
+
   useEffect(() => {
     getUserList()
       .then(newData => {
@@ -44,6 +45,7 @@ const BountyAssignDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   const handleAssignBounty = () => {
     if (!assignee) {
       toast.warn(`Please select user.`);
+
       return
     }
 

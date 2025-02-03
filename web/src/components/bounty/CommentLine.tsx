@@ -57,4 +57,5 @@ const BountyCommentLine = ({ data }: Props) => {
     </Timeline>
   )
 }
+
 export default BountyCommentLine

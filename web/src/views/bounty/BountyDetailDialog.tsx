@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 // MUI Imports
 import {
   Button,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -33,7 +34,7 @@ import { dateUserToString, getStatusName } from '@/utils/string'
 import { useSession } from '@/context/SessionContext'
 
 // Lib Imports
-import { createComment, getBountyDetail, getCommentList, getHistoryList } from '@/lib/api'
+import { createComment,  getCommentList, getHistoryList } from '@/lib/api'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import CustomTabList from '@/@core/components/mui/TabList'
@@ -41,7 +42,7 @@ import CustomTabList from '@/@core/components/mui/TabList'
 // Type Imports
 import type { BountyHistoryType, BountyType, CommentType } from '@/types/valueTypes'
 import { Status } from '@/types/enumTypes'
-import { Chip } from '@mui/material'
+
 import BountyHistoryLine from '@/components/bounty/HistoryLine'
 import BountyCommentLine from '@/components/bounty/CommentLine'
 
@@ -104,12 +105,11 @@ const CustomItem = ({ label, value, icon }: CustomItemProps) => {
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  data: BountyType
+  data?: BountyType
 }
 
 const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
-  const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
   const { session } = useSession();
   const [activeTab, setActiveTab] = useState('description')
   const [history, setHistory] = useState<BountyHistoryType[]>([])
@@ -124,11 +124,6 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
       createComment(data?._id, comment)
         .then(() => {
           toast.success("Comment created successfully")
-          // getCommentList(data._id)
-          //   .then(comments => {
-          //     setComments(comments)
-          //   })
-          //   .catch(() => { })
         })
         .catch((error: any) => {
           toast.error(error.message)
@@ -158,7 +153,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
         <div className='flex justify-between items-center gap-6'>
           <span>{data?.title}</span>
           <Chip
-            label={getStatusName(data?.status)}
+            label={getStatusName(data?.status || Status.PENDING)}
             color={data?.status == Status.PENDING ? 'warning'
               : data?.status == Status.OPEN ? "primary"
                 : data?.status == Status.ASSIGNED ? "success"

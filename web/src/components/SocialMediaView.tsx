@@ -1,4 +1,3 @@
-import { VideoType } from '@/types/enumTypes';
 import {
   FacebookEmbed,
   InstagramEmbed,
@@ -8,6 +7,8 @@ import {
   XEmbed,
   YouTubeEmbed,
 } from 'react-social-media-embed';
+
+import { VideoType } from '@/types/enumTypes';
 
 type Props = {
   url?: string,
@@ -19,26 +20,34 @@ const SocialMediaView = ({ url }: Props) => {
     if (!url)
       return VideoType.NONE;
     const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)(\/.+)?$/;
+
     if (youtubeRegex.test(url))
       return VideoType.YOUTUBE;
     const tweetRegex = /^(https?:\/\/)?(www\.)?(x\.com|twitter\.com)(\/.+)?$/;
+
     if (tweetRegex.test(url))
       return VideoType.TWEET;
     const tiktokRegex = /^(https?:\/\/)?(www\.)?(tiktok\.com)(\/.+)?$/;
+
     if (tiktokRegex.test(url))
       return VideoType.TIKTOK;
     const facebookRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9(\.\?)?]+$/;
+
     if (facebookRegex.test(url))
       return VideoType.FACEBOOK
     const instagramRegex = /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$/;
+
     if (instagramRegex.test(url))
       return VideoType.INSTAGRAM
     const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/;
+
     if (linkedinRegex.test(url))
       return VideoType.LINKEDIN
     const pinterestRegex = /^(https?:\/\/)?(www\.)?pinterest\.com\/[a-zA-Z0-9_-]+\/?$/
+
     if (pinterestRegex.test(url))
       return VideoType.PINTEREST
+
     return VideoType.UNKNOWN;
   }
 
@@ -49,6 +58,7 @@ const SocialMediaView = ({ url }: Props) => {
           <span>No Video</span>
         </div>
       );
+
     switch (getVideoType(url)) {
       case VideoType.FACEBOOK:
         return <FacebookEmbed url={url} />
@@ -67,12 +77,14 @@ const SocialMediaView = ({ url }: Props) => {
       default:
         break;
     }
+
     return (
       <div className='w-[400px] h-[225px] flex justify-center items-center'>
         <span>Unknown Video</span>
       </div>
     );
   }
+
   return (
     <div className='min-h-[250px]'>
       {getVideoEmbedComponent(url)}

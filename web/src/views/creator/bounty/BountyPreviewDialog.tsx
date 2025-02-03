@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 // MUI Imports
 import {
   Typography,
@@ -11,6 +13,7 @@ import {
   Grid,
   Chip
 } from '@mui/material'
+import { TabContext, TabPanel } from '@mui/lab'
 
 import moment from 'moment'
 
@@ -20,17 +23,16 @@ import TagsList from '@/components/TagsList'
 // Util Imports
 import { dateUserToString, getStatusName } from '@/utils/string'
 
-import CustomAvatar from '@/@core/components/mui/Avatar'
 
 // Type Imports
-import { CommentType, type BountyHistoryType, type BountyType } from '@/types/valueTypes'
+import type { CommentType, BountyHistoryType, BountyType } from '@/types/valueTypes'
 import { Status } from '@/types/enumTypes'
-import CustomTabList from '@/@core/components/mui/TabList'
-import { useEffect, useState } from 'react'
-import { TabContext, TabPanel } from '@mui/lab'
+
 import { getCommentList, getHistoryList } from '@/lib/api'
 import BountyHistoryLine from '@/components/bounty/HistoryLine'
 import BountyCommentLine from '@/components/bounty/CommentLine'
+import CustomTabList from '@/@core/components/mui/TabList'
+import CustomAvatar from '@/@core/components/mui/Avatar'
 
 type CustomItemProps = {
   label: string,

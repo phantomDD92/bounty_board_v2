@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 import dbConnect from '@/lib/mongoose';
 import { getSession } from "@/lib/session";
-
-import { checkAdmin, checkAuthenticated } from "@/utils/session";
 import Comment from "@/lib/models/Comment";
+
+import { checkAuthenticated } from "@/utils/session";
 
 // get comment list for admin
 export async function GET() {

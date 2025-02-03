@@ -33,6 +33,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const fields = [];
+
     if (description != bounty.description)
       fields.push("description")
     if (reward != bounty.reward)

@@ -1,7 +1,8 @@
-import { Status } from '@/types/enumTypes';
 import mongoose, { Schema } from 'mongoose';
 
 import type { Document, Model } from 'mongoose';
+
+import { Status } from '@/types/enumTypes';
 
 // Interface for a Comment
 export interface IComment extends Document {

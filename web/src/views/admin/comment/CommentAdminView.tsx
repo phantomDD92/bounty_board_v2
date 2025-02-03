@@ -18,7 +18,6 @@ import {
   TextField,
   Tooltip,
   Typography,
-  Rating
 } from '@mui/material'
 import type { TextFieldProps } from '@mui/material/TextField'
 
@@ -46,7 +45,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { deleteCommentForAdmin, getCommentListForAdmin, publishCommentForAdmin, weighBountyForAdmin } from '@/lib/api'
+import { deleteCommentForAdmin, getCommentListForAdmin, publishCommentForAdmin } from '@/lib/api'
 
 import type { CommentType, PublishType } from '@/types/valueTypes'
 

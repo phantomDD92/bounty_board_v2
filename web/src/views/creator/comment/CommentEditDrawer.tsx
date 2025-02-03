@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 // MUI Imports
 import {
@@ -15,9 +15,9 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import { changeCommentForUser, getTagList } from '@/lib/api'
+import { changeCommentForUser } from '@/lib/api'
 
-import type { CommentParamsType, CommentType, TagType } from '@/types/valueTypes'
+import type { CommentParamsType, CommentType } from '@/types/valueTypes'
 
 type Props = {
   data?: CommentType,
@@ -28,8 +28,6 @@ type Props = {
 
 const CommentEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
 
-  const [tags, setTags] = useState<TagType[]>([]);
-
   // Hooks
   const {
     control,
@@ -39,14 +37,6 @@ const CommentEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   } = useForm<CommentParamsType>({
     defaultValues: { text: '', }
   })
-
-  useEffect(() => {
-    getTagList()
-      .then(newData => {
-        setTags(newData)
-      })
-      .catch(() => { })
-  }, [])
 
   useEffect(() => {
     if (open && data) {
@@ -70,12 +60,6 @@ const CommentEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   // Handle Form Reset
   const handleReset = () => {
     onClose && onClose()
-  }
-
-  const getSkillName = (skill: string) => {
-    const tag = tags.find(item => item._id == skill)
-
-    return tag?.name
   }
 
   return (

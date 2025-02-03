@@ -2,11 +2,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/mongoose';
-import Bounty from '@/lib/models/Bounty';
-import { getSession } from '@/lib/session';
-import { checkAdmin, checkAuthenticated, checkOwner } from '@/utils/session';
-import { Status } from '@/types/enumTypes';
 import Comment from '@/lib/models/Comment';
+import { getSession } from '@/lib/session';
+import { checkAuthenticated, checkOwner } from '@/utils/session';
+import { Status } from '@/types/enumTypes';
 
 // update comment status
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {

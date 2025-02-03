@@ -2,12 +2,12 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/mongoose';
-import Bounty from '@/lib/models/Bounty';
 import { getSession } from '@/lib/session';
-import { checkAdmin, checkAuthenticated } from '@/utils/session';
-import { Status } from '@/types/enumTypes';
 import Comment from '@/lib/models/Comment';
 import BountyHistory from '@/lib/models/BountyHistory';
+
+import { checkAdmin, checkAuthenticated } from '@/utils/session';
+import { Status } from '@/types/enumTypes';
 
 // update comment status
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {

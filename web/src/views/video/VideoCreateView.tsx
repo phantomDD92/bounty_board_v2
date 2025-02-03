@@ -21,7 +21,6 @@ import type { VideoParamType } from "@/types/valueTypes"
 
 import { createVideo } from "@/lib/api"
 
-import VideoPreview from '@/components/VideoPreview'
 import SocialMediaView from '@/components/SocialMediaView'
 
 const VideoCreateView = () => {
