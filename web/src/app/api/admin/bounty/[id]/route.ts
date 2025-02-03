@@ -5,6 +5,7 @@ import dbConnect from '@/lib/mongoose';
 import Bounty from '@/lib/models/Bounty';
 import { getSession } from '@/lib/session';
 import { checkAdmin, checkAuthenticated } from '@/utils/session';
+import BountyHistory from '@/lib/models/BountyHistory';
 import { Status } from '@/types/enumTypes';
 
 // update bounty status
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const { feedback, status } = await request.json();
 
-    if (status < Status.PENDING || status > Status.REJECTED) {
+    if (status != Status.PENDING && status != Status.REJECTED && status != Status.OPEN ) {
       return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
     }
 
@@ -92,6 +93,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (!bounty) {
       return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
     }
+
+    await BountyHistory.create({ creator: session?.userId, text: `changed the bounty by admin(${session?.name})`, bounty: bounty._id })
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

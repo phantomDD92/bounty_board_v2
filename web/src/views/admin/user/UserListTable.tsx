@@ -39,7 +39,7 @@ import { toast } from 'react-toastify'
 import tableStyles from '@core/styles/table.module.css'
 
 // Lib Imports
-import { getUserList, setUserRole } from '@/lib/api'
+import { getUserListForAdmin, setUserRoleForAdmin } from '@/lib/api'
 
 // Type Imports
 import type { UserType } from '@/types/valueTypes'
@@ -113,7 +113,7 @@ const UserListTable = () => {
   const { session } = useSession();
 
   useEffect(() => {
-    getUserList()
+    getUserListForAdmin()
       .then(newData => {
         setData(newData)
       })
@@ -121,11 +121,11 @@ const UserListTable = () => {
   }, [])
 
   const handleToAdmin = (user: UserWithActionsType) => {
-    setUserRole(user._id, true)
+    setUserRoleForAdmin(user._id, true)
       .then(() => {
         toast.success("User role updated successfully!")
 
-        return getUserList()
+        return getUserListForAdmin()
       })
       .then(newData => {
         setData(newData)
@@ -134,11 +134,11 @@ const UserListTable = () => {
   }
 
   const handleToUser = (user: UserWithActionsType) => {
-    setUserRole(user._id, false)
+    setUserRoleForAdmin(user._id, false)
       .then(() => {
         toast.success("User role updated successfully!")
 
-        return getUserList()
+        return getUserListForAdmin()
       })
       .then(newData => {
         setData(newData)

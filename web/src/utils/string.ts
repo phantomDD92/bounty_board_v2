@@ -79,9 +79,32 @@ export function getStatusName(status: number): string {
     case Status.PENDING:
       return "Pending";
     case Status.OPEN:
-      return "Approved";
+      return "Open";
     case Status.REJECTED:
       return "Rejected";
+    case Status.ASSIGNED:
+      return "Assigned";
+    case Status.COMPLETED:
+      return "Completed";
+    default:
+      break
+  }
+
+  return "Unknown";
+}
+
+export function getStatusColor(status: number): string {
+  switch (status) {
+    case Status.PENDING:
+      return "warning";
+    case Status.OPEN:
+      return "secondary";
+    case Status.REJECTED:
+      return "error";
+    case Status.ASSIGNED:
+      return "primary";
+    case Status.COMPLETED:
+      return "success";
     default:
       break
   }

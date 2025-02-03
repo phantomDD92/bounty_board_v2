@@ -56,6 +56,7 @@ import { getStatusName } from '@/utils/string'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 import BountyPreviewDialog from './BountyPreviewDialog'
+import BountyEditDrawer from './BountyEditDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -120,6 +121,7 @@ const BountyCreatorView = () => {
   const [selected, setSelected] = useState<any>(undefined)
   const [confirmShow, setConfirmShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
+  const [editShow, setEditShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<BountyType[]>([])
   const [filteredData, setFilteredData] = useState<BountyType[]>([])
@@ -157,6 +159,14 @@ const BountyCreatorView = () => {
         toast.error(error.message)
       })
   }
+
+  const handleChange = () => {
+    setEditShow(false)
+    getBountyListForUser().then(newData => {
+      setData(newData)
+    }).catch(() => { })
+  }
+
 
   const columns = useMemo<ColumnDef<BountyWithActionsType, any>[]>(
     () => [
@@ -227,7 +237,11 @@ const BountyCreatorView = () => {
         cell: ({ row }) =>
           <Chip
             label={getStatusName(row.original.status)}
-            color={row.original.status == Status.OPEN ? 'primary' : row.original.status == Status.REJECTED ? "error" : "warning"} />
+            color={row.original.status == Status.PENDING ? 'warning'
+              : row.original.status == Status.OPEN ? "primary"
+                : row.original.status == Status.ASSIGNED ? "success"
+                  : row.original.status == Status.COMPLETED ? "secondary"
+                    : "error"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -244,6 +258,45 @@ const BountyCreatorView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
+            {row.original.status != Status.COMPLETED &&
+              <Tooltip title="Edit">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setEditShow(true)
+                  }}
+                >
+                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
+            {row.original.status == Status.OPEN &&
+              <Tooltip title="Assign">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setEditShow(true)
+                  }}
+                >
+                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
+            {row.original.status != Status.ASSIGNED &&
+              <Tooltip title="Complete">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setEditShow(true)
+                  }}
+                >
+                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
             <Tooltip title="Delete">
               <IconButton
                 size='small'
@@ -312,11 +365,12 @@ const BountyCreatorView = () => {
               value={status}
               onChange={e => setStatus(e.target.value)}
               label='Status'
-              labelId='status-select'
-            >
+              labelId='status-select'>
               <MenuItem value={`${Status.ALL}`}>Any</MenuItem>
               <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
-              <MenuItem value={`${Status.OPEN}`}>Approved</MenuItem>
+              <MenuItem value={`${Status.OPEN}`}>Open</MenuItem>
+              <MenuItem value={`${Status.ASSIGNED}`}>Assigned</MenuItem>
+              <MenuItem value={`${Status.COMPLETED}`}>Completed</MenuItem>
               <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>
@@ -391,20 +445,26 @@ const BountyCreatorView = () => {
         </div>
       </Card>
       {selected &&
-        <BountyPreviewDialog
-          open={previewShow}
-          onClose={() => setPreviewShow(false)}
-          data={selected}
-        />
-      }
-      {selected &&
-        <ConfirmDialog
-          question='Are you sure to delete the bounty?'
-          data={selected}
-          open={confirmShow}
-          onCancel={() => setConfirmShow(false)}
-          onConfirm={handleDelete}
-        />
+        <>
+          <BountyPreviewDialog
+            open={previewShow}
+            onClose={() => setPreviewShow(false)}
+            data={selected}
+          />
+          <ConfirmDialog
+            question='Are you sure to delete the bounty?'
+            data={selected}
+            open={confirmShow}
+            onCancel={() => setConfirmShow(false)}
+            onConfirm={handleDelete}
+          />
+          <BountyEditDrawer
+            open={editShow}
+            data={selected}
+            onClose={() => setEditShow(false)}
+            onUpdate={handleChange}
+          />
+        </>
       }
     </>
   )

@@ -1,4 +1,4 @@
-import {  NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import dbConnect from '@/lib/mongoose';
@@ -7,6 +7,7 @@ import Bounty from "@/lib/models/Bounty";
 import User from "@/lib/models/User";
 import { checkAuthenticated, checkRateLimited } from "@/utils/session";
 import { Status } from "@/types/enumTypes";
+import BountyHistory from "@/lib/models/BountyHistory";
 
 // create bountynpm
 export async function POST(request: Request) {
@@ -29,6 +30,8 @@ export async function POST(request: Request) {
     }
 
     const newData = await Bounty.create({ title, description, skills, reward, deadline, phone, email, status: Status.PENDING, creator: session?.userId });
+
+    BountyHistory.create({ creator: session?.userId, text: "created the bounty", bounty: newData._id })
 
     await User.findByIdAndUpdate(session?.userId, { $set: { submittedAt: new Date() } })
 
@@ -58,7 +61,7 @@ export async function GET(request: NextRequest) {
     if (tags.length > 0) {
       bounties = await Bounty
         .find({
-          status: Status.OPEN,
+          status: { $gte: Status.OPEN },
           skills: { $in: tags },
           $or: [
             { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
@@ -71,7 +74,7 @@ export async function GET(request: NextRequest) {
     } else {
       bounties = await Bounty
         .find({
-          status: Status.OPEN,
+          status: { $gte: Status.OPEN },
           $or: [
             { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
             { description: { $regex: search, $options: 'i' } }

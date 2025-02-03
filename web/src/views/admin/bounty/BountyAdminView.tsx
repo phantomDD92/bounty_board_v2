@@ -192,7 +192,7 @@ const BountyAdminView = () => {
   const handleChangeWeight = (bounty: BountyType, value: number | null) => {
     weighBountyForAdmin(bounty._id, value ? value * 2 : 1)
       .then(() => {
-        const newData:BountyType[] = [];
+        const newData: BountyType[] = [];
 
         Object.assign(newData, data)
         const current = newData.findIndex(el => el._id == bounty._id)
@@ -282,7 +282,7 @@ const BountyAdminView = () => {
             precision={0.5}
             max={5}
             size='small'
-            value={row.original.weight ? row.original.weight / 2 : 0.5 }
+            value={row.original.weight ? row.original.weight / 2 : 0.5}
             onChange={(_, value) => handleChangeWeight(row.original, value)} />
       }),
       columnHelper.accessor('status', {
@@ -290,7 +290,11 @@ const BountyAdminView = () => {
         cell: ({ row }) =>
           <Chip
             label={getStatusName(row.original.status)}
-            color={row.original.status == Status.OPEN ? 'primary' : row.original.status == Status.REJECTED ? "error" : "warning"} />
+            color={row.original.status == Status.PENDING ? 'warning'
+              : row.original.status == Status.OPEN ? "primary"
+                : row.original.status == Status.ASSIGNED ? "success"
+                  : row.original.status == Status.COMPLETED ? "secondary"
+                    : "error"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -410,11 +414,12 @@ const BountyAdminView = () => {
               value={status}
               onChange={e => setStatus(e.target.value)}
               label='Status'
-              labelId='status-select'
-            >
+              labelId='status-select'>
               <MenuItem value={`${Status.ALL}`}>Any</MenuItem>
               <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
-              <MenuItem value={`${Status.OPEN}`}>Approved</MenuItem>
+              <MenuItem value={`${Status.OPEN}`}>Open</MenuItem>
+              <MenuItem value={`${Status.ASSIGNED}`}>Assigned</MenuItem>
+              <MenuItem value={`${Status.COMPLETED}`}>Completed</MenuItem>
               <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>

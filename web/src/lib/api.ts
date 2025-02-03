@@ -427,6 +427,30 @@ export async function getBountyListForUser() {
   }
 }
 
+export async function changeBountyForUser(id: string, params: BountyParamType) {
+  try {
+    await axios.put(`/api/me/bounty/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function completeBountyForUser(id: string) {
+  try {
+    await axios.post(`/api/me/bounty/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function assignBountyForUser(id: string, assignee: string) {
+  try {
+    await axios.patch(`/api/me/bounty/${id}`, { assignee });
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
 export async function deleteBountyForUser(id: string) {
   try {
     await axios.delete(`/api/me/bounty/${id}`);
@@ -445,12 +469,18 @@ export async function deleteBountyForUser(id: string) {
 
 // User related apis
 export async function getUserList() {
+  const resp = await axios.get('/api/user');
+
+  return resp.data?.users;
+}
+
+export async function getUserListForAdmin() {
   const resp = await axios.get('/api/admin/user');
 
   return resp.data?.users;
 }
 
-export async function setUserRole(userId: string, isAdmin: boolean) {
+export async function setUserRoleForAdmin(userId: string, isAdmin: boolean) {
   await axios.put(`/api/admin/user/${userId}`, { isAdmin });
 }
 
