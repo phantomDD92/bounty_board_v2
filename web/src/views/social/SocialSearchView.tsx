@@ -27,7 +27,7 @@ import type { SocialType } from '@/types/valueTypes'
 import { useSession } from '@/context/SessionContext'
 
 import { checkAuthenticated } from '@/utils/session'
-import { dateToString } from '@/utils/string'
+import { dateDeltaToString } from '@/utils/string'
 
 import VideoPreview from '@/components/VideoPreview'
 
@@ -45,7 +45,7 @@ const SocialCard = ({ item }: Props) => {
         <div className='flex flex-col gap-2 p-5'>
           <div className='flex items-center justify-between'>
             <Chip label={item.creator.name} variant='tonal' size='small' color='primary' />
-            <Typography className='font-medium mie-1'>{dateToString(item.createdAt)}</Typography>
+            <Typography className='font-medium mie-1'>{dateDeltaToString(item.createdAt)}</Typography>
           </div>
           <div className='flex flex-col gap-1'>
             <Typography

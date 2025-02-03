@@ -14,13 +14,9 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
   try {
     const comments = await Comment.find({ bounty: bountyId }).populate('creator', 'name');
 
-    if (!comments || comments.length === 0) {
-      return NextResponse.json({ success: false, message: 'No comments found.' }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: comments }, { status: 200 });
+    return NextResponse.json({ success: true, comments }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Server error', error }, { status: 500 });
+    return NextResponse.json({ success: false, message: 'Internal server error', error }, { status: 500 });
   }
 }
 

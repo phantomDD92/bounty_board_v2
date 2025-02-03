@@ -161,3 +161,9 @@ export type BountySearchType = {
   page: number,
   size: number,
 }
+
+export type BountyHistoryType = {
+  creator: UserType,
+  text: string,
+  createdAt: Date,
+}

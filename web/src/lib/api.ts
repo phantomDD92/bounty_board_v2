@@ -351,6 +351,17 @@ export async function getCommentList(bountyId: string) {
   }
 }
 
+export async function getHistoryList(bountyId: string) {
+  try {
+    const resp = await axios.get(`/api/bounty/${bountyId}/history`);
+
+    return resp.data?.history;
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
 
 export async function getBountyList({ search, sort, tags }: { search: string, sort: string, tags: string[] }) {
   try {

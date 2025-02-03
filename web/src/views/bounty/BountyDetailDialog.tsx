@@ -7,63 +7,43 @@ import moment from 'moment'
 import { toast } from 'react-toastify'
 
 // MUI Imports
-import Timeline from '@mui/lab/Timeline'
-import TimelineDot from '@mui/lab/TimelineDot'
-import TimelineItem from '@mui/lab/TimelineItem'
-import TimelineContent from '@mui/lab/TimelineContent'
-import TimelineSeparator from '@mui/lab/TimelineSeparator'
-import TimelineConnector from '@mui/lab/TimelineConnector'
-import Dialog from '@mui/material/Dialog'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import Typography from '@mui/material/Typography'
-import { TimelineOppositeContent } from '@mui/lab'
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Tab,
+  TextField,
+  Typography,
+} from '@mui/material'
+
+import {
+  TabContext,
+  TabPanel
+} from '@mui/lab'
 
 // Component Imports
 import TagsList from '@/components/TagsList'
 
 // Util Imports
-import { dateToString, dateUserToString } from '@/utils/string'
+import { dateUserToString, getStatusName } from '@/utils/string'
 
 // Context Imports
 import { useSession } from '@/context/SessionContext'
 
 // Lib Imports
-import { createComment, getBountyDetail } from '@/lib/api'
+import { createComment, getBountyDetail, getCommentList, getHistoryList } from '@/lib/api'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
+import CustomTabList from '@/@core/components/mui/TabList'
 
 // Type Imports
-import type { BountyType, CommentType } from '@/types/valueTypes'
-
-type CommentItemProps = {
-  key: string
-  comment: CommentType
-}
-
-const CommentItem = ({ key, comment }: CommentItemProps) => {
-  return (
-    <TimelineItem key={key}>
-      <TimelineOppositeContent style={{ flex: 0 }} />
-      <TimelineSeparator>
-        <TimelineDot color='primary' />
-        <TimelineConnector />
-      </TimelineSeparator>
-      <TimelineContent>
-        <div className='flex flex-wrap items-center justify-between gap-x-2 mbe-2.5'>
-          <Typography color='text.primary' className='font-medium'>
-            {comment.creator?.name}
-          </Typography>
-          <Typography variant='caption'>{dateToString(comment.createdAt)}</Typography>
-        </div>
-        <Typography className='mbe-2 text-wrap'>{comment.text}</Typography>
-      </TimelineContent>
-    </TimelineItem>
-  )
-}
+import type { BountyHistoryType, BountyType, CommentType } from '@/types/valueTypes'
+import { Status } from '@/types/enumTypes'
+import { Chip } from '@mui/material'
+import BountyHistoryLine from '@/components/bounty/HistoryLine'
+import BountyCommentLine from '@/components/bounty/CommentLine'
 
 type CommentEditorProps = {
   onSend: (value: string) => void
@@ -124,13 +104,16 @@ const CustomItem = ({ label, value, icon }: CustomItemProps) => {
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  data?: BountyType
+  data: BountyType
 }
 
 const BountyDetail = ({ open, setOpen, data }: Props) => {
   // States
   const [bountyData, setBountyData] = useState<BountyType | undefined>(data)
   const { session } = useSession();
+  const [activeTab, setActiveTab] = useState('description')
+  const [history, setHistory] = useState<BountyHistoryType[]>([])
+  const [comments, setComments] = useState<CommentType[]>([]);
 
   const handleClose = () => {
     setOpen(false)
@@ -141,11 +124,11 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
       createComment(data?._id, comment)
         .then(() => {
           toast.success("Comment created successfully")
-          getBountyDetail(data._id)
-            .then(newData => {
-              setBountyData(newData)
-            })
-            .catch(() => { })
+          // getCommentList(data._id)
+          //   .then(comments => {
+          //     setComments(comments)
+          //   })
+          //   .catch(() => { })
         })
         .catch((error: any) => {
           toast.error(error.message)
@@ -155,58 +138,90 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
   }
 
   useEffect(() => {
-    if (open && data) {
-      getBountyDetail(data._id)
-        .then(newData => {
-          setBountyData(newData)
+    if (data) {
+      getHistoryList(data._id)
+        .then(history => {
+          setHistory(history)
+        })
+        .catch(() => { })
+      getCommentList(data._id)
+        .then(comments => {
+          setComments(comments)
         })
         .catch(() => { })
     }
-  }, [open, data])
+  }, [data])
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose} maxWidth='lg' scroll='body'>
       <DialogTitle variant='h4' className='flex gap-2 flex-col sm:pbs-8 sm:pbe-6 sm:pli-8 mb-4'>
-        <div className='flex justify-between items-center mb-1'>
-          <div>{bountyData?.title}</div>
+        <div className='flex justify-between items-center gap-6'>
+          <span>{data?.title}</span>
+          <Chip
+            label={getStatusName(data?.status)}
+            color={data?.status == Status.PENDING ? 'warning'
+              : data?.status == Status.OPEN ? "primary"
+                : data?.status == Status.ASSIGNED ? "success"
+                  : data?.status == Status.COMPLETED ? "secondary"
+                    : "error"} />
         </div>
-        <Typography component='span' className='flex flex-col mb-2'>
-          {dateUserToString(bountyData?.createdAt, bountyData?.creator.name || '')}
+        <Typography component='span' className='flex flex-col mb-4'>
+          {dateUserToString(data?.createdAt, data?.creator.name || '')}
         </Typography>
-        <TagsList tags={bountyData?.skills || []} />
+        <TagsList tags={data?.skills || []} />
+        <div className='flex flex-wrap justify-start gap-6 mt-4'>
+          <CustomItem icon='ri-user-line' label='Assignee' value={data?.assignee?.name || '-'} />
+          <CustomItem icon='ri-bit-coin-line' label='Reward' value={data?.reward || ''} />
+          <CustomItem icon='ri-calendar-line' label='Deadline' value={moment(data?.deadline).format("MM/DD/YYYY")} />
+          {data?.email != "" && <CustomItem icon='ri-mail-line' label='Email' value={data?.email || ""} />}
+          {data?.phone != "" && <CustomItem icon='ri-phone-line' label='Phone' value={data?.phone || ""} />}
+        </div>
       </DialogTitle>
-      <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
-        {/* <Alert severity='info' className='bg-primaryLight mb-8'>
-          <AlertTitle color='secondary'>This task is Open to Applications.</AlertTitle>
-          <Typography>
-            Click “I’m Interested” to express your interest to work on this task. If you’re a good fit, the task
-            reviewer will assign you to the task. After being assigned, other contributors won’t be able to apply
-            anymore and you will be able to start working and submit your work.
-          </Typography>
-        </Alert> */}
-        <Typography
-          className='min-h-[250px] text-wrap break-words'
-          component="pre" >
-          {bountyData?.description}
-        </Typography>
-        <div className='flex flex-wrap justify-start gap-6 mt-8 mb-8'>
-          <CustomItem icon='ri-user-line' label='Reward' value={bountyData?.reward || ''} />
-          <CustomItem icon='ri-calendar-line' label='Deadline' value={moment(bountyData?.deadline).format("MM/DD/YYYY")} />
-          {bountyData?.email != "" && <CustomItem icon='ri-calendar-line' label='Email' value={bountyData?.email || ""} />}
-          {bountyData?.phone != "" && <CustomItem icon='ri-calendar-line' label='Phone' value={bountyData?.phone || ""} />}
-        </div>
-        {/* <Button variant='contained' className='mb-8'>
-          <i className='ri-shield-keyhole-line text-textPrimary mr-2' />
-          I&apos;m interested
-        </Button> */}
-        {session?.isAuth &&
-          <CommentEditor onSend={handleCommentSend} />
-        }
-        <Timeline className='p-4'>
-          {(bountyData?.comments || []).map((comment, index) => (
-            <CommentItem key={`${index}`} comment={comment} />
-          ))}
-        </Timeline>
+      <DialogContent className='overflow-visible pbs-0 sm:pli-16 min-h-[400px]'>
+        <TabContext value={activeTab}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <CustomTabList variant='scrollable' pill='true' onChange={(e, value) => setActiveTab(value)}>
+                <Tab label='Description' icon={<i className='ri-quote-text' />} iconPosition='start' value='description' />
+                <Tab label='Comments' icon={<i className='ri-message-line' />} iconPosition='start' value='comment' />
+                <Tab label='History' icon={<i className='ri-history-line' />} iconPosition='start' value='history' />
+              </CustomTabList>
+            </Grid>
+            <Grid item xs={12}>
+              <TabPanel value={activeTab} className='p-0'>
+                {activeTab == "description" &&
+                  <Grid container spacing={6}>
+                    <Grid item xs={12}>
+                      <Typography
+                        className='min-h-[250px] text-wrap break-words'
+                        component="pre" >
+                        {data?.description}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                }
+                {activeTab == "history" &&
+                  <Grid container spacing={6}>
+                    <Grid item xs={12}>
+                      <BountyHistoryLine data={history} />
+                    </Grid>
+                  </Grid>
+                }
+                {activeTab == "comment" &&
+                  <Grid container spacing={6}>
+                    <Grid item xs={12}>
+                      {session?.isAuth &&
+                        <CommentEditor onSend={handleCommentSend} />
+                      }
+                      <BountyCommentLine data={comments} />
+                    </Grid>
+                  </Grid>
+                }
+              </TabPanel>
+            </Grid>
+
+          </Grid>
+        </TabContext>
       </DialogContent>
     </Dialog>
   )

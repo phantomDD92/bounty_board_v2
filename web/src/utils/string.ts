@@ -34,6 +34,10 @@ export const dateUserToString = (date: Date | undefined, username: string) => {
 }
 
 export const dateToString = (date: Date) => {
+  return moment(date).format("YYYY-MM-DD hh:mm");
+}
+
+export const dateDeltaToString = (date: Date) => {
   if (moment().diff(moment(date), 'year', false) > 1) {
     return `${moment().diff(moment(date), 'year', false)} years ago`
   } else if (moment().diff(moment(date), 'year', false) == 1) {
