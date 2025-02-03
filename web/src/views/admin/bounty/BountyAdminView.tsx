@@ -274,6 +274,14 @@ const BountyAdminView = () => {
           </Typography>
         )
       }),
+      columnHelper.accessor('assignee', {
+        header: 'Assignee',
+        cell: ({ row }) => (
+          <Typography className='font-medium' color='text.primary'>
+            {row.original.assignee?.name || "-"}
+          </Typography>
+        )
+      }),
       columnHelper.accessor('weight', {
         header: 'Weight',
         cell: ({ row }) =>
@@ -311,7 +319,7 @@ const BountyAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == Status.PENDING ?
+            {row.original.status == Status.PENDING &&
               <Tooltip title="Approve/Reject">
                 <IconButton
                   size='small'
@@ -322,7 +330,9 @@ const BountyAdminView = () => {
                 >
                   <i className='ri-presentation-line text-[22px] text-textSecondary' />
                 </IconButton>
-              </Tooltip> :
+              </Tooltip>
+            }
+            {row.original.status == Status.OPEN &&
               <Tooltip title="Undo">
                 <IconButton
                   size='small'
@@ -335,17 +345,19 @@ const BountyAdminView = () => {
                 </IconButton>
               </Tooltip>
             }
-            <Tooltip title="Edit">
-              <IconButton
-                size='small'
-                onClick={() => {
-                  setSelected(row.original)
-                  setEditShow(true)
-                }}
-              >
-                <i className='ri-edit-line text-[22px] text-textSecondary' />
-              </IconButton>
-            </Tooltip>
+            {row.original.status == Status.PENDING &&
+              <Tooltip title="Edit">
+                <IconButton
+                  size='small'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setEditShow(true)
+                  }}
+                >
+                  <i className='ri-edit-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
             <Tooltip title="Delete">
               <IconButton
                 size='small'

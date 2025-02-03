@@ -69,6 +69,7 @@ export async function GET(request: NextRequest) {
           ]
         })
         .populate("creator", "name")
+        .populate('assignee', 'name')
         .populate("skills")
         .sort(searchParams.get('sort') || '-createdAt')
     } else {

@@ -20,7 +20,7 @@ import {
 import { useForm, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import { changeBountyForAdmin, getTagList } from '@/lib/api'
+import { changeBountyForUser, getTagList } from '@/lib/api'
 
 import type { BountyParamType, BountyType, TagType } from '@/types/valueTypes'
 import AppReactDatepicker from '@/lib/styles/AppReactDatepicker'
@@ -69,7 +69,7 @@ const BountyEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
         title: data.title,
         description: data.description,
         reward: data.reward,
-        skills: data.skills? data.skills.map(skill => skill._id) : [],
+        skills: data.skills ? data.skills.map(skill => skill._id) : [],
         phone: data.phone,
         email: data.email,
         deadline: data.deadline,
@@ -82,7 +82,7 @@ const BountyEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
   const handleFormSubmit = async (params: BountyParamType) => {
     try {
       if (data) {
-        await changeBountyForAdmin(data._id, params);
+        await changeBountyForUser(data._id, params);
         onUpdate && onUpdate();
         toast.success(`Bounty changed successfully`);
       }
@@ -112,7 +112,7 @@ const BountyEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>{data ? 'Edit Infra' : 'Add Infra'}</Typography>
+        <Typography variant='h5'>Edit Bounty</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>

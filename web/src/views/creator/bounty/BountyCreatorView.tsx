@@ -46,7 +46,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
 
-import { getBountyListForUser, deleteBountyForUser } from '@/lib/api'
+import { getBountyListForUser, deleteBountyForUser, completeBountyForUser } from '@/lib/api'
 
 import type { BountyType } from '@/types/valueTypes'
 import { Status } from '@/types/enumTypes'
@@ -57,6 +57,7 @@ import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
 import BountyPreviewDialog from './BountyPreviewDialog'
 import BountyEditDrawer from './BountyEditDrawer'
+import BountyAssignDrawer from './BountyAssignDrawer'
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -122,6 +123,8 @@ const BountyCreatorView = () => {
   const [confirmShow, setConfirmShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [editShow, setEditShow] = useState(false)
+  const [assignShow, setAssignShow] = useState(false)
+  const [completeShow, setCompleteShow] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<BountyType[]>([])
   const [filteredData, setFilteredData] = useState<BountyType[]>([])
@@ -160,8 +163,24 @@ const BountyCreatorView = () => {
       })
   }
 
-  const handleChange = () => {
+  const handleComplete = () => {
+    setCompleteShow(false);
+    completeBountyForUser(selected._id)
+      .then(() => {
+        toast.success(`Bounty completed successfully`);
+        getBountyListForUser().then(newData => {
+          setData(newData);
+        })
+      })
+      .catch((error: any) => {
+        toast.error(error.message)
+      })
+  }
+
+
+  const handleUpdateData = () => {
     setEditShow(false)
+    setAssignShow(false);
     getBountyListForUser().then(newData => {
       setData(newData)
     }).catch(() => { })
@@ -232,6 +251,14 @@ const BountyCreatorView = () => {
           </Typography>
         )
       }),
+      columnHelper.accessor('assignee', {
+        header: 'Assignee',
+        cell: ({ row }) => (
+          <Typography color='text.primary'>
+            {row.original.assignee?.name || "-"}
+          </Typography>
+        )
+      }),
       columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) =>
@@ -267,33 +294,33 @@ const BountyCreatorView = () => {
                     setEditShow(true)
                   }}
                 >
-                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                  <i className='ri-edit-line text-[22px] text-textSecondary' />
                 </IconButton>
               </Tooltip>
             }
-            {row.original.status == Status.OPEN &&
+            {(row.original.status == Status.OPEN || row.original.status == Status.ASSIGNED) &&
               <Tooltip title="Assign">
                 <IconButton
                   size='small'
                   onClick={() => {
                     setSelected(row.original)
-                    setEditShow(true)
+                    setAssignShow(true)
                   }}
                 >
-                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                  <i className='ri-user-shared-line text-[22px] text-textSecondary' />
                 </IconButton>
               </Tooltip>
             }
-            {row.original.status != Status.ASSIGNED &&
+            {row.original.status == Status.ASSIGNED &&
               <Tooltip title="Complete">
                 <IconButton
                   size='small'
                   onClick={() => {
                     setSelected(row.original)
-                    setEditShow(true)
+                    setCompleteShow(true)
                   }}
                 >
-                  <i className='ri-eye-line text-[22px] text-textSecondary' />
+                  <i className='ri-door-closed-line text-[22px] text-textSecondary' />
                 </IconButton>
               </Tooltip>
             }
@@ -458,11 +485,24 @@ const BountyCreatorView = () => {
             onCancel={() => setConfirmShow(false)}
             onConfirm={handleDelete}
           />
+          <ConfirmDialog
+            question='Are you sure to complete the bounty?'
+            data={selected}
+            open={completeShow}
+            onCancel={() => setCompleteShow(false)}
+            onConfirm={handleComplete}
+          />
           <BountyEditDrawer
             open={editShow}
             data={selected}
             onClose={() => setEditShow(false)}
-            onUpdate={handleChange}
+            onUpdate={handleUpdateData}
+          />
+          <BountyAssignDrawer
+            open={assignShow}
+            data={selected}
+            onClose={() => setAssignShow(false)}
+            onUpdate={handleUpdateData}
           />
         </>
       }

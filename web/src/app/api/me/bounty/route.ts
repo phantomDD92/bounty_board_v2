@@ -18,7 +18,8 @@ export async function GET() {
 
     const bounties = await Bounty
       .find({ creator: session.userId })
-      .populate('creator')
+      .populate('creator', 'name')
+      .populate('assignee', 'name')
       .populate('skills', 'name')
       .sort({ createdAt: -1 });
 

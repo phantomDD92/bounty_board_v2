@@ -57,6 +57,7 @@ export type BountyType = {
   status: number,
   feedback: string,
   creator: UserType,
+  assignee?: UserType,
   comments?: CommentType[],
   email?: string
   phone?: string

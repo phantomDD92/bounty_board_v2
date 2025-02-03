@@ -112,7 +112,7 @@ const BountyEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 500 } } }}
     >
       <div className='flex items-center justify-between pli-5 plb-4'>
-        <Typography variant='h5'>{data ? 'Edit Infra' : 'Add Infra'}</Typography>
+        <Typography variant='h5'>Edit Bounty</Typography>
         <IconButton size='small' onClick={handleReset}>
           <i className='ri-close-line text-2xl' />
         </IconButton>

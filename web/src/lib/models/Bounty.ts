@@ -13,6 +13,7 @@ export interface IBounty extends Document {
   description: string;
   skills: string[]; // Array of tag IDs
   creator: mongoose.Schema.Types.ObjectId,
+  assignee: mongoose.Schema.Types.ObjectId,
   reward: string;
   deadline: Date;
   phone: string,
@@ -42,6 +43,10 @@ const BountySchema: Schema<IBounty> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
       required: true,
+    },
+    assignee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model
     },
     feedback: {
       type: String,
