@@ -18,6 +18,11 @@ const adminMenuData = (): HorizontalMenuDataType[] => [
     icon: 'ri-blogger-line'
   },
   {
+    label: 'Comments',
+    href: '/admin/comment',
+    icon: 'ri-message-line'
+  },
+  {
     label: 'Infra',
     href: '/admin/infra',
     icon: 'ri-steering-line'

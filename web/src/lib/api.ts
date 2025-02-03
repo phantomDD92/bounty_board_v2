@@ -3,6 +3,7 @@ import axios from 'axios'
 import type {
   BountyParamType,
   CodeParamType,
+  CommentParamsType,
   InfraParamType,
   PublishType as PublishParamType,
   SocialParamType,
@@ -351,6 +352,62 @@ export async function getCommentList(bountyId: string) {
   }
 }
 
+export async function getCommentListForAdmin() {
+  try {
+    const resp = await axios.get(`/api/admin/comment`);
+
+    return resp.data?.comments;
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function publishCommentForAdmin(id: string, params: PublishParamType) {
+  try {
+    await axios.post(`/api/admin/comment/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function deleteCommentForAdmin(id: string) {
+  try {
+    await axios.delete(`/api/admin/comment/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function changeCommentForUser(id: string, params: CommentParamsType) {
+  try {
+    await axios.put(`/api/me/comment/${id}`, params);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
+export async function getCommentListForUser() {
+  try {
+    const resp = await axios.get(`/api/me/comment`);
+
+    return resp.data?.comments;
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
+export async function deleteCommentForUser(id: string) {
+  try {
+    await axios.delete(`/api/me/comment/${id}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || error.message)
+  }
+}
+
 export async function getHistoryList(bountyId: string) {
   try {
     const resp = await axios.get(`/api/bounty/${bountyId}/history`);
@@ -522,7 +579,7 @@ export async function getSocialListForAdmin() {
   try {
     const resp = await axios.get('/api/admin/social');
 
-    return resp.data?.videos;
+    return resp.data?.socials;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }

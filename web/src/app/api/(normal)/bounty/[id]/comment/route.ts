@@ -6,13 +6,16 @@ import Comment from '@/lib/models/Comment';
 import Bounty from '@/lib/models/Bounty';
 import { getSession } from '@/lib/session';
 import { checkAuthenticated } from '@/utils/session';
+import { Status } from '@/types/enumTypes';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
   const { id: bountyId } = params;
 
   try {
-    const comments = await Comment.find({ bounty: bountyId }).populate('creator', 'name');
+    const comments = await Comment
+      .find({ bounty: bountyId, status: Status.OPEN })
+      .populate('creator', 'name');
 
     return NextResponse.json({ success: true, comments }, { status: 200 });
   } catch (error) {

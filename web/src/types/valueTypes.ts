@@ -18,9 +18,11 @@ export type CommentParamsType = {
 
 export type CommentType = CommentParamsType & {
   _id: string,
+  creator: UserType,
+  status: number,
+  bounty?: BountyType,
   createdAt: Date,
   updatedAt: Date,
-  creator: UserType,
 };
 
 export type TagParamType = {

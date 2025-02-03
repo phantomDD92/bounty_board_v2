@@ -34,7 +34,11 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
           </Typography>
           <Typography variant='caption'>{dateDeltaToString(comment.createdAt)} ({dateToString(comment.createdAt)})</Typography>
         </div>
-        <Typography className='mbe-2 text-wrap'>{comment.text}</Typography>
+        <Typography
+          className='mbe-2text-wrap break-words'
+          component="pre" >
+          {comment.text}
+        </Typography>
       </TimelineContent>
     </TimelineItem>
   )
