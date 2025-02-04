@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongoose';
 import { getSession } from '@/lib/session';
 import Comment from '@/lib/models/Comment';
-import BountyHistory from '@/lib/models/BountyHistory';
 
 import { checkAdmin, checkAuthenticated } from '@/utils/session';
 import { Status } from '@/types/enumTypes';

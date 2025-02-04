@@ -43,11 +43,10 @@ import tableStyles from '@core/styles/table.module.css'
 
 import { deleteCommentForAdmin, getCommentListForAdmin, publishCommentForAdmin } from '@/lib/api'
 
-import type { CommentType, PublishType } from '@/types/valueTypes'
+import type { CommentType } from '@/types/valueTypes'
 
 import { Status } from '@/types/enumTypes'
 import { getStatusName } from '@/utils/string'
-import PublishDialog from '../common/PublishDialog'
 import CommentPreviewDialog from './CommentPreviewDialog'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
 
@@ -132,7 +131,7 @@ const CommentAdminView = () => {
     setFilteredData(data)
   }, [data])
 
-  const handlePublish = (params: PublishType) => {
+  const handlePublish = () => {
     setPublishShow(false)
     publishCommentForAdmin(selected._id)
       .then(() => {

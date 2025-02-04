@@ -3,7 +3,6 @@ import axios from 'axios'
 import type {
   BountyParamType,
   CodeParamType,
-  CommentParamsType,
   InfraParamType,
   PublishType as PublishParamType,
   SocialParamType,

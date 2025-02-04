@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
 
     const search = searchParams.get("search")
     const status = parseInt(searchParams.get("status") || `0`)
+
     if (tags.length > 0) {
       if (status == Status.ALL) {
         bounties = await Bounty
