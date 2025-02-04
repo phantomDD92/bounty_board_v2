@@ -302,8 +302,8 @@ const BountyAdminView = () => {
               : row.original.status == Status.OPEN ? "primary"
                 : row.original.status == Status.ASSIGNED ? "success"
                   : row.original.status == Status.COMPLETED ? "secondary"
-                  : row.original.status == Status.DELETED ? "default"
-                    : "error"} />
+                    : row.original.status == Status.DELETED ? "default"
+                      : "error"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
@@ -359,18 +359,20 @@ const BountyAdminView = () => {
                 </IconButton>
               </Tooltip>
             }
-            <Tooltip title="Delete">
-              <IconButton
-                size='small'
-                color='error'
-                onClick={() => {
-                  setSelected(row.original)
-                  setConfirmShow(true)
-                }}
-              >
-                <i className='ri-delete-bin-line text-[22px] text-textError' />
-              </IconButton>
-            </Tooltip>
+            {row.original.status != Status.DELETED &&
+              <Tooltip title="Delete">
+                <IconButton
+                  size='small'
+                  color='error'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setConfirmShow(true)
+                  }}
+                >
+                  <i className='ri-delete-bin-line text-[22px] text-textError' />
+                </IconButton>
+              </Tooltip>
+            }
           </div >
         ),
         enableSorting: false

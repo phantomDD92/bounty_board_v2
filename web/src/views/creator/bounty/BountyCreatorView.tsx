@@ -286,7 +286,7 @@ const BountyCreatorView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status != Status.COMPLETED &&
+            {row.original.status >= Status.PENDING &&
               <Tooltip title="Edit">
                 <IconButton
                   size='small'
@@ -299,7 +299,7 @@ const BountyCreatorView = () => {
                 </IconButton>
               </Tooltip>
             }
-            {(row.original.status == Status.OPEN || row.original.status == Status.ASSIGNED) &&
+            {(row.original.status >= Status.OPEN) &&
               <Tooltip title="Assign">
                 <IconButton
                   size='small'
@@ -325,18 +325,20 @@ const BountyCreatorView = () => {
                 </IconButton>
               </Tooltip>
             }
-            <Tooltip title="Delete">
-              <IconButton
-                size='small'
-                color='error'
-                onClick={() => {
-                  setSelected(row.original)
-                  setConfirmShow(true)
-                }}
-              >
-                <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
-              </IconButton>
-            </Tooltip>
+            {row.original.status != Status.DELETED &&
+              <Tooltip title="Delete">
+                <IconButton
+                  size='small'
+                  color='error'
+                  onClick={() => {
+                    setSelected(row.original)
+                    setConfirmShow(true)
+                  }}
+                >
+                  <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
+                </IconButton>
+              </Tooltip>
+            }
           </div>
         ),
         enableSorting: false
