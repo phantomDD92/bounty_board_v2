@@ -20,7 +20,10 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const codes = await Code.find().populate('creator').sort({ createdAt: -1 });
+    const codes = await Code
+      .find()
+      .populate('creator', 'name')
+      .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, codes });
   } catch (error: any) {

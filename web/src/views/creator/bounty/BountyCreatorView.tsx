@@ -268,7 +268,8 @@ const BountyCreatorView = () => {
               : row.original.status == Status.OPEN ? "primary"
                 : row.original.status == Status.ASSIGNED ? "success"
                   : row.original.status == Status.COMPLETED ? "secondary"
-                    : "error"} />
+                    : row.original.status == Status.DELETED ? "default"
+                      : "error"} />
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',

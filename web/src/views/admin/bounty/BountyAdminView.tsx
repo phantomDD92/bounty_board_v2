@@ -302,6 +302,7 @@ const BountyAdminView = () => {
               : row.original.status == Status.OPEN ? "primary"
                 : row.original.status == Status.ASSIGNED ? "success"
                   : row.original.status == Status.COMPLETED ? "secondary"
+                  : row.original.status == Status.DELETED ? "default"
                     : "error"} />
       }),
       columnHelper.accessor('actions', {
@@ -332,7 +333,7 @@ const BountyAdminView = () => {
                 </IconButton>
               </Tooltip>
             }
-            {row.original.status == Status.OPEN &&
+            {(row.original.status == Status.OPEN || row.original.status == Status.REJECTED) &&
               <Tooltip title="Undo">
                 <IconButton
                   size='small'

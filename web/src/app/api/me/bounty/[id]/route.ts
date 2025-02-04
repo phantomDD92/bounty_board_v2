@@ -44,9 +44,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     await Bounty.findByIdAndUpdate(bountyId, { $set: { title, description, skills, reward, deadline, phone, email, status: Status.PENDING } });
 
     if (fields.length > 0) {
-      await BountyHistory.create({ creator: session?.userId, text: `changed the bounty's ${fields.join(', ')} by owner(${session?.name})`, bounty: bounty._id })
+      await BountyHistory.create({ creator: session?.userId, text: `changed the bounty's ${fields.join(', ')} by owner`, bounty: bounty._id })
     } else {
-      await BountyHistory.create({ creator: session?.userId, text: `changed the bounty by owner(${session?.name})`, bounty: bounty._id })
+      await BountyHistory.create({ creator: session?.userId, text: `changed the bounty by owner`, bounty: bounty._id })
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     await Bounty.findByIdAndUpdate(bountyId, { $set: { status: Status.COMPLETED } });
 
-    await BountyHistory.create({ creator: session?.userId, text: `completed the bounty by owner(${session?.name})`, bounty: bounty._id })
+    await BountyHistory.create({ creator: session?.userId, text: `completed the bounty by owner`, bounty: bounty._id })
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -149,7 +149,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    await Bounty.findByIdAndDelete(bounty._id);
+    await Bounty.findByIdAndUpdate(bounty._id, { $set: { status: Status.DELETED } });
+    await BountyHistory.create({ creator: session?.userId, text: `deleted the bounty by owner`, bounty: bounty._id })
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

@@ -20,7 +20,8 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const bounties = await Bounty.find()
+    const bounties = await Bounty
+      .find()
       .populate('creator', 'name')
       .populate('assignee', 'name')
       .populate('skills', 'name')

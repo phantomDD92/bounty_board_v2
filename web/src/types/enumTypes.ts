@@ -1,8 +1,9 @@
 export const Status = {
+  DELETED: -1,
   ALL: 0,
-  PENDING: 1,
-  REJECTED: 2,
-  COMPLETED: 3,
+  COMPLETED: 1,
+  PENDING: 2,
+  REJECTED: 3,
   OPEN: 4,
   ASSIGNED: 5,
 };

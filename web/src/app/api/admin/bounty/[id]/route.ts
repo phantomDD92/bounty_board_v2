@@ -26,7 +26,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const { feedback, status } = await request.json();
 
-    if (status != Status.PENDING && status != Status.REJECTED && status != Status.OPEN ) {
+    if (status < Status.PENDING || status > Status.OPEN) {
       return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
     }
 
@@ -94,7 +94,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
     }
 
-    await BountyHistory.create({ creator: session?.userId, text: `changed the bounty by admin(${session?.name})`, bounty: bounty._id })
+    await BountyHistory.create({ creator: session?.userId, text: `changed the bounty by admin`, bounty: bounty._id })
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -123,7 +123,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ success: false, message: "Bounty not found" }, { status: 404 });
     }
 
-    await Bounty.findByIdAndDelete(bounty._id);
+    await Bounty.findByIdAndUpdate(bounty._id, { $set: { status: Status.DELETED } });
+    await BountyHistory.create({ creator: session?.userId, text: `deleted the bounty by admin`, bounty: bounty._id })
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

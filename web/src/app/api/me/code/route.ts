@@ -16,7 +16,10 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 })
     }
 
-    const codes = await Code.find({ creator: session.userId }).populate('creator').sort({ createdAt: -1 });
+    const codes = await Code
+      .find({ creator: session.userId })
+      .populate('creator', 'name')
+      .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, codes });
   } catch (error: any) {

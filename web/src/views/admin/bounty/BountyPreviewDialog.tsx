@@ -90,7 +90,8 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
               : data?.status == Status.OPEN ? "primary"
                 : data?.status == Status.ASSIGNED ? "success"
                   : data?.status == Status.COMPLETED ? "secondary"
-                    : "error"} />
+                    : data.status == Status.DELETED ? "default"
+                      : "error"} />
         </div>
         <Typography component='span' className='flex flex-col mb-4'>
           {dateUserToString(data?.createdAt, data?.creator.name || '')}

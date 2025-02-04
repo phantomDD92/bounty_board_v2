@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const { feedback, status } = await request.json();
 
-    if (status < Status.PENDING || status > Status.REJECTED) {
+    if (status < Status.PENDING || status > Status.OPEN) {
       return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
     }
 
