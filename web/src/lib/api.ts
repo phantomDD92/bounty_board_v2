@@ -340,6 +340,16 @@ export async function createComment(bountyId: string, comment: string) {
   }
 }
 
+export async function reportComment(commentId: string) {
+  try {
+    await axios.post(`/api/comment/${commentId}`);
+  } catch (error: any) {
+    if (error?.response?.data?.message)
+      throw new Error(error?.response?.data?.message)
+    throw error;
+  }
+}
+
 export async function getCommentList(bountyId: string) {
   try {
     const resp = await axios.get(`/api/bounty/${bountyId}/comment`);
@@ -364,9 +374,9 @@ export async function getCommentListForAdmin() {
   }
 }
 
-export async function publishCommentForAdmin(id: string, params: PublishParamType) {
+export async function publishCommentForAdmin(id: string) {
   try {
-    await axios.post(`/api/admin/comment/${id}`, params);
+    await axios.post(`/api/admin/comment/${id}`);
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
@@ -380,33 +390,33 @@ export async function deleteCommentForAdmin(id: string) {
   }
 }
 
-export async function changeCommentForUser(id: string, params: CommentParamsType) {
-  try {
-    await axios.put(`/api/me/comment/${id}`, params);
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || error.message)
-  }
-}
+// export async function changeCommentForUser(id: string, params: CommentParamsType) {
+//   try {
+//     await axios.put(`/api/me/comment/${id}`, params);
+//   } catch (error: any) {
+//     throw new Error(error.response?.data?.message || error.message)
+//   }
+// }
 
-export async function getCommentListForUser() {
-  try {
-    const resp = await axios.get(`/api/me/comment`);
+// export async function getCommentListForUser() {
+//   try {
+//     const resp = await axios.get(`/api/me/comment`);
 
-    return resp.data?.comments;
-  } catch (error: any) {
-    if (error?.response?.data?.message)
-      throw new Error(error?.response?.data?.message)
-    throw error;
-  }
-}
+//     return resp.data?.comments;
+//   } catch (error: any) {
+//     if (error?.response?.data?.message)
+//       throw new Error(error?.response?.data?.message)
+//     throw error;
+//   }
+// }
 
-export async function deleteCommentForUser(id: string) {
-  try {
-    await axios.delete(`/api/me/comment/${id}`);
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || error.message)
-  }
-}
+// export async function deleteCommentForUser(id: string) {
+//   try {
+//     await axios.delete(`/api/me/comment/${id}`);
+//   } catch (error: any) {
+//     throw new Error(error.response?.data?.message || error.message)
+//   }
+// }
 
 export async function getHistoryList(bountyId: string) {
   try {
@@ -420,9 +430,9 @@ export async function getHistoryList(bountyId: string) {
   }
 }
 
-export async function getBountyList({ search, sort, tags }: { search: string, sort: string, tags: string[] }) {
+export async function getBountyList({ search, sort, tags, status }: { search: string, sort: string, tags: string[], status: number }) {
   try {
-    const resp = await axios.get('/api/bounty', { params: { search, sort, tags: tags.join(",") } });
+    const resp = await axios.get('/api/bounty', { params: { search, sort, tags: tags.join(","), status } });
 
     return resp.data?.bounties || [];
   } catch (error: any) {
@@ -568,7 +578,7 @@ export async function getSocialList() {
   try {
     const resp = await axios.get('/api/social');
 
-    return resp.data?.videos;
+    return resp.data?.socials;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }
@@ -623,7 +633,7 @@ export async function getSocialListForUser() {
   try {
     const resp = await axios.get('/api/me/social');
 
-    return resp.data?.videos;
+    return resp.data?.socials;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || error.message)
   }

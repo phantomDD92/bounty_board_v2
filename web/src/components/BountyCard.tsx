@@ -89,7 +89,7 @@ const BountyCard = (props: BountyCardProps) => {
           <Typography fontSize='small' color='secondary'>
             {bountyToUserDate(bounty)}
           </Typography>
-          <TagsList tags={bounty.skills} />
+          <TagsList status={bounty.status} tags={bounty.skills} />
         </div>
 
         <div className='flex flex-col items-center gap-1'>

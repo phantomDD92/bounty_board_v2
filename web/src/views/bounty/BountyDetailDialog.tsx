@@ -34,7 +34,7 @@ import { dateUserToString, getStatusName } from '@/utils/string'
 import { useSession } from '@/context/SessionContext'
 
 // Lib Imports
-import { createComment,  getCommentList, getHistoryList } from '@/lib/api'
+import { createComment, getCommentList, getHistoryList, reportComment } from '@/lib/api'
 
 import CustomAvatar from '@/@core/components/mui/Avatar'
 import CustomTabList from '@/@core/components/mui/TabList'
@@ -124,12 +124,33 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
       createComment(data?._id, comment)
         .then(() => {
           toast.success("Comment created successfully")
+          getCommentList(data._id)
+            .then(comments => {
+              setComments(comments)
+            })
+            .catch(() => { })
         })
         .catch((error: any) => {
           toast.error(error.message)
         })
     }
+  }
 
+  const handleReportComment = (comment: CommentType) => {
+    if (data) {
+      reportComment(comment._id)
+        .then(() => {
+          toast.success("Comment reported successfully");
+          getCommentList(data._id)
+            .then(comments => {
+              setComments(comments)
+            })
+            .catch(() => { })
+        })
+        .catch((error: any) => {
+          toast.error(error.message)
+        })
+    }
   }
 
   useEffect(() => {
@@ -208,7 +229,7 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
                       {session?.isAuth &&
                         <CommentEditor onSend={handleCommentSend} />
                       }
-                      <BountyCommentLine data={comments} />
+                      <BountyCommentLine data={comments} onReport={handleReportComment} />
                     </Grid>
                   </Grid>
                 }

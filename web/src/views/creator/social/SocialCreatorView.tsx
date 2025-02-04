@@ -242,7 +242,7 @@ const SocialCreatorView = () => {
                   setConfirmShow(true)
                 }}
               >
-                <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-line text-[22px] text-textError' />
               </IconButton>
             </Tooltip>
           </div>

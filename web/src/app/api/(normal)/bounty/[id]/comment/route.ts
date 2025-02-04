@@ -7,6 +7,7 @@ import Bounty from '@/lib/models/Bounty';
 import { getSession } from '@/lib/session';
 import { checkAuthenticated } from '@/utils/session';
 import { Status } from '@/types/enumTypes';
+import BountyHistory from '@/lib/models/BountyHistory';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect();
@@ -55,12 +56,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
   // Create the comment
   try {
-    const newComment = await Comment.create({ text, creator: session?.userId, bounty: bountyId });
+    const newComment = await Comment.create({ text, creator: session?.userId, bounty: bountyId, status: Status.OPEN });
 
     await Bounty.findByIdAndUpdate(bountyId, { $push: { comments: newComment._id } })
+    await BountyHistory.create({ creator: session?.userId, text: `sent a comment to the bounty`, bounty: bountyId });
 
     return NextResponse.json({ success: true, data: newComment }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Server error', error }, { status: 500 });
+    return NextResponse.json({ success: false, message: 'Internal error', error }, { status: 500 });
   }
 }

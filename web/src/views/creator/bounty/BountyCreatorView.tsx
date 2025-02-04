@@ -286,7 +286,7 @@ const BountyCreatorView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status >= Status.PENDING &&
+            {(row.original.status >= Status.PENDING && row.original.status < Status.COMPLETED) &&
               <Tooltip title="Edit">
                 <IconButton
                   size='small'
@@ -299,7 +299,7 @@ const BountyCreatorView = () => {
                 </IconButton>
               </Tooltip>
             }
-            {(row.original.status >= Status.OPEN) &&
+            {(row.original.status >= Status.OPEN && row.original.status < Status.COMPLETED) &&
               <Tooltip title="Assign">
                 <IconButton
                   size='small'
@@ -312,8 +312,8 @@ const BountyCreatorView = () => {
                 </IconButton>
               </Tooltip>
             }
-            {row.original.status == Status.ASSIGNED &&
-              <Tooltip title="Complete">
+            {(row.original.status >= Status.OPEN && row.original.status < Status.COMPLETED) &&
+              <Tooltip title="Close">
                 <IconButton
                   size='small'
                   onClick={() => {
@@ -335,7 +335,7 @@ const BountyCreatorView = () => {
                     setConfirmShow(true)
                   }}
                 >
-                  <i className='ri-delete-bin-line text-[22px] text-textSecondary' />
+                  <i className='ri-delete-bin-line text-[22px] text-textError' />
                 </IconButton>
               </Tooltip>
             }
@@ -400,7 +400,7 @@ const BountyCreatorView = () => {
               <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
               <MenuItem value={`${Status.OPEN}`}>Open</MenuItem>
               <MenuItem value={`${Status.ASSIGNED}`}>Assigned</MenuItem>
-              <MenuItem value={`${Status.COMPLETED}`}>Completed</MenuItem>
+              <MenuItem value={`${Status.COMPLETED}`}>Closed</MenuItem>
               <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>
@@ -489,7 +489,7 @@ const BountyCreatorView = () => {
             onConfirm={handleDelete}
           />
           <ConfirmDialog
-            question='Are you sure to complete the bounty?'
+            question='Are you sure to close the bounty?'
             data={selected}
             open={completeShow}
             onCancel={() => setCompleteShow(false)}

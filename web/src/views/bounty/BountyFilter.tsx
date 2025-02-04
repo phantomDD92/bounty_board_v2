@@ -16,23 +16,43 @@ import TagsSelector from '@/components/TagsSelector'
 
 // Type Imports
 import type { TagType } from '@/types/valueTypes'
+import { Status } from '@/types/enumTypes'
 
 type Props = {
   search: string
   sort: string
-  tags: TagType[]
+  tags: TagType[],
+  status: number,
   onSearchChange?: (value: string) => void,
+  onStatusChange?: (value: number) => void,
   onSortChange?: (value: string) => void
   onTagsChange?: (value: any) => void
 }
 
-const BountyFilter = ({ search, sort, tags, onSearchChange, onSortChange, onTagsChange }: Props) => {
+const BountyFilter = ({ search, sort, status, tags, onSearchChange, onSortChange, onTagsChange, onStatusChange }: Props) => {
   return (
     <Card>
       <CardHeader title='Filters' />
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Status</InputLabel>
+                <Select
+                  label='Status'
+                  value={status}
+                  onChange={e => {
+                    onStatusChange && onStatusChange(parseInt(`${e.target.value}`))
+                  }}
+                >
+                  <MenuItem value={Status.ALL}>Any</MenuItem>
+                  <MenuItem value={Status.OPEN}>Open</MenuItem>
+                  <MenuItem value={Status.ASSIGNED}>Assigned</MenuItem>
+                  <MenuItem value={Status.COMPLETED}>Closed</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth

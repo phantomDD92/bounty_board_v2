@@ -203,7 +203,7 @@ const TagListTable = () => {
                   setConfirmShow(true)
                 }}
               >
-                <i className='ri-delete-bin-7-line text-[22px] text-textSecondary' />
+                <i className='ri-delete-bin-7-line text-[22px] text-textError' />
               </IconButton>
             </Tooltip>
           </div>

@@ -10,10 +10,6 @@ import {
   Chip,
   Divider,
   IconButton,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TablePagination,
   TextField,
   Tooltip,
@@ -119,12 +115,10 @@ const CommentAdminView = () => {
   const [publishShow, setPublishShow] = useState(false)
   const [previewShow, setPreviewShow] = useState(false)
   const [confirmShow, setConfirmShow] = useState(false);
-  const [undoShow, setUndoShow] = useState(false);
   const [rowSelection, setRowSelection] = useState({})
   const [data, setData] = useState<CommentType[]>([])
   const [filteredData, setFilteredData] = useState<CommentType[]>([])
   const [globalFilter, setGlobalFilter] = useState('')
-  const [status, setStatus] = useState('0');
 
   useEffect(() => {
     getCommentListForAdmin()
@@ -135,20 +129,14 @@ const CommentAdminView = () => {
   }, [])
 
   useEffect(() => {
-    if (status != `${Status.ALL}`) {
-      const fData = data?.filter(item => `${item.status}` == status)
-
-      setFilteredData(fData)
-    } else {
-      setFilteredData(data)
-    }
-  }, [status, data])
+    setFilteredData(data)
+  }, [data])
 
   const handlePublish = (params: PublishType) => {
     setPublishShow(false)
-    publishCommentForAdmin(selected._id, params)
+    publishCommentForAdmin(selected._id)
       .then(() => {
-        toast.success(`Comment updated successfully`);
+        toast.success(`Comment published successfully`);
         getCommentListForAdmin().then(newData => {
           setData(newData)
         }).catch(() => { })
@@ -171,19 +159,6 @@ const CommentAdminView = () => {
       })
   }
 
-  const handleUndo = () => {
-    setUndoShow(false);
-    publishCommentForAdmin(selected._id, { status: Status.PENDING, feedback: "" })
-      .then(() => {
-        toast.success(`Comment updated successfully`);
-        getCommentListForAdmin().then(newData => {
-          setData(newData)
-        }).catch(() => { })
-      })
-      .catch((error: any) => {
-        toast.error(error.message)
-      })
-  }
 
   const columns = useMemo<ColumnDef<CommentWithActionsType, any>[]>(
     () => [
@@ -272,32 +247,17 @@ const CommentAdminView = () => {
                 <i className='ri-eye-line text-[22px] text-textSecondary' />
               </IconButton>
             </Tooltip>
-            {row.original.status == Status.PENDING &&
-              <Tooltip title="Approve/Reject">
-                <IconButton
-                  size='small'
-                  onClick={() => {
-                    setSelected(row.original)
-                    setPublishShow(true)
-                  }}
-                >
-                  <i className='ri-presentation-line text-[22px] text-textSecondary' />
-                </IconButton>
-              </Tooltip>
-            }
-            {row.original.status == Status.OPEN &&
-              <Tooltip title="Undo">
-                <IconButton
-                  size='small'
-                  onClick={() => {
-                    setSelected(row.original)
-                    setUndoShow(true)
-                  }}
-                >
-                  <i className='ri-arrow-go-back-line text-[22px] text-textSecondary' />
-                </IconButton>
-              </Tooltip>
-            }
+            <Tooltip title="Approve">
+              <IconButton
+                size='small'
+                onClick={() => {
+                  setSelected(row.original)
+                  setPublishShow(true)
+                }}
+              >
+                <i className='ri-presentation-line text-[22px] text-textSecondary' />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Delete">
               <IconButton
                 size='small'
@@ -359,7 +319,7 @@ const CommentAdminView = () => {
             placeholder='Search'
             className='max-sm:is-full'
           />
-          <FormControl size='small' className='min-is-[175px]'>
+          {/* <FormControl size='small' className='min-is-[175px]'>
             <InputLabel id='status-select'>Status</InputLabel>
             <Select
               id='select-status'
@@ -372,7 +332,7 @@ const CommentAdminView = () => {
               <MenuItem value={`${Status.OPEN}`}>Approved</MenuItem>
               <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </div>
         <TablePagination
           rowsPerPageOptions={[10, 15, 25]}
@@ -445,11 +405,12 @@ const CommentAdminView = () => {
       </Card>
       {selected &&
         <>
-          <PublishDialog
+          <ConfirmDialog
+            question='Are you sure to publish the comment?'
+            data={selected}
             open={publishShow}
             onCancel={() => setPublishShow(false)}
-            onApprove={(feedback) => { setPublishShow(false); handlePublish({ feedback, status: Status.OPEN }) }}
-            onReject={(feedback) => { setPublishShow(false); handlePublish({ feedback, status: Status.REJECTED }) }}
+            onConfirm={handlePublish}
           />
           <CommentPreviewDialog
             open={previewShow}
@@ -462,13 +423,6 @@ const CommentAdminView = () => {
             open={confirmShow}
             onCancel={() => setConfirmShow(false)}
             onConfirm={handleDelete}
-          />
-          <ConfirmDialog
-            question='Are you sure to unpublish the comment?'
-            data={selected}
-            open={undoShow}
-            onCancel={() => setUndoShow(false)}
-            onConfirm={handleUndo}
           />
         </>
       }

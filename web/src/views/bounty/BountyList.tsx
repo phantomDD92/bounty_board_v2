@@ -28,22 +28,23 @@ import BountyDetail from './BountyDetailDialog'
 type Props = {
   search: string
   sort: string,
+  status: number,
   tags: TagType[],
   selectedTags: string[]
 }
 
-const BountyList = ({ search, sort, selectedTags }: Props) => {
+const BountyList = ({ search, sort, status, selectedTags }: Props) => {
   const [selected, setSelected] = useState<BountyType | undefined>()
   const [data, setData] = useState<BountyType[]>([])
   const [page, setPage] = useState(0)
 
   useEffect(() => {
-    getBountyList({search, sort, tags:selectedTags})
+    getBountyList({search, sort, status, tags:selectedTags})
       .then(items => {
         setData(items)
       })
       .catch(() => { })
-  }, [search, sort, selectedTags, page])
+  }, [search, sort, status, selectedTags, page])
 
   useEffect(() => {
     const newData = data || []

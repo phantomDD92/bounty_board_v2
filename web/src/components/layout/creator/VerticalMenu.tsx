@@ -44,11 +44,6 @@ const creatorMenuData = (): HorizontalMenuDataType[] => [
     icon: 'ri-blogger-line'
   },
   {
-    label: 'Comments',
-    href: '/creator/comment',
-    icon: 'ri-message-line'
-  },
-  {
     label: 'Infra',
     href: '/creator/infra',
     icon: 'ri-steering-line'

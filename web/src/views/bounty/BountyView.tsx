@@ -22,10 +22,12 @@ import type { TagType } from '@/types/valueTypes'
 
 import { checkAuthenticated } from '@/utils/session'
 import { useSession } from '@/context/SessionContext'
+import { Status } from '@/types/enumTypes'
 
 const BountyView = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [search, setSearch] = useState<string>('')
+  const [status, setStatus] = useState<number>(Status.ALL);
   const [sort, setSort] = useState('-createdAt')
   const [tags, setTags] = useState<TagType[]>([])
   const { session } = useSession()
@@ -64,16 +66,23 @@ const BountyView = () => {
       </Grid>
       <Grid item xs={12} md={6} lg={4}>
         <BountyFilter
+          status={status}
           search={search}
           sort={sort}
           tags={tags}
+          onStatusChange={(value: number) => setStatus(value)}
           onSearchChange={(value: string) => setSearch(value)}
           onSortChange={(value: string) => setSort(value)}
           onTagsChange={(tags: string[]) => setSelectedTags(tags)}
         />
       </Grid>
       <Grid item xs={12} md={6} lg={8}>
-        <BountyList search={search} sort={sort} tags={tags} selectedTags={selectedTags} />
+        <BountyList
+          status={status}
+          search={search}
+          sort={sort}
+          tags={tags}
+          selectedTags={selectedTags} />
       </Grid>
     </Grid>
   )

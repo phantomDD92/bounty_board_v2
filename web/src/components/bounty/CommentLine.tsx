@@ -8,6 +8,8 @@ import {
   TimelineSeparator,
 } from '@mui/lab'
 import {
+  IconButton,
+  Tooltip,
   Typography
 } from '@mui/material'
 
@@ -16,10 +18,11 @@ import { dateDeltaToString, dateToString } from '@/utils/string'
 
 type CommentItemProps = {
   key: string
-  comment: CommentType
+  comment: CommentType,
+  onReport?: () => void,
 }
 
-const CommentItem = ({ key, comment }: CommentItemProps) => {
+const CommentItem = ({ key, comment, onReport }: CommentItemProps) => {
   return (
     <TimelineItem key={key}>
       <TimelineOppositeContent style={{ flex: 0 }} />
@@ -32,13 +35,25 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
           <Typography color='text.primary' className='font-medium'>
             {comment.creator?.name}
           </Typography>
-          <Typography variant='caption'>{dateDeltaToString(comment.createdAt)} ({dateToString(comment.createdAt)})</Typography>
+          <Typography variant='caption'>
+            {dateDeltaToString(comment.createdAt)} ({dateToString(comment.createdAt)})
+          </Typography>
         </div>
-        <Typography
-          className='mbe-2text-wrap break-words'
-          component="pre" >
-          {comment.text}
-        </Typography>
+        <div className='flex flex-wrap items-center justify-between gap-x-2 mbe-2.5'>
+          <Typography
+            className='mbe-2text-wrap break-words'
+            component="pre" >
+            {comment.text}
+          </Typography>
+          <Tooltip title="Report">
+            <IconButton
+              size='small'
+              onClick={onReport}>
+              <i className='ri-flag-line text-[22px] text-error' />
+            </IconButton>
+          </Tooltip>
+        </div>
+
       </TimelineContent>
     </TimelineItem>
   )
@@ -46,13 +61,14 @@ const CommentItem = ({ key, comment }: CommentItemProps) => {
 
 type Props = {
   data: CommentType[]
+  onReport?: (comment: CommentType) => void
 }
 
-const BountyCommentLine = ({ data }: Props) => {
+const BountyCommentLine = ({ data, onReport }: Props) => {
   return (
     <Timeline className='p-4'>
       {data.map((comment, index) => (
-        <CommentItem key={`${index}`} comment={comment} />
+        <CommentItem key={`${index}`} comment={comment} onReport={() => onReport && onReport(comment)} />
       ))}
     </Timeline>
   )

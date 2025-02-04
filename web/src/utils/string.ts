@@ -89,7 +89,7 @@ export function getStatusName(status: number): string {
     case Status.ASSIGNED:
       return "Assigned";
     case Status.COMPLETED:
-      return "Completed";
+      return "Closed";
     case Status.DELETED:
       return "Deleted";
     default:

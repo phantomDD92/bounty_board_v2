@@ -5,6 +5,7 @@ import { getSession } from "@/lib/session";
 
 import { checkAdmin, checkAuthenticated } from "@/utils/session";
 import Comment from "@/lib/models/Comment";
+import { Status } from "@/types/enumTypes";
 
 // get comment list for admin
 export async function GET() {
@@ -21,7 +22,7 @@ export async function GET() {
     }
 
     const comments = await Comment
-      .find()
+      .find({ status: Status.PENDING })
       .populate('creator', 'name')
       .populate('bounty', 'title description')
       .sort({ createdAt: -1 });

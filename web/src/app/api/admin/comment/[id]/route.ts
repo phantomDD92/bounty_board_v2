@@ -25,23 +25,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ success: false, message: "Permission required" }, { status: 403 })
     }
 
-    const { feedback, status } = await request.json();
-
-    if (status < Status.PENDING || status > Status.OPEN) {
-      return NextResponse.json({ success: false, message: "Status is invalid" }, { status: 400 })
-    }
-
-    const comment = await Comment.findByIdAndUpdate(commentId, { $set: { status: status, feedback } });
+    const comment = await Comment.findByIdAndUpdate(commentId, { $set: { status: Status.OPEN } });
 
     if (!comment) {
       return NextResponse.json({ success: false, message: "Comment not found" }, { status: 404 });
     }
 
-    if (status == Status.OPEN) {
-      await BountyHistory.create({ creator: comment.creator, text: `sent a comment to the bounty`, bounty: comment.bounty });
-    }
-
-    return NextResponse.json({ success: true }, { status: 200 });
+     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ success: false, message: 'Internal server error', error }, { status: 500 });
   }

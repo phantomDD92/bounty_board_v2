@@ -1,11 +1,11 @@
 export const Status = {
   DELETED: -1,
   ALL: 0,
-  COMPLETED: 1,
-  PENDING: 2,
-  REJECTED: 3,
-  OPEN: 4,
-  ASSIGNED: 5,
+  PENDING: 1,
+  REJECTED: 2,
+  OPEN: 3,
+  ASSIGNED: 4,
+  COMPLETED: 5,
 };
 
 export const UserRole = {

@@ -434,7 +434,7 @@ const BountyAdminView = () => {
               <MenuItem value={`${Status.PENDING}`}>Pending</MenuItem>
               <MenuItem value={`${Status.OPEN}`}>Open</MenuItem>
               <MenuItem value={`${Status.ASSIGNED}`}>Assigned</MenuItem>
-              <MenuItem value={`${Status.COMPLETED}`}>Completed</MenuItem>
+              <MenuItem value={`${Status.COMPLETED}`}>Closed</MenuItem>
               <MenuItem value={`${Status.REJECTED}`}>Rejected</MenuItem>
             </Select>
           </FormControl>

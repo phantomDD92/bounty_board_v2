@@ -57,34 +57,65 @@ export async function GET(request: NextRequest) {
     }
 
     const search = searchParams.get("search")
-
+    const status = parseInt(searchParams.get("status") || `0`)
     if (tags.length > 0) {
-      bounties = await Bounty
-        .find({
-          status: { $gte: Status.OPEN },
-          skills: { $in: tags },
-          $or: [
-            { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
-            { description: { $regex: search, $options: 'i' } }
-          ]
-        })
-        .populate("creator", "name")
-        .populate('assignee', 'name')
-        .populate("skills")
-        .sort(searchParams.get('sort') || '-createdAt')
+      if (status == Status.ALL) {
+        bounties = await Bounty
+          .find({
+            status: { $gte: Status.OPEN },
+            skills: { $in: tags },
+            $or: [
+              { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+              { description: { $regex: search, $options: 'i' } }
+            ]
+          })
+          .populate("creator", "name")
+          .populate('assignee', 'name')
+          .populate("skills")
+          .sort(searchParams.get('sort') || '-createdAt')
+      } else {
+        bounties = await Bounty
+          .find({
+            status: status,
+            skills: { $in: tags },
+            $or: [
+              { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+              { description: { $regex: search, $options: 'i' } }
+            ]
+          })
+          .populate("creator", "name")
+          .populate('assignee', 'name')
+          .populate("skills")
+          .sort(searchParams.get('sort') || '-createdAt')
+      }
     } else {
-      bounties = await Bounty
-        .find({
-          status: { $gte: Status.OPEN },
-          $or: [
-            { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
-            { description: { $regex: search, $options: 'i' } }
-          ]
-        })
-        .populate("creator", "name")
-        .populate('assignee', 'name')
-        .populate("skills")
-        .sort(searchParams.get('sort') || '-createdAt')
+      if (status == Status.ALL) {
+        bounties = await Bounty
+          .find({
+            status: { $gte: Status.OPEN },
+            $or: [
+              { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+              { description: { $regex: search, $options: 'i' } }
+            ]
+          })
+          .populate("creator", "name")
+          .populate('assignee', 'name')
+          .populate("skills")
+          .sort(searchParams.get('sort') || '-createdAt')
+      } else {
+        bounties = await Bounty
+          .find({
+            status: status,
+            $or: [
+              { title: { $regex: search, $options: 'i' } },  // 'i' for case-insensitive
+              { description: { $regex: search, $options: 'i' } }
+            ]
+          })
+          .populate("creator", "name")
+          .populate('assignee', 'name')
+          .populate("skills")
+          .sort(searchParams.get('sort') || '-createdAt')
+      }
     }
 
     // .skip((parseInt(page) - 1) * parseInt(size))
