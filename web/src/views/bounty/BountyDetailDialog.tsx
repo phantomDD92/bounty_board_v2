@@ -199,7 +199,6 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
             <Grid item xs={12}>
               <CustomTabList variant='scrollable' pill='true' onChange={(e, value) => setActiveTab(value)}>
                 <Tab label='Description' icon={<i className='ri-quote-text' />} iconPosition='start' value='description' />
-                <Tab label='Comments' icon={<i className='ri-message-line' />} iconPosition='start' value='comment' />
                 <Tab label='History' icon={<i className='ri-history-line' />} iconPosition='start' value='history' />
               </CustomTabList>
             </Grid>
@@ -209,10 +208,16 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
                   <Grid container spacing={6}>
                     <Grid item xs={12}>
                       <Typography
-                        className='min-h-[250px] text-wrap break-words'
+                        className='min-h-[100px] text-wrap break-words'
                         component="pre" >
                         {data?.description}
                       </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      {session?.isAuth &&
+                        <CommentEditor onSend={handleCommentSend} />
+                      }
+                      <BountyCommentLine data={comments} onReport={handleReportComment} />
                     </Grid>
                   </Grid>
                 }
@@ -220,16 +225,6 @@ const BountyDetail = ({ open, setOpen, data }: Props) => {
                   <Grid container spacing={6}>
                     <Grid item xs={12}>
                       <BountyHistoryLine data={history} />
-                    </Grid>
-                  </Grid>
-                }
-                {activeTab == "comment" &&
-                  <Grid container spacing={6}>
-                    <Grid item xs={12}>
-                      {session?.isAuth &&
-                        <CommentEditor onSend={handleCommentSend} />
-                      }
-                      <BountyCommentLine data={comments} onReport={handleReportComment} />
                     </Grid>
                   </Grid>
                 }

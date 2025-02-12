@@ -114,7 +114,6 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
             <Grid item xs={12}>
               <CustomTabList variant='scrollable' pill='true' onChange={(e, value) => setActiveTab(value)}>
                 <Tab label='Description' icon={<i className='ri-quote-text' />} iconPosition='start' value='description' />
-                <Tab label='Comments' icon={<i className='ri-message-line' />} iconPosition='start' value='comment' />
                 <Tab label='History' icon={<i className='ri-history-line' />} iconPosition='start' value='history' />
               </CustomTabList>
             </Grid>
@@ -124,11 +123,10 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
                   <Grid container spacing={6}>
                     <Grid item xs={12}>
                       <Typography
-                        className='min-h-[250px] text-wrap break-words'
+                        className='min-h-[100px] text-wrap break-words'
                         component="pre" >
                         {data?.description}
                       </Typography>
-
                       {data.status == Status.REJECTED && data.feedback && (
                         <Alert severity='warning'>{data.feedback}</Alert>
                       )}
@@ -136,19 +134,15 @@ const BountyPreviewDialog = ({ open, onClose, data }: Props) => {
                         <Alert severity='info'>{data.feedback}</Alert>
                       )}
                     </Grid>
+                    <Grid item xs={12}>
+                      <BountyCommentLine data={comments} />
+                    </Grid>
                   </Grid>
                 }
                 {activeTab == "history" &&
                   <Grid container spacing={6}>
                     <Grid item xs={12}>
                       <BountyHistoryLine data={history} />
-                    </Grid>
-                  </Grid>
-                }
-                {activeTab == "comment" &&
-                  <Grid container spacing={6}>
-                    <Grid item xs={12}>
-                      <BountyCommentLine data={comments} />
                     </Grid>
                   </Grid>
                 }

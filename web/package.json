@@ -61,6 +61,7 @@
     "react-qr-code": "^2.0.15",
     "react-quill": "^2.0.0",
     "react-social-media-embed": "^2.5.17",
+    "react-syntax-highlighter": "^15.6.1",
     "react-toastify": "^11.0.2",
     "react-twitter-embed": "^4.0.4",
     "react-use": "17.5.1",

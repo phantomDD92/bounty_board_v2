@@ -21,8 +21,12 @@ const languageData = (): LanguageDataType[] => [
     text: "Python"
   },
   {
-    value: Language.PHP,
-    text: "PHP"
+    value: Language.BASH,
+    text: "Verus CLI"
+  },
+  {
+    value: Language.DOCKER,
+    text: "Verus GUI"
   },
 ]
 

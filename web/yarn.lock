@@ -5400,7 +5400,7 @@ react-sub-unsub@^2.2.1:
   resolved "https://registry.yarnpkg.com/react-sub-unsub/-/react-sub-unsub-2.2.7.tgz#d755ea40ab61ff64bc8c73a9013efa910472629d"
   integrity sha512-b2o0mIW8G4Yb3aaKxFB9iiCCHxCDGmogy+493oQpEJHjBy/hl6uf+6RhAinqKWRwi1fvO6mGIMVGsf2XYLL38g==
 
-react-syntax-highlighter@^15.5.0:
+react-syntax-highlighter@^15.5.0, react-syntax-highlighter@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react-syntax-highlighter/-/react-syntax-highlighter-15.6.1.tgz#fa567cb0a9f96be7bbccf2c13a3c4b5657d9543e"
   integrity sha512-OqJ2/vL7lEeV5zTJyG7kmARppUjiB9h9udl4qHQjjgEos66z00Ia0OckwYfRxCSFrW8RJIBnsBwQsHZbVPspqg==

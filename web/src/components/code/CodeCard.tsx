@@ -5,10 +5,13 @@ import { useState } from 'react'
 
 import type { SyntheticEvent } from 'react'
 
-import { CopyBlock, railscast } from 'react-code-blocks';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { toast } from 'react-toastify';
 
 import {
   Grid,
+  IconButton,
   Tab,
   Tabs,
   Typography,
@@ -16,6 +19,8 @@ import {
 
 import type { CodeCardProps } from '@/types/widgetTypes'
 import type { CodeSnippetType } from '@/types/valueTypes'
+
+import { getLanguageLabel } from '@/utils/string';
 
 type Props = {
   snippets: CodeSnippetType[]
@@ -41,7 +46,7 @@ const LanguageSelector = ({ snippets, onChange }: Props) => {
         <Tab
           key={index}
           value={index}
-          label={snippet.language}
+          label={getLanguageLabel(snippet.language)}
         />
       ))}
     </Tabs>
@@ -55,6 +60,13 @@ const CodeCard = (props: CodeCardProps) => {
 
   const handleLanguageChange = (id: number) => {
     setSelected(id)
+  }
+
+  const handleCopyCode = async () => {
+    if (snippets && snippets.length && navigator.clipboard) {
+      await navigator.clipboard.writeText(snippets[selected].code);
+      toast.success("Code copied");
+    }
   }
 
   return (
@@ -81,13 +93,17 @@ const CodeCard = (props: CodeCardProps) => {
             )}
             {
               snippets && snippets.length > 0 &&
-              <CopyBlock
-                language={snippets[selected].language}
-                text={snippets[selected].code}
-                showLineNumbers={true}
-                wrapLongLines={true}
-                theme={railscast}
-              />
+              <div className='overflow-x-auto relative'>
+                <IconButton className='absolute right-5 top-5' onClick={handleCopyCode}>
+                  <i className='ri-file-copy-line text-base' />
+                </IconButton>
+                <SyntaxHighlighter
+                  language={snippets[selected].language}
+                  style={materialDark}
+                  >
+                  {snippets[selected].code}
+                </SyntaxHighlighter>
+              </div>
             }
           </Grid>
         </Grid>

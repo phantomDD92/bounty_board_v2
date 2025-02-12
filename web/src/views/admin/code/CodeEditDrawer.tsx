@@ -26,6 +26,7 @@ import type {
 } from '@/types/valueTypes'
 import CodeAppendDialog from './CodeAppendDialog'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog'
+import { getLanguageLabel } from '@/utils/string'
 
 type Props = {
   data?: CodeType,
@@ -225,7 +226,7 @@ const CodeEditDrawer = ({ data, open, onClose, onUpdate }: Props) => {
                 value={snippet.language}
                 label={<div>
                   <span>
-                    {snippet.language}
+                    {getLanguageLabel(snippet.language)}
                   </span>
                   <IconButton size='small' onClick={() => setDeleteShow(true)}>
                     <i className='ri-close-line' />

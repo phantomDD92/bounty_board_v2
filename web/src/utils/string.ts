@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-import { Status, UserRole } from '@/types/enumTypes'
+import { Language, Status, UserRole } from '@/types/enumTypes'
 
 export const ensurePrefix = (str: string, prefix: string) => (str.startsWith(prefix) ? str : `${prefix}${str}`)
 export const withoutSuffix = (str: string, suffix: string) =>
@@ -118,3 +118,21 @@ export function getStatusColor(status: number): string {
   return "Unknown";
 }
 
+export function getLanguageLabel(language: string) {
+  switch (language) {
+    case Language.JAVA:
+      return "Java"
+    case Language.JAVASCRIPT:
+      return "JavaScript";
+    case Language.PYTHON:
+      return "Python";
+    case Language.BASH:
+      return "Verus CLI";
+    case Language.DOCKER:
+      return "Verus GUI";
+    default:
+      break
+  }
+
+  return "Unknown"
+}
