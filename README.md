@@ -6,8 +6,8 @@ Bounty Board is a platform where users can post and claim bounties. The system c
 3. **Database** (MongoDB) – Stores users, bounties, and transactions.  
    
 ## **🛠️ Technologies Used**
-- **Frontend:** Next.js, React, Tailwind CSS  
-- **Backend:** Express.js, Node.js  
+- **Frontend:** React, Tailwind CSS  
+- **Backend:** Express.js, Next.js  
 - **Database:** MongoDB  
 - **Authentication:** JWT (JSON Web Tokens)  
 - **API Communication:** REST API between servers  
@@ -76,7 +76,6 @@ Create a .env file in web(main server) and verus(server).
 
 🌍 Main Server (.env)
 ```bash
-#NEXT_PUBLIC_APP_URL=http://64.95.13.150:5000
 NEXT_PUBLIC_APP_URL=https://bountyboard.com
 MONGODB_URI=mongodb://localhost:27017/bountyboard
 SESSION_SECRET=your_secret_key
@@ -84,14 +83,13 @@ SESSION_SECRET=your_secret_key
 
 🔐 Verus Server (.env)
 ```bash
-#APP_URL=http://64.95.13.150:5000
 APP_URL=https://bountyboard.com
 CHAIN="VRSC"
-CHAIN_IADDRESS="i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV"
+CHAIN_IADDRESS="i5w......B6MGV"
 API="https://api.verus.services"
 
-SIGNING_IADDRESS="iAv9tYEyNBP73aFmFyxqDPzisMLdTPAdtk"
-PRIVATE_KEY="UxC9oYzUnJfL1Gr3QNbjPxU6kZrkNcT9bLf2mrwV3uSztpmW1xnP"
+SIGNING_IADDRESS="iAv9t.....PAdtk"
+PRIVATE_KEY="UxC9.....pmW1xnP"
 ```
 ## Running the Project:
 
@@ -126,7 +124,6 @@ Enable the configuration:
 ```bash
 $ sudo ln -s /etc/nginx/sites-available/bountyboard /etc/nginx/sites-enabled/
 ```
-
 
 Restart nginx:
 ```bash
